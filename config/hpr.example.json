@@ -1,0 +1,18 @@
+{
+  "schedule": 3600,
+  "api": false,
+
+  "gitlab": {
+    "endpoint": "http://gitlab.example.com/api/v3",
+    "private_token": "abc",
+
+    "group_name": "mirrors",
+
+    "project_public": false,
+    "project_issue": false,
+    "project_wiki": false,
+    "project_merge_request": false,
+    "project_snippet": false,
+    "project_wall": false
+  }
+}

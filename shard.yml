@@ -1,0 +1,20 @@
+name: hpr
+version: 0.1.0
+
+authors:
+  - icyleaf <icyleaf.cn@gmail.com>
+
+targets:
+  hpr:
+    main: src/hpr_cli.cr
+
+dependencies:
+  gitlab:
+    github: icyleaf/gitlab.cr
+  faktory_worker:
+    github: calebuharrison/faktory.cr
+    branch: master
+
+crystal: 0.24.1
+
+license: MIT

@@ -1,0 +1,14 @@
+version: 1.0
+shards:
+  faktory_worker:
+    github: calebuharrison/faktory.cr
+    commit: de888f661acf7fa23d80fcff5960c5ac1bd03968
+
+  gitlab:
+    github: icyleaf/gitlab.cr
+    version: 0.3.1
+
+  halite:
+    github: icyleaf/halite
+    version: 0.3.1
+

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  faktory:
+    image: contribsys/faktory
+    ports:
+      - 17419:7419
+      - 17420:7420
+    volumes:
+      - faktory-data:/var/lib/faktory
+    # environment:
+    #   FAKTORY_PASSWORD: "p@ssword"
+  hpr:
+    build: .
+    image: icyleafcn/hpr
+    ports:
+      - 18000:80
+    volumes:
+      - hpr-config-data:/app/config
+      - hpr-repositories-data:/app/repositories
+    environment:
+      FAKTORY_URL: tcp://faktory:7419
+      FAKTORY_PROVIDER: FAKTORY_URL
+    depends_on:
+      - faktory
+
+volumes:
+  faktory-data:
+  hpr-config-data:
+  hpr-repositories-data:

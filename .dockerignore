@@ -1,0 +1,27 @@
+# crystal
+doc
+output
+bin
+Makefile
+README.md
+LICENSE
+
+# git
+.git
+.gitignore
+
+# editor
+.history
+.editorconfig
+
+# docker
+Dockerfile
+.env*
+.dockerignore
+
+# CI
+.cricalci
+.travis.yml
+
+# macOS
+.DS_Store
