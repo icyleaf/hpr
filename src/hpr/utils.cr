@@ -13,6 +13,11 @@ module Hpr
       File.join(Hpr.config.repository_path, name)
     end
 
+    def repository_path?(name : String) : String?
+      path = repository_path(name)
+      Dir.exists?(path) ? path : nil
+    end
+
     def gitlab_url(config : Config) : String
       uri = URI.parse config.gitlab.endpoint
       uri.path = nil
