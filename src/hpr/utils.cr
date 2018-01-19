@@ -21,7 +21,7 @@ module Hpr
     def repository_info(name : String)
       Dir.cd repository_path(name)
       url, mirror_url, latest_version = Utils.run_cmd "git remote get-url --push origin",
-                                                      "git remote get-url --push downstream",
+                                                      "git remote get-url --push mirror",
                                                       "git describe --abbrev=0 --tags 2>/dev/null",
                                                       echo: false
       {

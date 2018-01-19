@@ -6,7 +6,7 @@ shards:
 
   gitlab:
     github: icyleaf/gitlab.cr
-    version: 0.3.2
+    version: 0.3.3
 
   halite:
     github: icyleaf/halite

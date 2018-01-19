@@ -23,13 +23,13 @@ module Hpr
     private def setting_mirror_settings
       Dir.cd Utils.repository_path(name)
       Utils.run_cmd "git config credential.helper store",
-                    "git remote add downstream #{downstream_url}",
-                    "git config --add remote.downstream.push '+refs/heads/*:refs/heads/*'",
-                    "git config --add remote.downstream.push '+refs/remotes/tags/*:refs/remotes/tags/*'",
-                    "git config remote.downstream.mirror true"
+                    "git remote add mirror #{mirror_url}",
+                    "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'",
+                    "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'",
+                    "git config remote.mirror.mirror true"
     end
 
-    private def downstream_url
+    private def mirror_url
       gitlab_url = Utils.gitlab_url Hpr.config
       "#{gitlab_url}/#{Hpr.config.gitlab.group_name}/#{name}.git"
     end

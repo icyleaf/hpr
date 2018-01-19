@@ -12,5 +12,6 @@ module Hpr::API
     Kemal.run port
   end
 
+  include Entrance
   include Repository
 end

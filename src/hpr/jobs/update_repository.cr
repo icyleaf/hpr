@@ -9,7 +9,7 @@ module Hpr
 
       Dir.cd repository_path
       Utils.run_cmd "git fetch origin",
-                    "git push downstream"
+                    "git push mirror"
 
       update_schedule!
     end

@@ -2,6 +2,7 @@
 doc
 output
 bin
+repositories
 Makefile
 README.md
 LICENSE

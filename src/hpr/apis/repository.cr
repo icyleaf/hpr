@@ -1,5 +1,3 @@
-require "json"
-
 module Hpr::API::Repository
   @@client = Client.new
 
@@ -20,37 +18,43 @@ module Hpr::API::Repository
     name = env.params.url["name"]
     if Utils.repository_path?(name)
       status_code = 200
-      message = Utils.repository_info(name).to_json
+      message = Utils.repository_info(name)
     else
+      status_code = 408
       message = {
-        message: "Not found repository: #{name}."
-      }.to_json
-      status_code = 404
+        message: "Not found repository."
+      }
     end
 
     env.response.content_type = "application/json"
     env.response.status_code = status_code
-    message
+    message.to_json
   end
 
   post "/repositories" do |env|
     begin
-      jid = @@client.create_repository(env.params.body["url"], env.params.body["name"])
-      message = true.to_json
+      @@client.create_repository(
+        env.params.body["url"],
+        env.params.body["name"],
+        env.params.body.fetch("mirror_only", "false") == "true"
+      )
+      message = true
       status_code = 201
     rescue e : Exception
       message = {
         message: e.message,
-      }.to_json
+      }
       status_code = 400
     end
 
     env.response.content_type = "application/json"
     env.response.status_code = status_code
-    message
+    message.to_json
   end
 
   put "/repositories/:name" do |env|
+    @@client.update_repository(env.params.url["name"])
+
     env.response.content_type = "application/json"
     env.response.status_code = 200
     true.to_json

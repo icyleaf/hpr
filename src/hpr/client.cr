@@ -4,10 +4,12 @@ module Hpr
   class Client
     @user : JSON::Any
     @group : JSON::Any
+    @namespace : JSON::Any
 
     def initialize
       @user = current_user
       @group = current_group
+      @namespace = group_namespace
 
       determine_git!
       determine_repository_path!
@@ -23,30 +25,32 @@ module Hpr
       end
     end
 
-    def create_repository(url : String, name : String? = nil)
+    def create_repository(url : String, name : String? = nil, mirror_only = false)
       repo = Repository.new url
       repo.name = name if name
 
-      raise RepositoryExistsError.new "Exists Repository: #{repo.name}" if reopsitory_exists?(repo.name)
+      raise RepositoryExistsError.new "Exists Repository: #{repo.name}" if reopsitory_stored?(repo.name)
 
       loop do
         begin
-          Hpr.gitlab.create_project repo.name, {"namespace_id" => @group["id"].to_s}
+          Hpr.gitlab.create_project repo.name, {"namespace_id" => @namespace["id"].to_s}
           break
         rescue e : Gitlab::Error::BadRequest
           if (message = e.message) && message.includes?("still being deleted")
             sleep 1
+          else
+            raise e
           end
         end
-      end
+      end unless mirror_only
 
       CloneRepositoryJob.perform_async repo.url, repo.name
     end
 
     def update_repository(name : String)
-      raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_exists?(repo.name)
+      raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_stored?(name)
 
-      UpdateRepositoryJob.perform_aync name
+      UpdateRepositoryJob.perform_async name
     end
 
     def delete_repository(name : String)
@@ -66,7 +70,7 @@ module Hpr
       end
     end
 
-    def reopsitory_exists?(name)
+    def reopsitory_stored?(name)
       Dir.exists?(Utils.repository_path(name))
     end
 
@@ -78,6 +82,11 @@ module Hpr
       Hpr.gitlab.group Hpr.config.gitlab.group_name
     rescue Gitlab::Error::NotFound
       Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
+    end
+
+    private def group_namespace
+      r = Hpr.gitlab.get "namespaces/#{Hpr.config.gitlab.group_name}"
+      JSON.parse r.body
     end
 
     def determine_git!

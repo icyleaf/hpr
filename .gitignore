@@ -3,4 +3,4 @@
 /bin/
 /.shards/
 /repositories/
-/config/hpr.json
+/config/hpr*.json
