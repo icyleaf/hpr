@@ -14,10 +14,7 @@ module Hpr::API::Repository
 
     begin
       jid = @@client.create_repository(env.params.body["url"], env.params.body["name"])
-      message = {
-        result: true,
-        jid: jid
-      }.to_json
+      message = true.to_json
       status_code = 201
     rescue e : Exception
       message = {

@@ -9,6 +9,10 @@ module Hpr
       end
     end
 
+    def repository_path(name : String)
+      File.join(Hpr.config.repository_path, name)
+    end
+
     def gitlab_url(config : Config) : String
       uri = URI.parse config.gitlab.endpoint
       uri.path = nil

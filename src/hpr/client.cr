@@ -30,7 +30,7 @@ module Hpr
 
       loop do
         begin
-          Hpr.gitlab.create_project @user["id"].as_i, repo.name, {"namespace_id" => @group["id"].to_s}
+          Hpr.gitlab.create_project repo.name, {"namespace_id" => @group["id"].to_s}
           break
         rescue e : Gitlab::Error::BadRequest
           if (message = e.message) && message.includes?("still being deleted")
@@ -39,13 +39,13 @@ module Hpr
         end
       end
 
-      CloneRepositoryJob.perform_async repo.url, repo.name, Hpr.config
+      CloneRepositoryJob.perform_async repo.url, repo.name
     end
 
     def update_repository(name : String)
       raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_exists?(repo.name)
 
-      UpdateRepositoryJob.perform_aync name, Hpr.config
+      UpdateRepositoryJob.perform_aync name
     end
 
     def delete_repository(name : String)
@@ -56,7 +56,7 @@ module Hpr
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
-      DeleteRepositoryJob.perform_async name, Hpr.config
+      DeleteRepositoryJob.perform_async name
     end
 
     def delete_repository(all = true)
@@ -66,7 +66,17 @@ module Hpr
     end
 
     def reopsitory_exists?(name)
-      Dir.exists?(File.join(Hpr.config.repository_path, name))
+      Dir.exists?(Utils.repository_path(name))
+    end
+
+    private def current_user
+      Hpr.gitlab.user
+    end
+
+    private def current_group
+      Hpr.gitlab.group Hpr.config.gitlab.group_name
+    rescue Gitlab::Error::NotFound
+      Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
     end
 
     def determine_gitlab_configure!
@@ -82,16 +92,6 @@ module Hpr
       unless Dir.exists?(path)
         FileUtils.mkdir_p path
       end
-    end
-
-    private def current_user
-      Hpr.gitlab.user
-    end
-
-    private def current_group
-      Hpr.gitlab.group Hpr.config.gitlab.group_name
-    rescue Gitlab::Error::NotFound
-      Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
     end
   end
 end
