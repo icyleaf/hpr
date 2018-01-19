@@ -18,6 +18,20 @@ module Hpr
       Dir.exists?(path) ? path : nil
     end
 
+    def repository_info(name : String)
+      Dir.cd repository_path(name)
+      url, mirror_url, latest_version = Utils.run_cmd "git remote get-url --push origin",
+                                                      "git remote get-url --push downstream",
+                                                      "git describe --abbrev=0 --tags 2>/dev/null",
+                                                      echo: false
+      {
+        "name" => name,
+        "url" => url,
+        "mirror_url" => mirror_url,
+        "latest_version" => latest_version,
+      }
+    end
+
     def gitlab_url(config : Config) : String
       uri = URI.parse config.gitlab.endpoint
       uri.path = nil

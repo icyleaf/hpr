@@ -5,29 +5,25 @@ module Hpr::API::Repository
 
   get "/repositories" do |env|
     env.response.content_type = "application/json"
-    @@client.list_repositories.to_json
+    names = @@client.list_repositories
+    repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
+      obj << Utils.repository_info(name) if Utils.repository_path?(name)
+    end
+
+    {
+      total: repositories.size,
+      data: repositories
+    }.to_json
   end
 
   get "/repositories/:name" do |env|
     name = env.params.url["name"]
-    if repository_path = Utils.repository_path?(name)
+    if Utils.repository_path?(name)
       status_code = 200
-
-      Dir.cd repository_path
-      url, mirror_url = Utils.run_cmd "git remote get-url --push origin",
-                                      "git remote get-url --push downstream",
-                                      echo: false
-
-      puts url
-      puts mirror_url
-      message = {
-        name: name,
-        url: url,
-        mirror_url: mirror_url,
-      }.to_json
+      message = Utils.repository_info(name).to_json
     else
       message = {
-        message: "not found repository: #{name}"
+        message: "Not found repository: #{name}."
       }.to_json
       status_code = 404
     end
