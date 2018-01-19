@@ -12,7 +12,7 @@ dependencies:
   gitlab:
     github: icyleaf/gitlab.cr
   faktory_worker:
-    github: calebuharrison/faktory.cr
+    github: icyleaf/faktory.cr
     branch: master
   kemal:
     github: kemalcr/kemal

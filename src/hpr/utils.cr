@@ -4,7 +4,7 @@ module Hpr
 
     def run_cmd(*commands, echo = true)
       commands.each_with_object([] of String) do |command, obj|
-        puts "$ #{command}" if echo
+        Hpr.log.debug "$ #{command}" if echo
         obj << `#{command}`.strip
       end
     end
@@ -42,12 +42,12 @@ module Hpr
       count = 1
       loop do
         begin
-          puts "try ... #{count}" if verbose
+          Hpr.log.debug "try ... #{count}" if verbose
           break if count > max_connect
           return yield
           break
         rescue e : Exception
-          puts " * #{e.class}: #{e.message}"
+          Hpr.log.debug " * #{e.class}: #{e.message}"
           count += 1
           sleep 1
         end

@@ -3,6 +3,8 @@ require "kemal-basic-auth"
 require "./apis/*"
 
 module Hpr::API
+  CLIENT = Client.new
+
   def self.run(port = 8848)
     # Hpr.log.info "API Server now listening at localhost:8848, press Ctrl-C to stop"
 
