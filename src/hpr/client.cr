@@ -9,6 +9,7 @@ module Hpr
       @user = current_user
       @group = current_group
 
+      determine_git!
       determine_repository_path!
       determine_gitlab_configure!
     end
@@ -79,9 +80,14 @@ module Hpr
       Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
     end
 
+    def determine_git!
+      r = Utils.run_cmd "which git", echo: false
+      raise NotFoundGitError.new "Please install git." if r[0].empty?
+    end
+
     def determine_gitlab_configure!
-      raise NotRoleError.new "Please enable create group role" unless @user["can_create_group"].as_bool
-      raise NotRoleError.new "Please enable create project role" unless @user["can_create_project"].as_bool
+      raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
+      raise NotRoleError.new "Please enable create project role." unless @user["can_create_project"].as_bool
 
       ssh_keys = Hpr.gitlab.ssh_keys
       raise MissingSSHKeyError.new "Please add ssh key for '#{@user["name"]}' user." if ssh_keys.as_a.empty?

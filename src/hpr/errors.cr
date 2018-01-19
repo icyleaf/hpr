@@ -1,12 +1,13 @@
 module Hpr
   class Error < Exception; end
 
-  class NotRoleError < Error; end
+  class ClientError < Error; end
+  class NotFoundGitError < ClientError; end
+  class NotRoleError < ClientError; end
+  class UnkownURIError < ClientError; end
 
-  class MissingSSHKeyError < Error; end
-
-  class RepositoryExistsError < Error; end
-  class NotFoundRepositoryError < Error; end
-
-  class UnkownURIError < Error; end
+  class APIError < Error; end
+  class MissingSSHKeyError < APIError; end
+  class RepositoryExistsError < APIError; end
+  class NotFoundRepositoryError < APIError; end
 end
