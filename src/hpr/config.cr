@@ -4,6 +4,7 @@ module Hpr
       repository_path: {type: String, default: ""},
       schedule: Int64,
       api: Bool,
+      auth: AuthStruct,
       gitlab: GitlabStruct
     )
 
@@ -23,6 +24,14 @@ module Hpr
         project_wall: Bool,
         project_snippet: Bool,
         project_merge_request: Bool
+      )
+    end
+
+    class AuthStruct
+      JSON.mapping(
+        enable: Bool,
+        user: {type: String, default: ""},
+        password: {type: String, default: ""},
       )
     end
   end

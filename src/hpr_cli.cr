@@ -1,8 +1,8 @@
 require "./hpr"
 
 spawn do
-  worker = Faktory::Worker.new
-  worker.run
+  Hpr::API.run
 end
 
-Hpr::API.run
+worker = Faktory::Worker.new
+worker.run

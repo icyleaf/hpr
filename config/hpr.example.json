@@ -1,7 +1,11 @@
 {
   "schedule": 3600,
   "api": false,
-
+  "auth": {
+    "enable": false,
+    "user": "hpr",
+    "password": "hpr"
+  },
   "gitlab": {
     "endpoint": "http://gitlab.example.com/api/v3",
     "private_token": "abc",
