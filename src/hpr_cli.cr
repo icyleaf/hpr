@@ -1,5 +1,8 @@
 require "./hpr"
 
-puts "Hpr worker is running ..."
-worker = Faktory::Worker.new
-worker.run
+spawn do
+  worker = Faktory::Worker.new
+  worker.run
+end
+
+Hpr::API.run

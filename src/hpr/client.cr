@@ -9,7 +9,7 @@ module Hpr
     @user : JSON::Any
     @group : JSON::Any
 
-    def initialize(config_file : String)
+    def initialize(config_file = "config/hpr.json")
       @config = Config.load config_file
       @gitlab = Gitlab.client(@config.gitlab.endpoint, @config.gitlab.private_token)
       @user = current_user

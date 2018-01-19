@@ -14,6 +14,10 @@ dependencies:
   faktory_worker:
     github: calebuharrison/faktory.cr
     branch: master
+  kemal:
+    github: kemalcr/kemal
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
 
 crystal: 0.24.1
 

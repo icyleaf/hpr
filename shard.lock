@@ -6,9 +6,25 @@ shards:
 
   gitlab:
     github: icyleaf/gitlab.cr
-    version: 0.3.1
+    version: 0.3.2
 
   halite:
     github: icyleaf/halite
     version: 0.3.1
+
+  kemal:
+    github: kemalcr/kemal
+    version: 0.22.0
+
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
+    version: 0.2.0
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.4.0
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.8
 
