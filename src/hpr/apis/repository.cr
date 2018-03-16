@@ -1,6 +1,7 @@
 module Hpr::API::Repository
   @@client = Client.new
 
+  # List all repositories
   get "/repositories" do |env|
     env.response.content_type = "application/json"
     names = @@client.list_repositories
@@ -14,6 +15,7 @@ module Hpr::API::Repository
     }.to_json
   end
 
+  # Get a repository by given name
   get "/repositories/:name" do |env|
     name = env.params.url["name"]
     if Utils.repository_path?(name)
@@ -31,11 +33,13 @@ module Hpr::API::Repository
     message.to_json
   end
 
+  # Create new repository
   post "/repositories" do |env|
     begin
+      url = env.params.body["url"]
+      name = env.params.body["name"]? || url.split("/")[-2..-1].join("-").gsub(".git", "")
       @@client.create_repository(
-        env.params.body["url"],
-        env.params.body["name"],
+        url, name,
         env.params.body.fetch("mirror_only", "false") == "true"
       )
       message = true
@@ -52,6 +56,7 @@ module Hpr::API::Repository
     message.to_json
   end
 
+  # Update a repository by given name
   put "/repositories/:name" do |env|
     @@client.update_repository(env.params.url["name"])
 
@@ -60,6 +65,7 @@ module Hpr::API::Repository
     true.to_json
   end
 
+  # Remove a repository by given name
   delete "/repositories/:name" do |env|
     @@client.delete_repository env.params.url["name"]
 

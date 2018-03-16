@@ -85,7 +85,7 @@ module Hpr
     end
 
     private def group_namespace
-      r = Hpr.gitlab.get "namespaces/#{Hpr.config.gitlab.group_name}"
+      r = Hpr.gitlab.get "groups/#{Hpr.config.gitlab.group_name}"
       JSON.parse r.body
     end
 
