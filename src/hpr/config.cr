@@ -19,9 +19,9 @@ module Hpr
         endpoint: String,
         private_token: String,
         group_name: String,
+        project_public: Bool,
         project_issue: Bool,
         project_wiki: Bool,
-        project_wall: Bool,
         project_snippet: Bool,
         project_merge_request: Bool
       )

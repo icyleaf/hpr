@@ -16,7 +16,6 @@
     "project_issue": false,
     "project_wiki": false,
     "project_merge_request": false,
-    "project_snippet": false,
-    "project_wall": false
+    "project_snippet": false
   }
 }
