@@ -8,6 +8,8 @@ RUN shards build --production && \
     mkdir -p /app/repositories && \
     rm -rf src lib bin .shards shard.lock shard.yml spec
 
-VOLUME ["/app/repositories"]
+VOLUME "/app/config"
+VOLUME "/app/repositories"
 
-CMD ["/hpr"]
+ENTRYPOINT ["/hpr"]
+CMD ["-s"]

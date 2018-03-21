@@ -7,6 +7,7 @@ module Hpr
     class Error < Exception; end
 
     enum Action
+      None
       Server
       List
       Create
@@ -19,27 +20,18 @@ module Hpr
     def initialize(args = ARGV)
       @client = Client.new
 
-      @action = Action::Server
+      @action = Action::None
       @repo_url = ""
       @repo_name = ""
-
       @mirror_only = false
 
-      OptionParser.parse(args.dup) do |parser|
+      need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
+
+      OptionParser.parse(args) do |parser|
         parser.banner = usage
 
-        parser.unknown_args do |unknown_args|
-          need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
-
-          if need_flags
-            raise Error.new("Missing url argument.") if unknown_args.size.zero?
-
-            @repo_url = unknown_args.first
-          end
-        end
-
-        parser.separator("\n Actions:\n")
-        parser.on("-s", "--server", "Run a web api server (default)") { @action = Action::Server }
+        parser.separator("\nActions:\n")
+        parser.on("-s", "--server", "Run a web api server (port 8848)") { @action = Action::Server }
         parser.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
         parser.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
         parser.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
@@ -56,12 +48,20 @@ module Hpr
         parser.on("-h", "--help", "Show this help") { puts parser }
 
         parser.separator("\n#{version}")
+
+        parser.unknown_args do |unknown_args|
+          if need_flags
+            raise Error.new("Missing url argument.") if unknown_args.size.zero?
+
+            @repo_url = unknown_args.first
+          end
+        end
       end
 
-      run_action
+      run if @action != Action::None
     end
 
-    private def run_action
+    private def run
       case @action
       when Action::Server
         start_server
@@ -127,7 +127,7 @@ module Hpr
     end
 
     private def usage
-      "Usage: hpr <action> [--name=<name>] <url>"
+      "Usage: hpr <action> [--name=<name>] [<url>]"
     end
 
     private def version

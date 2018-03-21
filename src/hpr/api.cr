@@ -8,7 +8,9 @@ module Hpr::API
   def self.run(port = 8848)
     Hpr.log.info "API Server now listening at localhost:8848, press Ctrl-C to stop"
 
-    basic_auth Hpr.config.auth.user, Hpr.config.auth.password if Hpr.config.basic_auth.enable
+    if Hpr.config.basic_auth.enable
+      basic_auth Hpr.config.basic_auth.user, Hpr.config.basic_auth.password
+    end
 
     Kemal.config.logging = false
     Kemal.config.env = "production"

@@ -39,7 +39,7 @@ I 2018-03-21T09:33:24.542Z Web server now listening on port 7420
 执行 hpr 可在本地允许一个 Web API 服务（端口号 `8848`)：
 
 ```bash
-$ hpr
+$ hpr --server
        _
       | |__  _ __  _ __
       | '_ \| '_ \| '__|

@@ -34,7 +34,7 @@ I 2018-03-21T09:33:24.542Z Web server now listening on port 7420
 hpr support a web api service (port `8848`) by default, run it:
 
 ```bash
-$ hpr
+$ hpr --server
        _
       | |__  _ __  _ __
       | '_ \| '_ \| '__|
