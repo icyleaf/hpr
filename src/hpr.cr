@@ -3,6 +3,7 @@ require "gitlab"
 
 module Hpr
   CONFIG_FILE = "config/hpr.json"
+
   @@config : Config | Nil
   def self.config
     @@config ||= Config.load(CONFIG_FILE)
@@ -15,8 +16,10 @@ module Hpr
     @@gitlab.not_nil!
   end
 
-  @@log_instance = Logger.new(STDOUT)
+  @@log_instance : Logger | Nil
   def self.log
-    @@log_instance
+    @@log_instance ||= Logger.new(STDOUT)
+    @@log_instance.not_nil!.progname = "hpr"
+    @@log_instance.not_nil!
   end
 end

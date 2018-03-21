@@ -1,8 +1,8 @@
 version: 1.0
 shards:
   faktory_worker:
-    github: calebuharrison/faktory.cr
-    commit: de888f661acf7fa23d80fcff5960c5ac1bd03968
+    github: icyleaf/faktory.cr
+    commit: eefb2bd8b8ab0efc17f776ebe9e3437a3e1592ce
 
   gitlab:
     github: icyleaf/gitlab.cr

@@ -6,7 +6,7 @@ authors:
 
 targets:
   hpr:
-    main: src/hpr_cli.cr
+    main: src/cli.cr
 
 dependencies:
   gitlab:
@@ -19,6 +19,6 @@ dependencies:
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
 
-crystal: 0.24.1
+crystal: 0.24.2
 
 license: MIT
