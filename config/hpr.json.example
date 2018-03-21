@@ -1,10 +1,9 @@
 {
   "schedule": 3600,
-  "api": false,
-  "auth": {
+  "basic_auth": {
     "enable": false,
     "user": "hpr",
-    "password": "hpr"
+    "password": "p@ssw0rd"
   },
   "gitlab": {
     "endpoint": "http://gitlab.example.com/api/v3",

@@ -1,24 +1,36 @@
-![hpr-logo](support/hpr.png)
+<p align="center">
+  <a href="https://github.com/icyleaf/hpr">
+    <img alt="docsify" src="./docs/_media/icon.png">
+  </a>
+</p>
 
-# ḫpr
+<p align="center">
+  ḫpr
+  <br />
+  Mirror git repositories to self-host gitlab services.
+</p>
 
-![Status](https://img.shields.io/badge/status-WIP-yellow.svg)
-![Language](https://img.shields.io/badge/language-crystal-776791.svg)
-[![License](https://img.shields.io/github/license/icyleaf/hpr.svg)](https://github.com/icyleaf/hpr/blob/master/LICENSE)
+<p align="center">
+  <img alt="Project Status" src="https://img.shields.io/badge/status-WIP-yellow.svg">
+  <a href="https://crystal-lang.org/"><img alt="Langugea" src="https://img.shields.io/badge/language-crystal-776791.svg"></a>
+  <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/hpr.svg"></a>
+</p>
 
-Mirror git repositories to self-host gitlab services. It's best choice for any repository can not access in China.
+## Links
 
-> The project name and logo is source from [Dung beetle](https://en.wikipedia.org/wiki/Dung_beetle#Scarab_in_ancient_Egypt)
+* [Documentation](https://icyleaf.github.io/hpr)
 
-## Deploy
+## Features
 
-Packed all dependenices into Docker, easy peasy:
+* Support API layer
+* Support Cli tools
+* Schedule update to date all repositores
+* Mirror any git repository
+* Support any version of gitlab
 
-```
-$ docker-compose up -d
-```
+## Quick start
 
-That's all!
+Look at [this tutorial](https://icyleaf.github.io/hpr/#/?id=usage).
 
 ## Contributing
 
@@ -31,3 +43,7 @@ That's all!
 ## Contributors
 
 - [icyleaf](https://github.com/icyleaf) - creator, maintainer
+
+# About Project's name and icon
+
+The project name and logo is source from [Dung beetle](https://en.wikipedia.org/wiki/Dung_beetle#Scarab_in_ancient_Egypt)

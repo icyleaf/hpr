@@ -3,8 +3,7 @@ module Hpr
     JSON.mapping(
       repository_path: {type: String, default: ""},
       schedule: Int64,
-      api: Bool,
-      auth: AuthStruct,
+      basic_auth: BasicAuthStruct,
       gitlab: GitlabStruct
     )
 
@@ -27,7 +26,7 @@ module Hpr
       )
     end
 
-    class AuthStruct
+    class BasicAuthStruct
       JSON.mapping(
         enable: Bool,
         user: {type: String, default: ""},
