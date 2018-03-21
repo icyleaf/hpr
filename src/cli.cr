@@ -88,21 +88,39 @@ module Hpr
     end
 
     private def create_repository
-      @client.create_repository(@repo_url, @repo_name, (@mirror_only == true ? "true" : "false"))
+      spawn do
+        @client.create_repository(@repo_url, @repo_name, (@mirror_only == true ? "true" : "false"))
+      end
+
+      start_worker
     end
 
     private def update_repository
-      @client.update_repository(@repo_name)
+      spawn do
+        @client.update_repository(@repo_name)
+      end
+
+      start_worker
     end
 
     private def delete_repository
-      @client.delete_repository(@repo_name)
+      spawn do
+        @client.delete_repository(@repo_name)
+      end
+
+      start_worker
     end
 
     private def start_server
       spawn do
         Hpr::API.run
       end
+
+      start_worker
+    end
+
+    private def start_worker
+      print_banner
 
       worker = Faktory::Worker.new
       worker.run
@@ -114,6 +132,17 @@ module Hpr
 
     private def version
       "hpr v#{Hpr::VERSION} in Crystal v#{Crystal::VERSION}"
+    end
+
+    private def print_banner
+      puts <<-EOF
+       _
+      | |__  _ __  _ __
+      | '_ \\| '_ \\| '__|
+      | | | | |_) | |
+      |_| |_| .__/|_|
+            |_|
+EOF
     end
   end
 end
