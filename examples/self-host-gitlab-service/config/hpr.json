@@ -1,0 +1,21 @@
+{
+  "schedule": 3600,
+  "basic_auth": {
+    "enable": false,
+    "user": "hpr",
+    "password": "p@ssw0rd"
+  },
+  "gitlab": {
+    "ssh_port": 10022,
+    "endpoint": "http://localhost:10080/api/v3",
+    "private_token": "<change me>",
+
+    "group_name": "hpr-mirrors",
+
+    "project_public": false,
+    "project_issue": false,
+    "project_wiki": false,
+    "project_merge_request": false,
+    "project_snippet": false
+  }
+}
