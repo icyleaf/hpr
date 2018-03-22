@@ -22,6 +22,9 @@ services:
     environment:
       FAKTORY_URL: tcp://:password@faktory:7419
       FAKTORY_PROVIDER: FAKTORY_URL
+
+      HPR_SSH_HOST: git.example.com
+      HPR_SSH_PORT: 10022
     depends_on:
       - faktory
 

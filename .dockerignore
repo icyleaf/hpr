@@ -1,7 +1,10 @@
 # crystal
-doc
+.cr
+docs
 output
 bin
+lib
+spec
 repositories
 Makefile
 README.md

@@ -2,13 +2,13 @@
 
 # ḫpr <small>0.1.0</small>
 
-> Mirror git repositories to self-host gitlab services.
+> 镜像任意 git 仓库到 gitlab 的同步工具，具有静态加速、定时更新的功能。
 
-* Support API layer
-* Support Cli tools
-* Schedule update to date all repositores
-* Mirror any git repository
-* Support any version of gitlab
+* 支持 API 接口，可用于远程控制不仅限于终端使用
+* 支持终端命令控制，方便临时使用
+* 定时更新镜像的仓库，时间可调，告别不靠谱的 crontab
+* 几乎支持所有的 git 托管的仓库
+* 使用可独立部署的 Gitlab 作为镜像平台。
 
-[GitHub](https://github.com/icyleaf/hpr/)
-[Get Started](#ḫpr)
+[项目源码](https://github.com/icyleaf/hpr/)
+[快速上手](#ḫpr)
