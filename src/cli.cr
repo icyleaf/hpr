@@ -27,7 +27,7 @@ module Hpr
 
       need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
 
-      OptionParser.parse(args) do |parser|
+      parser = OptionParser.parse(args) do |parser|
         parser.banner = usage
 
         parser.separator("\nActions:\n")
@@ -58,7 +58,11 @@ module Hpr
         end
       end
 
-      run if @action != Action::None
+      if @action != Action::None
+        run
+      else
+        puts parser
+      end
     end
 
     private def run
@@ -136,12 +140,12 @@ module Hpr
 
     private def print_banner
       puts <<-EOF
-       _
-      | |__  _ __  _ __
-      | '_ \\| '_ \\| '__|
-      | | | | |_) | |
-      |_| |_| .__/|_|
-            |_|
+  _
+ | |__  _ __  _ __
+ | '_ \\| '_ \\| '__|
+ | | | | |_) | |
+ |_| |_| .__/|_|
+       |_|
 EOF
     end
   end

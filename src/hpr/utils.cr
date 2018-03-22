@@ -32,12 +32,6 @@ module Hpr
       }
     end
 
-    def gitlab_url(config : Config) : String
-      uri = URI.parse config.gitlab.endpoint
-      uri.path = nil
-      uri.to_s
-    end
-
     def tryable(max_connect = 3, verbose = false, &block)
       count = 1
       loop do
