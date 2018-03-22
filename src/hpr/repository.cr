@@ -2,41 +2,58 @@ require "uri"
 
 module Hpr
   struct Repository
-    property user : String
-    property name : String
     property url : String
+    property namespace : String | Nil
+    property name : String
 
-    def initialize(uri : String)
-      @user, @name, @url = parse(uri)
+    def self.parse(url : String)
+      new(url)
     end
 
-    private def parse(uri : String)
-      user = name = url = ""
-      if uri.starts_with?("git@")
-        # git@github.com:icyleaf/hpr.git
-        # git@gitlab.org:icyleaf/hpr.git
-
-        git_user, host_with_path = uri.split("@")
-        host, path = host_with_path.split(":")
-
-        name = path.split("/")[-2..-1].join("-").gsub(".git", "")
-        user = path.split("/")[0]
-        url = "https://#{host}/#{path}"
-      elsif uri.starts_with?("http")
-        # https://github.com/icyleaf/hpr.git
-        # http://gitlab.com/icyleaf/hpr.git
-
-        url = URI.parse uri
-        if path = url.path
-          path = path[1..-1]
-          name = path.split("/")[-2..-1].join("-").gsub(".git", "")
-          user = name.split("-")[0]
-        end
-      else
-        raise UnkownURIError.new "Not support current url: #{uri}"
+    def initialize(@url : String)
+      paths = path(@url).split("/")
+      @name = strip_tail paths.last
+      @namespace = if paths.size >= 2
+        strip_tail paths[-2]
       end
+    end
 
-      [user, name, url.to_s]
+    def mirror_name
+      if @namespace
+        "#{@namespace}-#{@name}"
+      else
+        @name
+      end
+    end
+
+    private def path(url : String) : String
+      case url
+      when .starts_with?("git@"), .starts_with?("ssh"), .starts_with?("git://")
+        url.split("@").last.split(":").last
+      when .starts_with?("http")
+        uri = URI.parse url
+        path = uri.path.not_nil!
+        path.starts_with?("/") ? path[1..-1] : path
+      else
+        raise UnkownURIError.new "Not support repository url: #{url}, avaiable in ssh/http(s) protocols."
+      end
+    end
+
+    private def extract_name_and_user(path : String)
+
+      namespace = if paths.size >= 2
+                    strip_tail paths[-2]
+                  else
+                    ""
+                  end
+      name = strip_tail paths.last
+
+      [namespace, name]
+    end
+
+    private def strip_tail(text : String)
+      text.gsub(".git", "")
+          .gsub("~", "")
     end
   end
 end

@@ -27,13 +27,13 @@ module Hpr
 
     def create_repository(url : String, name : String? = nil, mirror_only = false)
       repo = Repository.new url
-      repo.name = name if name
+      repo.mirror_name = name if name
 
-      raise RepositoryExistsError.new "Exists Repository: #{repo.name}" if reopsitory_stored?(repo.name)
+      raise RepositoryExistsError.new "Exists Repository: #{repo.mirror_name}" if reopsitory_stored?(repo.mirror_name)
 
       loop do
         begin
-          Hpr.gitlab.create_project repo.name, {
+          Hpr.gitlab.create_project repo.mirror_name, {
             "namespace_id" => @namespace["id"].to_s,
             "visibility" => (Hpr.config.gitlab.project_public ? "public" : "private"),
             "issues_enabled" => Hpr.config.gitlab.project_issue.to_s,
@@ -52,7 +52,7 @@ module Hpr
         end
       end unless mirror_only
 
-      CloneRepositoryJob.perform_async repo.url, repo.name
+      CloneRepositoryJob.perform_async repo.url, repo.mirror_name
     end
 
     def update_repository(name : String)
