@@ -12,7 +12,7 @@ module Hpr
 
   @@gitlab : Gitlab::Client | Nil
   def self.gitlab
-    @@gitlab ||= Gitlab.client(config.gitlab.endpoint, config.gitlab.private_token)
+    @@gitlab ||= Gitlab.client(config.gitlab.endpoint.to_s, config.gitlab.private_token)
     @@gitlab.not_nil!
   end
 

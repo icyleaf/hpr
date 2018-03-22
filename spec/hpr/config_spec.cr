@@ -1,6 +1,6 @@
 require "../spec_helper.cr"
 
-CONFIG_FILE = "./config/hpr.example.json"
+CONFIG_FILE = "./config/hpr.json.example"
 
 describe Hpr::Config do
   describe ".load" do
@@ -10,6 +10,10 @@ describe Hpr::Config do
       config.repository_path.should eq File.expand_path("repositories")
 
       config.gitlab.should be_a Hpr::Config::GitlabStruct
+      config.gitlab.ssh_port.should eq 22
+      config.gitlab.endpoint.should be_a URI
+      config.gitlab.endpoint.scheme.should eq "http"
+      config.gitlab.endpoint.port.should eq nil
       config.gitlab.group_name.should eq "mirrors"
 
       config.repository_path = "/path/to/repositories"

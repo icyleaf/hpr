@@ -6,6 +6,7 @@
     "password": "p@ssw0rd"
   },
   "gitlab": {
+    "ssh_port": 22,
     "endpoint": "http://gitlab.example.com/api/v3",
     "private_token": "abc",
 

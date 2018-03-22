@@ -15,7 +15,8 @@ module Hpr
 
     class GitlabStruct
       JSON.mapping(
-        endpoint: String,
+        ssh_port: Int32,
+        endpoint: { type: String, getter: false },
         private_token: String,
         group_name: String,
         project_public: Bool,
@@ -24,6 +25,10 @@ module Hpr
         project_snippet: Bool,
         project_merge_request: Bool
       )
+
+      def endpoint : URI
+        URI.parse @endpoint
+      end
     end
 
     class BasicAuthStruct
