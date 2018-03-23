@@ -10,6 +10,7 @@ module Hpr
     private def clone_and_push!
       clone_repository
       setting_mirror_settings_and_push
+      update_schedule
     end
 
     private def clone_repository
@@ -26,7 +27,22 @@ module Hpr
                     "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'",
                     "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'",
                     "git config remote.mirror.mirror true",
-                    "git push mirror"
+                    "git config hpr.status 'idle'",
+                    "git config hpr.created '#{Utils.current_datetime}'",
+                    "git push mirror",
+                    "git config hpr.status 'busy'",
+                    "git config hpr.updated '#{Utils.current_datetime}'",
+                    "git config hpr.status 'idle'"
+    end
+
+    private def update_schedule
+      scheduled = Time.now + Time::Span.new(0, 0, Hpr.config.schedule)
+      UpdateRepositoryJob.perform_async(name) do |options|
+        options.at scheduled
+      end
+
+      Dir.cd Utils.repository_path(name)
+      Utils.run_cmd "git config hpr.scheduled '#{scheduled.to_s("%F %T %z")}'"
     end
 
     private def mirror_ssh_url

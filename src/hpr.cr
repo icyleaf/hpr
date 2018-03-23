@@ -19,6 +19,7 @@ module Hpr
   @@log_instance : Logger | Nil
   def self.log
     @@log_instance ||= Logger.new(STDOUT)
+    @@log_instance.not_nil!.level = Logger::DEBUG
     @@log_instance.not_nil!.progname = "hpr"
     @@log_instance.not_nil!
   end
