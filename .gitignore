@@ -1,6 +1,8 @@
 /doc/
 /lib/
 /bin/
+/deps/
 /.shards/
 /repositories/
 /config/hpr*.json
+hpr

@@ -18,7 +18,7 @@ services:
       - 8848:8848
     volumes:
       - ./config:/app/config
-      - ./repositories:/app/repositories
+      - hpr-data:/app/repositories
     environment:
       FAKTORY_URL: tcp://:password@faktory:7419
       FAKTORY_PROVIDER: FAKTORY_URL
@@ -27,3 +27,4 @@ services:
 
 volumes:
   faktory-data:
+  hpr-data:

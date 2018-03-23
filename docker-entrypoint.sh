@@ -1,12 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 [[ $DEBUG == true ]] && set -x
 
 cleanup_workspace() {
   mkdir -p /app/repositories
-  mv /app/bin/hpr /app
-  cd /app && rm -rf .shards bin docs lib script src shard.yml shard.lock
 }
 
 generate_ssh_key() {

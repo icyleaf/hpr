@@ -1,18 +1,17 @@
-FROM icyleafcn/crystal:latest
+FROM icyleafcn/alpine:3.7
 
-COPY ./script/docker-entrypoint.sh /entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY hpr /app/hpr
+COPY deps/ /
 
-ADD . /app
 WORKDIR /app
 
-RUN shards build --production && \
-    chmod 755 /entrypoint.sh && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --update --no-cache git bash openssh-client
 
 VOLUME ["/app/config", "/app/repositories"]
 
 EXPOSE 8848/tcp
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["hpr:init"]
