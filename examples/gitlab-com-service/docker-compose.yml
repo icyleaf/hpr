@@ -4,21 +4,16 @@ services:
   faktory:
     image: contribsys/faktory
     command: /faktory -b 0.0.0.0:7419 -e production
-    ports:
-      - 7419:7419
-      - 7420:7420
     volumes:
       - faktory-data:/var/lib/faktory
     environment:
       FAKTORY_PASSWORD: "password"
   hpr:
-    build: ../../
     image: icyleafcn/hpr
     ports:
       - 8848:8848
     volumes:
       - ./config:/app/config
-      - hpr-data:/app/repositories
     environment:
       FAKTORY_URL: tcp://:password@faktory:7419
       FAKTORY_PROVIDER: FAKTORY_URL
@@ -27,4 +22,3 @@ services:
 
 volumes:
   faktory-data:
-  hpr-data:

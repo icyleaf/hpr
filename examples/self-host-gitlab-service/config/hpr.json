@@ -7,8 +7,8 @@
   },
   "gitlab": {
     "ssh_port": 10022,
-    "endpoint": "http://localhost:10080/api/v3",
-    "private_token": "<change me>",
+    "endpoint": "http://localhost:10080/api/v4",
+    "private_token": "sLosyZeesafstajxnBxJ",
 
     "group_name": "hpr-mirrors",
 
