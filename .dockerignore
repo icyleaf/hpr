@@ -1,11 +1,13 @@
 # crystal
-.cr
+main.cr
 docs
 output
+config
 bin
 lib
 spec
 repositories
+examples
 Makefile
 README.md
 LICENSE
@@ -19,6 +21,7 @@ LICENSE
 .editorconfig
 
 # docker
+docker-compose.yml
 Dockerfile
 .env*
 .dockerignore
