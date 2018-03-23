@@ -37,7 +37,7 @@ module Hpr::API::Repository
   post "/repositories" do |env|
     begin
       url = env.params.body["url"]
-      name = env.params.body["name"]? || url.split("/")[-2..-1].join("-").gsub(".git", "")
+      name = env.params.body["name"]?
       @@client.create_repository(
         url, name,
         env.params.body.fetch("mirror_only", "false") == "true"
