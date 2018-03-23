@@ -8,7 +8,7 @@
   "gitlab": {
     "ssh_port": 22,
     "endpoint": "http://gitlab.example.com/api/v3",
-    "private_token": "abc",
+    "private_token": "<change-me>",
 
     "group_name": "mirrors",
 

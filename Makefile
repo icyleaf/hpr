@@ -9,7 +9,7 @@ release:  ## Docker release image
 	docker container cp extract:/app/deps ./deps
 	docker container rm -f extract
 
-	docker build --no-cache -t icyleafcn/hpr:0.1.0 .
+	docker build --no-cache -t icyleafcn/hpr:0.2.0 .
 	rm -rf hpr deps
 
 clean:

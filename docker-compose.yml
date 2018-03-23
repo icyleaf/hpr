@@ -12,7 +12,7 @@ services:
     environment:
       FAKTORY_PASSWORD: "password"
   hpr:
-    image: icyleafcn/hpr:0.1.0
+    image: icyleafcn/hpr:0.2.0
     ports:
       - 8848:8848
     volumes:
