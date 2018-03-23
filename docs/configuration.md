@@ -1,4 +1,4 @@
-# hpr 配置
+# 配置
 
 hpr 默认提供了一个模板文件: `config/hpr.json.example`，根据自己的需要进行修改。
 

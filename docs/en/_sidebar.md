@@ -1,0 +1,5 @@
+- Getting started
+  - [Quick start](quickstart.md)
+- Guide
+  - [Configuration](configuration.md)
+  - [API](api.md)
