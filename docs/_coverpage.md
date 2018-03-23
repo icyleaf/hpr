@@ -10,5 +10,4 @@
 * 几乎支持所有的 git 托管的仓库
 * 使用可独立部署的 Gitlab 作为镜像平台。
 
-[项目源码](https://github.com/icyleaf/hpr/)
 [快速上手](#ḫpr)
