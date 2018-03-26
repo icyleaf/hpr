@@ -8,6 +8,8 @@ services:
       - faktory-data:/var/lib/faktory
     environment:
       FAKTORY_PASSWORD: "password"
+    networks:
+      - hpr
 
   hpr:
     image: icyleafcn/hpr
@@ -19,13 +21,18 @@ services:
     environment:
       FAKTORY_URL: tcp://:password@faktory:7419
       FAKTORY_PROVIDER: FAKTORY_URL
-      HPR_SSH_HOST: localhost
-      HPR_SSH_PORT: 10022
+      HPR_SSH_HOST: gitlab
+      HPR_SSH_PORT: 22
     depends_on:
       - faktory
     networks:
-      - tier
+      - hpr
 
 volumes:
   faktory-data:
   hpr-repositories:
+
+networks:
+  hpr:
+    external:
+      name: selfhost_gitlab

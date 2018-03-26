@@ -3,3 +3,4 @@
 - Guide
   - [Configuration](configuration.md)
   - [API](api.md)
+  - [Examples](examples.md)

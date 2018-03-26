@@ -6,9 +6,9 @@
     "password": "p@ssw0rd"
   },
   "gitlab": {
-    "ssh_port": 10022,
-    "endpoint": "http://localhost:10080/api/v4",
-    "private_token": "sLosyZeesafstajxnBxJ",
+    "ssh_port": 22,
+    "endpoint": "http://gitlab/api/v4",
+    "private_token": "64detE_HSNwzLHycDxGj",
 
     "group_name": "hpr-mirrors",
 

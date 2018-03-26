@@ -3,3 +3,4 @@
 - 指南详解
   - [配置](configuration.md)
   - [API 接口](api.md)
+  - [范例讲解](examples.md)
