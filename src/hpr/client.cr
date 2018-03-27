@@ -1,4 +1,5 @@
 require "file_utils"
+require "json"
 
 module Hpr
   class Client
