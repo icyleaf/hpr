@@ -117,7 +117,6 @@ module Hpr
 
     private def start_server
       print_banner
-
       start_worker
 
       Hpr::API.run
