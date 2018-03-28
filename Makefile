@@ -6,7 +6,7 @@ all: build release
 build: clean ## Docker build image
 	docker build -t $(hpr_image_name):build -f Dockerfile.build .
 
-release:  ## Docker release image
+release: build ## Docker release image
 	docker container create --name extract icyleafcn/hpr:build
 	docker container cp extract:/app/bin/hpr ./hpr
 	docker container cp extract:/app/deps ./deps
@@ -15,7 +15,7 @@ release:  ## Docker release image
 	docker build --no-cache -t $(hpr_image_name):$(hpr_version) .
 	rm -rf hpr deps
 
-publish:
+publish: release
 	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
 	docker push $(hpr_image_name):latest
 	docker push $(hpr_image_name):$(hpr_version)
