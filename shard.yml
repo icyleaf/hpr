@@ -11,8 +11,8 @@ targets:
 dependencies:
   gitlab:
     github: icyleaf/gitlab.cr
-  faktory_worker:
-    github: icyleaf/faktory.cr
+  sidekiq:
+    github: icyleaf/sidekiq.cr
     branch: master
   kemal:
     github: kemalcr/kemal

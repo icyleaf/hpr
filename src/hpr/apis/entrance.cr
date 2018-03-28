@@ -7,8 +7,6 @@ module Hpr::API::Entrance
   end
 
   get "/info" do |env|
-    faktory = Faktory.info
-
     env.response.content_type = "application/json"
 
     names = CLIENT.list_repositories
@@ -21,7 +19,9 @@ module Hpr::API::Entrance
           entry: names
         }
       },
-      faktory: JSON.parse(faktory)["faktory"],
+      jobs: {
+        todo: "dependence"
+      }
     }.to_json
   end
 end

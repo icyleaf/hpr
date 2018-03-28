@@ -3,6 +3,7 @@
 /bin/
 /deps/
 /.shards/
+/logs/
 /repositories/
 /config/hpr*.json
 hpr

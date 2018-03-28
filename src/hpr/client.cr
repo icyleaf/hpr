@@ -54,13 +54,13 @@ module Hpr
         end
       end unless mirror_only
 
-      CloneRepositoryJob.perform_async repo.url, project_name
+      CloneRepositoryWorker.async.perform repo.url, project_name
     end
 
     def update_repository(name : String)
       raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_stored?(name)
 
-      UpdateRepositoryJob.perform_async name
+      UpdateRepositoryWorker.async.perform name
     end
 
     def delete_repository(name : String)
@@ -71,7 +71,7 @@ module Hpr
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
-      DeleteRepositoryJob.perform_async name
+      DeleteRepositoryWorker.async.perform name
     end
 
     def delete_repository(all = true)
