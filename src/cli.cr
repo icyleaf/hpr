@@ -116,18 +116,16 @@ module Hpr
     end
 
     private def start_server
-      spawn do
-        Hpr::API.run
-      end
-
+      print_banner
       start_worker
+
+      Hpr::API.run
     end
 
     private def start_worker
-      print_banner
-
-      worker = Faktory::Worker.new
-      worker.run
+      spawn do
+        Hpr::Worker.run
+      end
     end
 
     private def usage

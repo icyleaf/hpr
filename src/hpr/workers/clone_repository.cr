@@ -1,29 +1,28 @@
 module Hpr
-  struct CloneRepositoryJob < Faktory::Job
-    arg url : String
-    arg name : String
+  struct CloneRepositoryWorker
+    include Sidekiq::Worker
 
-    def perform
-      clone_and_push!
+    def perform(url : String, name : String)
+      clone_and_push!(url, name)
     end
 
-    private def clone_and_push!
-      clone_repository
-      setting_mirror_settings_and_push
-      update_schedule
+    private def clone_and_push!(url, name)
+      clone_repository(url, name)
+      setting_mirror_settings_and_push(url, name)
+      update_schedule(url, name)
     end
 
-    private def clone_repository
+    private def clone_repository(url, name)
       repository_path = Hpr.config.repository_path
       Dir.cd repository_path
 
       Utils.run_cmd "git clone --mirror #{url} #{name}"
     end
 
-    private def setting_mirror_settings_and_push
+    private def setting_mirror_settings_and_push(url, name)
       Dir.cd Utils.repository_path(name)
       Utils.run_cmd "git config credential.helper store",
-                    "git remote add mirror #{mirror_ssh_url}",
+                    "git remote add mirror #{mirror_ssh_url(name)}",
                     "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'",
                     "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'",
                     "git config remote.mirror.mirror true",
@@ -35,17 +34,15 @@ module Hpr
                     "git config hpr.status 'idle'"
     end
 
-    private def update_schedule
-      scheduled = Time.now + Time::Span.new(0, 0, Hpr.config.schedule)
-      UpdateRepositoryJob.perform_async(name) do |options|
-        options.at scheduled
-      end
+    private def update_schedule(url, name)
+      scheduled = Time::Span.new(0, 0, 10)
+      UpdateRepositoryWorker.async.perform_in(scheduled, name)
 
       Dir.cd Utils.repository_path(name)
-      Utils.run_cmd "git config hpr.scheduled '#{scheduled.to_s("%F %T %z")}'"
+      Utils.run_cmd "git config hpr.scheduled '#{(Time.now + scheduled).to_s("%F %T %z")}'"
     end
 
-    private def mirror_ssh_url
+    private def mirror_ssh_url(name)
       gitlab_host = Hpr.config.gitlab.endpoint.host
       gitlab_port = if Hpr.config.gitlab.ssh_port != 22
         "#{Hpr.config.gitlab.ssh_port}/"

@@ -5,6 +5,7 @@ output
 config
 bin
 lib
+logs
 spec
 repositories
 examples
