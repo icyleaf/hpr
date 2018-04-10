@@ -220,7 +220,7 @@ $ hpr -d --name hpr-mirror
 
 ## Development
 
-Install [Crystal](https://crystal-lang.org/docs/installation/index.html) and [faktory](http://contribsys.com/faktory/), then run `shards install`.
+Install [Crystal](https://crystal-lang.org/docs/installation/index.html) then run `shards install`.
 
 ## Contributing
 

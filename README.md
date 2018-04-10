@@ -16,6 +16,10 @@
   <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/hpr.svg"></a>
 </p>
 
+<p align="center">
+  <a href="http://hpr.ews.im/#/en/">English Documents</a>
+</p>
+
 ## 独特优势
 
 * 支持 API 接口，可用于远程控制不仅限于终端使用

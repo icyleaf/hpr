@@ -3,14 +3,15 @@ FROM icyleafcn/crystal:latest
 ADD . /app
 WORKDIR /app
 
-RUN apk add --update --no-cache gcc openssl-dev git bash openssh-client && \
+RUN apk add --no-cache gcc openssl-dev git openssh-client && \
     chmod +x docker-entrypoint.sh && mv docker-entrypoint.sh /docker-entrypoint.sh && \
-    shards build --production && \
+    shards build --release --no-debug && \
     ldd bin/hpr | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'
 
 VOLUME ["/app/config", "/app/repositories"]
 
 EXPOSE 8848/tcp
+
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
