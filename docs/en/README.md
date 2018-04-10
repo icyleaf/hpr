@@ -2,7 +2,7 @@
 
 # ḫpr
 
-![Status](https://img.shields.io/badge/status-WIP-yellow.svg)
+[![Tag](https://img.shields.io/github/tag/icyleaf/hpr.svg)](https://github.com/icyleaf/hpr/releases)
 ![Language](https://img.shields.io/badge/language-crystal-776791.svg)
 [![License](https://img.shields.io/github/license/icyleaf/hpr.svg)](https://github.com/icyleaf/hpr/blob/master/LICENSE)
 

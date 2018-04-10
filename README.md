@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img alt="Project Status" src="https://img.shields.io/badge/status-WIP-yellow.svg">
+  <a href="https://github.com/icyleaf/hpr/releases"><img alt="Tag" src="https://img.shields.io/github/tag/icyleaf/hpr.svg" /></a>
   <a href="https://crystal-lang.org/"><img alt="Langugea" src="https://img.shields.io/badge/language-crystal-776791.svg"></a>
   <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/hpr.svg"></a>
 </p>
