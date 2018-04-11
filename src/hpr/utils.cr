@@ -13,13 +13,17 @@ module Hpr
       end
     end
 
-    def repository_path(name : String)
-      File.join(Hpr.config.repository_path, name)
+    def repository_cloning?(name : String)
+      repository_path?(name) && !File.exists?(File.join(repository_path(name), "packed-refs"))
     end
 
     def repository_path?(name : String) : String?
       path = repository_path(name)
       Dir.exists?(path) ? path : nil
+    end
+
+    def repository_path(name : String)
+      File.join(Hpr.config.repository_path, name)
     end
 
     def repository_info(name : String)
