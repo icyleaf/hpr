@@ -100,8 +100,8 @@ module Hpr
     end
 
     def determine_git!
-      r = Utils.run_cmd "which git", echo: false
-      raise NotFoundGitError.new "Please install git." if r[0].empty?
+      _, _, success = Utils.run_cmd "which git"
+      raise NotFoundGitError.new "Please install git." unless success
     end
 
     def determine_gitlab_configure!

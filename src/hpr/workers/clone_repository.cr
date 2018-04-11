@@ -21,17 +21,17 @@ module Hpr
 
     private def setting_mirror_settings_and_push(url, name)
       Dir.cd Utils.repository_path(name)
-      Utils.run_cmd "git config credential.helper store",
-                    "git remote add mirror #{mirror_ssh_url(name)}",
-                    "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'",
-                    "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'",
-                    "git config remote.mirror.mirror true",
-                    "git config hpr.status 'idle'",
-                    "git config hpr.created '#{Utils.current_datetime}'",
-                    "git push mirror",
-                    "git config hpr.status 'busy'",
-                    "git config hpr.updated '#{Utils.current_datetime}'",
-                    "git config hpr.status 'idle'"
+      Utils.run_cmd "git config credential.helper store"
+      Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name)}"
+      Utils.run_cmd "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'"
+      Utils.run_cmd "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'"
+      Utils.run_cmd "git config remote.mirror.mirror true"
+      Utils.run_cmd "git config hpr.status 'idle'"
+      Utils.run_cmd "git config hpr.created '#{Utils.current_datetime}'"
+      Utils.run_cmd "git push mirror"
+      Utils.run_cmd "git config hpr.status 'busy'"
+      Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
+      Utils.run_cmd "git config hpr.status 'idle'"
     end
 
     private def update_schedule(url, name)

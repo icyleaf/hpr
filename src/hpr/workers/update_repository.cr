@@ -8,10 +8,10 @@ module Hpr
       return unless Dir.exists?(repository_path)
 
       Dir.cd repository_path
-      Utils.run_cmd "git config hpr.status 'busy'",
-                    "git fetch origin",
-                    "git push mirror",
-                    "git config hpr.status 'idle'"
+      Utils.run_cmd "git config hpr.status 'busy'"
+      Utils.run_cmd "git fetch origin"
+      Utils.run_cmd "git push mirror"
+      Utils.run_cmd "git config hpr.status 'idle'"
 
       update_schedule(name)
     end
