@@ -1,6 +1,6 @@
 ![logo](../_media/icon.png)
 
-# ḫpr <small>0.2.0</small>
+# ḫpr <small>0.3.0</small>
 
 > Mirror git repositories to self-host gitlab services.
 
