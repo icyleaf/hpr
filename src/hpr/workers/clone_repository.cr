@@ -35,7 +35,7 @@ module Hpr
     end
 
     private def update_schedule(url, name)
-      scheduled = Time::Span.new(0, 0, 10)
+      scheduled = Time::Span.new(0, 0, Hpr.config.schedule)
       UpdateRepositoryWorker.async.perform_in(scheduled, name)
 
       Dir.cd Utils.repository_path(name)
