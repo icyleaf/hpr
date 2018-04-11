@@ -35,12 +35,12 @@ module Hpr
       loop do
         begin
           Hpr.gitlab.create_project project_name, {
-            "namespace_id" => @namespace["id"].to_s,
-            "description" => "Mirror of #{url}",
-            "visibility" => (Hpr.config.gitlab.project_public ? "public" : "private"),
-            "issues_enabled" => Hpr.config.gitlab.project_issue.to_s,
-            "wiki_enabled" => Hpr.config.gitlab.project_wiki.to_s,
-            "snippets_enabled" => Hpr.config.gitlab.project_snippet.to_s,
+            "namespace_id"           => @namespace["id"].to_s,
+            "description"            => "Mirror of #{url}",
+            "visibility"             => (Hpr.config.gitlab.project_public ? "public" : "private"),
+            "issues_enabled"         => Hpr.config.gitlab.project_issue.to_s,
+            "wiki_enabled"           => Hpr.config.gitlab.project_wiki.to_s,
+            "snippets_enabled"       => Hpr.config.gitlab.project_snippet.to_s,
             "merge_requests_enabled" => Hpr.config.gitlab.project_merge_request.to_s,
           }
 

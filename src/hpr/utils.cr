@@ -31,14 +31,14 @@ module Hpr
     def repository_info(name : String)
       Dir.cd repository_path(name)
       {
-        "name" => name,
-        "url" => run_cmd("git remote get-url --push origin").first.as(String),
-        "mirror_url" => run_cmd("git remote get-url --push mirror").first.as(String),
+        "name"           => name,
+        "url"            => run_cmd("git remote get-url --push origin").first.as(String),
+        "mirror_url"     => run_cmd("git remote get-url --push mirror").first.as(String),
         "latest_version" => run_cmd("git describe --abbrev=0 --tags 2>/dev/null").first.as(String),
-        "status" => run_cmd("git config hpr.status").first.as(String),
-        "created_at" => run_cmd("git config hpr.created").first.as(String),
-        "updated_at" => run_cmd("git config hpr.updated").first.as(String),
-        "scheduled_at" => run_cmd("git config hpr.scheduled").first.as(String),
+        "status"         => run_cmd("git config hpr.status").first.as(String),
+        "created_at"     => run_cmd("git config hpr.created").first.as(String),
+        "updated_at"     => run_cmd("git config hpr.updated").first.as(String),
+        "scheduled_at"   => run_cmd("git config hpr.scheduled").first.as(String),
       }
     end
 

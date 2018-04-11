@@ -11,7 +11,7 @@ module Hpr::API::Repository
 
     {
       total: repositories.size,
-      data: repositories
+      data:  repositories,
     }.to_json
   end
 
@@ -22,7 +22,7 @@ module Hpr::API::Repository
       if Utils.repository_cloning?(name)
         status_code = 202
         message = {
-          message: "Repositoy is cloning, wait a moment."
+          message: "Repositoy is cloning, wait a moment.",
         }
       else
         status_code = 200
@@ -31,7 +31,7 @@ module Hpr::API::Repository
     else
       status_code = 404
       message = {
-        message: "Not found repository."
+        message: "Not found repository.",
       }
     end
 

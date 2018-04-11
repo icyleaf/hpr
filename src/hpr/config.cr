@@ -16,7 +16,7 @@ module Hpr
     class GitlabStruct
       JSON.mapping(
         ssh_port: Int32,
-        endpoint: { type: String, getter: false },
+        endpoint: {type: String, getter: false},
         private_token: String,
         group_name: String,
         project_public: Bool,

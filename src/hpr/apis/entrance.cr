@@ -2,7 +2,7 @@ module Hpr::API::Entrance
   get "/" do |env|
     env.response.content_type = "application/json"
     {
-      message: "welcome to hpr api layer"
+      message: "welcome to hpr api layer",
     }.to_json
   end
 
@@ -13,15 +13,15 @@ module Hpr::API::Entrance
 
     {
       hpr: {
-        version: Hpr::VERSION,
+        version:      Hpr::VERSION,
         repositroies: {
           total: names.size,
-          entry: names
-        }
+          entry: names,
+        },
       },
       jobs: {
-        todo: "dependence"
-      }
+        todo: "dependence",
+      },
     }.to_json
   end
 end

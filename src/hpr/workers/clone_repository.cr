@@ -45,10 +45,10 @@ module Hpr
     private def mirror_ssh_url(name)
       gitlab_host = Hpr.config.gitlab.endpoint.host
       gitlab_port = if Hpr.config.gitlab.ssh_port != 22
-        "#{Hpr.config.gitlab.ssh_port}/"
-      else
-        ""
-      end
+                      "#{Hpr.config.gitlab.ssh_port}/"
+                    else
+                      ""
+                    end
 
       "git@#{gitlab_host}:#{gitlab_port}#{Hpr.config.gitlab.group_name}/#{name.downcase}.git"
     end
