@@ -1,5 +1,5 @@
 hpr_image_name ?= icyleafcn/hpr
-hpr_version ?= 0.2.0
+hpr_version ?= 0.3.0
 
 all: build release
 
