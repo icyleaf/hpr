@@ -11,7 +11,7 @@ module Hpr::API::Repository
 
     {
       total: repositories.size,
-      data: repositories
+      data:  repositories,
     }.to_json
   end
 
@@ -19,12 +19,19 @@ module Hpr::API::Repository
   get "/repositories/:name" do |env|
     name = env.params.url["name"]
     if Utils.repository_path?(name)
-      status_code = 200
-      message = Utils.repository_info(name)
+      if Utils.repository_cloning?(name)
+        status_code = 202
+        message = {
+          message: "Repositoy is cloning, wait a moment.",
+        }
+      else
+        status_code = 200
+        message = Utils.repository_info(name)
+      end
     else
-      status_code = 408
+      status_code = 404
       message = {
-        message: "Not found repository."
+        message: "Not found repository.",
       }
     end
 

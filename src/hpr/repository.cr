@@ -14,8 +14,8 @@ module Hpr
       paths = path(@url).split("/")
       @name = strip_tail paths.last
       @namespace = if paths.size >= 2
-        strip_tail paths[-2]
-      end
+                     strip_tail paths[-2]
+                   end
     end
 
     def mirror_name
@@ -40,7 +40,6 @@ module Hpr
     end
 
     private def extract_name_and_user(path : String)
-
       namespace = if paths.size >= 2
                     strip_tail paths[-2]
                   else

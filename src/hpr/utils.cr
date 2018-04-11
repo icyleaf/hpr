@@ -6,15 +6,17 @@ module Hpr
       Time.now.to_s("%F %T %z")
     end
 
-    def run_cmd(*commands, echo = false)
-      commands.each_with_object([] of String) do |command, obj|
-        Hpr.logger.debug "$ #{command}" if echo
-        obj << `#{command}`.strip
-      end
+    def run_cmd(command : String)
+      process = Process.new(command, shell: true, output: Process::Redirect::Pipe, error: Process::Redirect::Pipe)
+      output = process.output.gets_to_end.strip
+      error = process.error.gets_to_end
+      status = process.wait
+
+      [output, error, status.success?]
     end
 
-    def repository_path(name : String)
-      File.join(Hpr.config.repository_path, name)
+    def repository_cloning?(name : String)
+      repository_path?(name) && !File.exists?(File.join(repository_path(name), "packed-refs"))
     end
 
     def repository_path?(name : String) : String?
@@ -22,24 +24,21 @@ module Hpr
       Dir.exists?(path) ? path : nil
     end
 
+    def repository_path(name : String)
+      File.join(Hpr.config.repository_path, name)
+    end
+
     def repository_info(name : String)
       Dir.cd repository_path(name)
-      info = Utils.run_cmd "git remote get-url --push origin",
-                           "git remote get-url --push mirror",
-                           "git describe --abbrev=0 --tags 2>/dev/null",
-                           "git config hpr.status",
-                           "git config hpr.created",
-                           "git config hpr.updated",
-                           "git config hpr.scheduled"
       {
-        "name" => name,
-        "url" => info[0],
-        "mirror_url" => info[1],
-        "latest_version" => info[2],
-        "status" => info[3],
-        "created_at" => info[4],
-        "updated_at" => info[5],
-        "scheduled_at" => info[6],
+        "name"           => name,
+        "url"            => run_cmd("git remote get-url --push origin").first.as(String),
+        "mirror_url"     => run_cmd("git remote get-url --push mirror").first.as(String),
+        "latest_version" => run_cmd("git describe --abbrev=0 --tags 2>/dev/null").first.as(String),
+        "status"         => run_cmd("git config hpr.status").first.as(String),
+        "created_at"     => run_cmd("git config hpr.created").first.as(String),
+        "updated_at"     => run_cmd("git config hpr.updated").first.as(String),
+        "scheduled_at"   => run_cmd("git config hpr.scheduled").first.as(String),
       }
     end
 

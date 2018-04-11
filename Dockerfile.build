@@ -3,7 +3,7 @@ FROM icyleafcn/crystal:latest
 ADD . /app
 WORKDIR /app
 
-RUN apk add --no-cache gcc openssl-dev git openssh-client && \
+RUN apk add --no-cache gcc openssl-dev git && \
     chmod +x docker-entrypoint.sh && mv docker-entrypoint.sh /docker-entrypoint.sh && \
     shards build --release --no-debug && \
     ldd bin/hpr | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'
