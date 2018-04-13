@@ -22,16 +22,16 @@ module Hpr::API::Repository
       if Utils.repository_cloning?(name)
         status_code = 202
         message = {
-          message: "Repositoy is cloning, wait a moment.",
+          message: "Repositoy is cloning, wait a moment."
         }
       else
         status_code = 200
         message = Utils.repository_info(name)
       end
     else
-      status_code = 404
+      status_code = 200
       message = {
-        message: "Not found repository.",
+        message: "Not found repository."
       }
     end
 
