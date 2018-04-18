@@ -10,12 +10,11 @@ module Hpr
       None
       Server
       List
+      Search
       Create
       Update
       Delete
     end
-
-    NEDD_URL_FLAGS = ["-c", "--create"]
 
     def initialize(args = ARGV)
       @client = Client.new
@@ -24,44 +23,77 @@ module Hpr
       @repo_url = ""
       @repo_name = ""
       @mirror_only = false
-
-      need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
+      @server_port = 8848
 
       parser = OptionParser.parse(args) do |parser|
         parser.banner = usage
 
         parser.separator("\nActions:\n")
-        parser.on("-s", "--server", "Run a web api server (port 8848)") { @action = Action::Server }
+        parser.on("-s", "--server", "Run a web api server") { @action = Action::Server }
         parser.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
+        parser.on("-S", "--search", "Search mirrored repositories") { @action = Action::Search }
         parser.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
         parser.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
         parser.on("-d", "--delete", "Delete a mirrored repository") { @action = Action::Delete }
 
-        parser.separator("\nOption in create action:\n")
-        parser.on("--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
+        parser.separator("\nOption in server action:\n")
+        parser.on("-P PORT", "--port PORT", "the port of server (by default is 8848)") { |port| @server_port = port.to_i }
 
-        parser.separator("\nOption in create/update/delete action:\n")
-        parser.on("--name NAME", "The name of mirror repository") { |n| @repo_name = n }
+        parser.separator("\nOption in create action:\n")
+        parser.on("-U URL", "--url URL", "The url of mirror repository") { |url| @repo_url = url }
+        parser.on("-M", "--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
 
         parser.separator("\nGlobal options:\n")
         parser.on("-v", "--version", "Show version") { puts version }
         parser.on("-h", "--help", "Show this help") { puts parser }
 
+        parser.separator <<-EXAMPLES
+\nExamples:
+
+       o Start a API server:
+
+               $ hpr -s
+
+       o Start a API server with custom port:
+
+               $ hpr -s --port 3001
+
+       o List all mirrored repositories:
+
+               $ hpr -l
+
+       o Search all repositories include icyleaf keywords:
+
+               $ hpr -S icyleaf
+
+       o Create a new repository:
+
+               $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
+
+       o Clone and push a new repository without create gitlab project:
+
+               $ hpr -c --mirror-only --url https://github.com/icyleaf/hpr.git icyleaf-hpr
+
+       o Update a repository:
+
+               $ hpr -u icyleaf-hpr
+
+       o Delete a repository:
+
+               $ hpr -d icyleaf-hpr
+
+       More detail to check: https://icyleaf.github.io/hpr/
+EXAMPLES
+
         parser.separator("\n#{version}")
 
         parser.unknown_args do |unknown_args|
-          if need_flags
-            raise Error.new("Missing url argument.") if unknown_args.size.zero?
-
-            @repo_url = unknown_args.first
-          end
+          @repo_name = unknown_args.first if unknown_args.size > 0
         end
       end
 
       if @action != Action::None
         run
-      else
-        puts parser
       end
     end
 
@@ -71,6 +103,8 @@ module Hpr
         start_server
       when Action::List
         list_repositories
+      when Action::Search
+        search_repositories
       when Action::Create
         create_repository
       when Action::Update
@@ -82,44 +116,101 @@ module Hpr
 
     private def list_repositories
       repositories = @client.list_repositories.each_with_object([] of Hash(String, String)) do |name, obj|
-        obj << Utils.repository_info(name) if Utils.repository_path?(name)
+        obj << Utils.repository_info(name)
       end
 
-      puts "Here are #{repositories.size} mirrored repositories:\n"
-      @client.list_repositories.each do |repository|
-        puts "* #{repository}"
+      Hpr.logger.info "listing repositories (#{repositories.size}):"
+      repositories.each do |repo|
+        dump_repository(repo)
+      end
+    end
+
+    private def search_repositories
+      Hpr.logger.info "searching repositories ... #{@repo_name}"
+      repositories = @client.search_repositories(@repo_name).each_with_object([] of Hash(String, String)) do |name, obj|
+        obj << Utils.repository_info(name)
+      end
+
+      Hpr.logger.info "found repositories (#{repositories.size}):"
+      repositories.each do |repo|
+        dump_repository(repo)
       end
     end
 
     private def create_repository
-      spawn do
-        @client.create_repository(@repo_url, @repo_name, (@mirror_only == true ? "true" : "false"))
+      Utils.user_error! "Missing url argument." if @repo_url.empty?
+
+      @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
+      if Utils.repository_path?(@repo_name)
+        Hpr.logger.info "repository exists ... #{@repo_name}"
+        repo = Utils.repository_info(@repo_name)
+        dump_repository(repo)
+
+        exit
       end
 
       start_worker
+      sleep 100.milliseconds # waiting sidekiq is ready
+
+      @client.create_repository(@repo_url, @repo_name, @mirror_only)
+      loop do
+        sleep 1.seconds
+        if !Utils.repository_cloning?(@repo_name) &&
+           (info = Utils.repository_info(@repo_name)) &&
+           !info["updated_at"].empty?
+          break
+        end
+      end
+      Hpr.logger.info "create repository ... done"
     end
 
     private def update_repository
-      spawn do
-        @client.update_repository(@repo_name)
-      end
+      Utils.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
+      sleep 1.seconds # waiting sidekiq is ready
+      @client.update_repository(@repo_name)
+
+      loop do
+        sleep 1.seconds
+        break unless Utils.repository_updating?(@repo_name)
+      end
+      Hpr.logger.info "update repository ... done"
     end
 
     private def delete_repository
-      spawn do
-        @client.delete_repository(@repo_name)
-      end
+      Utils.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
+      sleep 1.seconds # waiting sidekiq is ready
+
+      @client.delete_repository(@repo_name)
+      loop do
+        sleep 1.seconds
+        break unless Utils.repository_path?(@repo_name)
+      end
+      Hpr.logger.info "delete repository ... done"
+    end
+
+    private def dump_repository(repo)
+      puts
+      puts "=> Name: #{repo["name"]}"
+      puts "   Path: #{Utils.repository_path(repo["name"])}"
+      puts "   OriginalUrl: #{repo["url"]}"
+      puts "   MirrorUrl: #{repo["mirror_url"]}"
+      puts "   Status: #{repo["status"]}"
+      puts "   CreatedAt: #{repo["created_at"]}"
+      puts "   UpdatedAt: #{repo["updated_at"]}"
+      puts "   ScheduledAt: #{repo["scheduled_at"]}"
     end
 
     private def start_server
+      determine_redis!
+
       print_banner
       start_worker
 
-      Hpr::API.run
+      Hpr::API.run(@server_port)
     end
 
     private def start_worker
@@ -128,8 +219,17 @@ module Hpr
       end
     end
 
+    private def determine_redis!
+      if provider = ENV["REDIS_PROVIDER"]?
+        Redis.new(url: ENV[provider])
+      end
+    rescue e : Exception
+      Hpr.logger.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
+      exit
+    end
+
     private def usage
-      "Usage: hpr <action> [--name=<name>] [<url>]"
+      "Usage: hpr <action> [--url=<url>] <name>"
     end
 
     private def version

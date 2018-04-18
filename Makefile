@@ -1,12 +1,12 @@
 hpr_image_name ?= icyleafcn/hpr
-hpr_version ?= 0.3.0
+hpr_version ?= 0.6.2
 
-all: build release
+all: build release publish
 
 build: clean ## Docker build image
-	docker build -t $(hpr_image_name):build -f Dockerfile.build .
+	docker build --no-cache -t $(hpr_image_name):build -f Dockerfile.build .
 
-release: build ## Docker release image
+release:  ## Docker release image
 	docker container create --name extract icyleafcn/hpr:build
 	docker container cp extract:/app/bin/hpr ./hpr
 	docker container cp extract:/app/deps ./deps
@@ -15,10 +15,13 @@ release: build ## Docker release image
 	docker build --no-cache -t $(hpr_image_name):$(hpr_version) .
 	rm -rf hpr deps
 
-publish: release
+publish:
 	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
 	docker push $(hpr_image_name):latest
 	docker push $(hpr_image_name):$(hpr_version)
+
+doc:
+	docsify serve docs -p 3001
 
 clean:
 	rm -rf bin hpr deps

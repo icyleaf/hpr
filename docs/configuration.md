@@ -1,14 +1,23 @@
-# 配置
+# 配置文件
 
 hpr 默认提供了一个模板文件: `config/hpr.json.example`，根据自己的需要进行修改。
 
 目前 hpr 只能从 `config/hpr.json` 获取配置，请务必保证配置的路径和文件名没有错误。
 
-## schedule
+## schedule_in
 
-频率设置是针对每个仓库进行单独设置，不会造成统一时间全部镜像仓库。
+镜像仓库的更新频率，频率设置是针对每个仓库进行单独设置，不会造成统一时间全部镜像仓库。
 
-镜像仓库的更新频率，默认是 `3600` 秒，即为 1 小时。
+接受以分钟为单位的整型和可识别时间类型的字符串型。没有匹配到的规则会默认转换为分钟。
+
+时间单位 | 类型 | 可用值 | 举例
+---|---|---|---
+分钟 | String/Int32/Int64 | `整型数字`/`minute`/`minutes` | 60<br />"1.minute"<br />"30.minutes"
+小时 | String | `hour`/`hours` | "1.hour"<br />"5.hours"
+天 | String | `day`/`days` | "1.day"<br />"10.days"
+周 | String | `week`/`weeks` | "1.week"<br />"2.weeks"
+月 | String | `month`/`months` | "1.month"<br />"6.months"
+年 | String | `year`/`years` | "1.year"<br />"2.years"
 
 ## basic_auth - 接口认证
 

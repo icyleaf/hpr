@@ -1,12 +1,12 @@
-# 快速上手
+# Quick Start
 
-鉴于 Docker 的便利性，推荐使用 docker-compose 以最快速的安装使用：
+Packed all dependenices into Docker, first, clone this repository:
 
 ```bash
 $ wget https://raw.githubusercontent.com/icyleaf/hpr/master/docker-compose.yml
 ```
 
-获取配置模板：
+Download config file of hpr：
 
 ```bash
 $ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
@@ -14,7 +14,7 @@ $ mkdir config
 $ mv hpr.json.example.yml config/hpr.json
 ```
 
-根据自己的情况修改 `config/config.json` 文件
+Copy [config/hpr.json.example](https://github.com/icyleaf/hpr/blob/master/config/hpr.json.example) to `config/config.json` and edit it.
 
 ```json
 {
@@ -40,16 +40,16 @@ $ mv hpr.json.example.yml config/hpr.json
 }
 ```
 
-核心需要修改的参数有如下四项：
+Here has 4 places to change your own.
 
-- `endpoint`: Gitlab API 的地址，**无需修改后面部分**
-- `private_token`: 在个人设置的 Account 页面获得
-- `group_name`: 项目镜像的项目都会归属到这个组内，**务必确保你的账户拥有创建组的权限** (如果是管理员请忽略加粗字样)
-- `ssh_port`: 如果 SSH 不是 22 端口的话需要根据你的实际情况修改
+- `endpoint`: you only change the scheme and host, **DOT NOT** edit tail part.
+- `private_token`: visit your account page in account setting
+- `group_name`: all mirrored project will be in this group, **MAKE SUER YOU ACCOUNT HAS CREATE GROUP ROLE** (ignore if has admin role)
+- `ssh_port`: change it if you use custom ssh port
 
-> 更多参数详情参见[配置文件](configuration?id=basic_auth-接口认证)。
+> About more params check [Configuration](configuration?id=basic_auth-接口认证) page.
 
-配置文件修改保存后还需要在 `docker-compose.yml` 文件中配置下：
+Then set some optional `ENV` variables if you need in `docker-compose.yml`:
 
 ```yaml
 version: '2'
@@ -74,9 +74,9 @@ services:
     image: redis:alpine
 ```
 
-其中 `HPR_SSH_HOST` 和 `HPR_SSH_PORT` 变量用于设置 Docker 实例中的 SSH 配置。如果 SSH 端口是 22 的可忽略设置这俩参数。
+the `HPR_SSH_HOST` and `HPR_SSH_PORT` variables will update your gitlab ssh config, ignore if your gitlab server use 22 port in ssh protocol.
 
-编辑完成后运行下面命令快完成了！
+Then run it:
 
 ```bash
 $ docker-compose up
@@ -99,14 +99,12 @@ hpr_1      |  |_| |_| .__/|_|
 hpr_1      |        |_|
 ```
 
-最后从执行命令的输出找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），
-复制添加到 gitlab 的账户 SSH Keys 页面中。
+Be attention to copy generated ssh public key in terminal output.
+Add ssh public key to your gitlab.
 
-部署的部分介绍完毕，下面是具体使用方法。
+That's all! Check usage part please.
 
-# 用法
+# Usages
 
-hpr 提供两者方法来管理 git 仓库:
-
-- [Web API](api.md) (推荐)
-- [命令行工具](cli.md)
+- [Web API](/en/api.md) (Recommand)
+- [CLI](/en/cli.md)

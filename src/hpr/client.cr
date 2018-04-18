@@ -26,16 +26,26 @@ module Hpr
       end
     end
 
+    def search_repositories(query : String)
+      query = query.downcase
+      list_repositories.each_with_object([] of String) do |name, obj|
+        obj << name if name.downcase.includes?(query)
+      end
+    end
+
     def create_repository(url : String, name : String? = nil, mirror_only = false)
       repo = Repository.new url
-      project_name = name ? name : repo.mirror_name
+      project_name = (name && !name.empty?) ? name : repo.mirror_name
 
-      raise RepositoryExistsError.new "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
+      Utils.user_error! "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
+
+      Hpr.logger.info "creating repository ... #{@group["name"]}/#{project_name}"
 
       loop do
         begin
           Hpr.gitlab.create_project project_name, {
             "namespace_id"           => @namespace["id"].to_s,
+            "path"                   => project_name,
             "description"            => "Mirror of #{url}",
             "visibility"             => (Hpr.config.gitlab.project_public ? "public" : "private"),
             "issues_enabled"         => Hpr.config.gitlab.project_issue.to_s,
@@ -47,7 +57,7 @@ module Hpr
           break
         rescue e : Gitlab::Error::BadRequest
           if (message = e.message) && message.includes?("still being deleted")
-            sleep 1
+            sleep 1.seconds
           else
             raise e
           end
@@ -58,7 +68,9 @@ module Hpr
     end
 
     def update_repository(name : String)
-      raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_stored?(name)
+      unless reopsitory_stored?(name)
+        Utils.user_error! "repository not exists ... #{name}"
+      end
 
       UpdateRepositoryWorker.async.perform name
     end
@@ -68,6 +80,7 @@ module Hpr
       unless projects.as_a.empty?
         project = projects[0]
 
+        Hpr.logger.info "destroying project ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
@@ -80,7 +93,7 @@ module Hpr
       end
     end
 
-    def reopsitory_stored?(name)
+    private def reopsitory_stored?(name)
       Dir.exists?(Utils.repository_path(name))
     end
 

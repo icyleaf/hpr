@@ -1,5 +1,5 @@
 name: hpr
-version: 0.3.0
+version: 0.6.2
 
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
@@ -9,16 +9,19 @@ targets:
     main: src/cli.cr
 
 dependencies:
+  salt:
+    github: icyleaf/salt
+    version: ~> 0.4.2
+  radix:
+    github: luislavena/radix
+    version: ~> 0.3.8
   gitlab:
     github: icyleaf/gitlab.cr
+    version: ~> 0.3.3
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master
-  kemal:
-    github: kemalcr/kemal
-  kemal-basic-auth:
-    github: kemalcr/kemal-basic-auth
 
-crystal: 0.24.2
+crystal: 0.25.1
 
 license: MIT

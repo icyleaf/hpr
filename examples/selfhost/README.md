@@ -41,7 +41,7 @@ gitlab_1      | 2018-03-23 17:36:32,176 INFO success: sshd entered RUNNING state
 
 ```
 {
-  "schedule": 3600,
+  "schedule_in": "1.day",
   "basic_auth": {
     "enable": false,
     "user": "hpr",

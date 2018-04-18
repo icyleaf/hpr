@@ -1,8 +1,8 @@
 ![logo](_media/icon.png)
 
-# ḫpr <small>0.3.0</small>
+# ḫpr <small>0.6.2</small>
 
-> 镜像任意 git 仓库到 gitlab 的同步工具，具有静态加速、定时更新的功能。
+> 镜像任意 git 仓库到 gitlab 的同步工具，具有定时更新的功能。
 
 * 支持 API 接口，可用于远程控制不仅限于终端使用
 * 支持终端命令控制，方便临时使用

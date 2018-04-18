@@ -1,3 +1,3 @@
 module Hpr
-  VERSION = "0.3.0"
+  VERSION = "0.6.2"
 end

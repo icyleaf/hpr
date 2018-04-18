@@ -1,10 +1,10 @@
-# API 接口
+# Web API
 
 hpr support a web api service (port `8848`) by default.
 
 ## Authentication
 
-Only support Basic Auth for now. Configure from `config/hpr.json` file，View detail in [Configuration](configuration?id=basic_auth-接口认证).
+Only support Basic Auth for now. Configure to enable or not from `config/hpr.json` file，View detail in [Configuration](/en/configuration?id=basic_auth).
 
 ```bash
 $ curl -u user@password http://hpr-ip:8848/info
@@ -55,6 +55,49 @@ GET /repositores
 }
 ```
 
+### Search repositories
+
+Search repositories by given query keywords, returns all include keyword matchs the name of mirrored reposotories.
+
+```
+GET /repositores/search/?q=[query]
+```
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|---|---|---|---|
+| q | String | true | keyworkd |
+
+#### Example Response
+
+```json
+{
+    "total": 2,
+    "data": [
+        {
+            "name": "coding-coding-docs",
+            "url": "https://git.coding.net/coding/coding-docs.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/coding-coding-docs.git",
+            "latest_version": "",
+            "status": "idle",
+            "created_at": "2018-03-23 16:27:59 +0800",
+            "updated_at": "2018-03-23 16:27:59 +0800",
+            "scheduled_at": "2018-03-23 17:28:02 +0800"
+        },
+        {
+            "name": "spf13-viper",
+            "url": "https://github.com/spf13/viper.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/spf13-viper.git",
+            "latest_version": "v1.0.2",
+            "status": "idle",
+            "created_at": "2018-03-23 16:36:00 +0800",
+            "updated_at": "2018-03-23 16:36:00 +0800",
+            "scheduled_at": "2018-03-23 17:36:02 +0800"
+        }
+    ]
+}
+```
 
 ### Get a repository info
 
@@ -83,7 +126,7 @@ GET /repositores/:name
 }
 ```
 
-### 创建镜像仓库
+### Create repository
 
 Create a git repository, it is recommand to use HTTP protocol. The name got from url by default if left it empty but only avaiables with
 
@@ -185,43 +228,24 @@ GET /info
             ]
         }
     },
-    "faktory": {
-        "default_size": 0,
-        "tasks": {
-            "Busy": {
-                "reaped": 0,
-                "size": 0
-            },
-            "Dead": {
-                "cycles": 0,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0
-            },
-            "Retries": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.00032004
-            },
-            "Scheduled": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.000807896
-            },
-            "Workers": {
-                "reaped": 0,
-                "size": 1
-            },
-            "backup": {
-                "count": 0
-            }
-        },
+    "jobs": {
+        "total_scheduled": 7,
         "total_enqueued": 0,
-        "total_failures": 2,
-        "total_processed": 36,
-        "total_queues": 1
-    }
+        "total_failures": 0,
+        "total_processed": 111,
+        "total_queues": {
+            "default": 0
+        }
+    },
+    "scheduleds": [
+        {
+            "name": "project1",
+            "scheduled_at": "2018-04-28 15:47:48 UTC"
+        },
+        {
+            "name": "project2",
+            "scheduled_at": "2018-04-28 20:47:48 UTC"
+        }
+    ]
 }
 ```

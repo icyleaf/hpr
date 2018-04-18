@@ -1,10 +1,10 @@
 # API 接口
 
-hpr 运行后会提供 Web API 接口，端口号 `8848`。
+hpr 运行后会提供 Web API 接口，默认端口 `8848`。
 
 ## 认证
 
-接口请求目前仅支持 Basic Auth，通过配置文件 `config/hpr.json` 进行配置，详情参见[配置文件](configuration?id=basic_auth-接口认证)说明。
+接口请求目前仅支持 Basic Auth，通过配置文件 `config/hpr.json` 进行配置是否开启（默认关闭），详情参见[配置文件](configuration?id=basic_auth-接口认证)说明。
 
 ```bash
 $ curl -u user@password http://hpr-ip:8848/info
@@ -55,6 +55,49 @@ GET /repositores
 }
 ```
 
+### 搜索镜像仓库
+
+根据关键词搜索镜像仓库，只要关键词匹配到任意镜像仓库名的字符串均会命中。
+
+```
+GET /repositores/search/?q=[query]
+```
+
+#### 参数
+
+| 名称 | 类型 | 是否必须 | 描述 |
+|---|---|---|---|
+| q | String | true | 搜索关键词 |
+
+#### 返回样例
+
+```json
+{
+    "total": 2,
+    "data": [
+        {
+            "name": "coding-coding-docs",
+            "url": "https://git.coding.net/coding/coding-docs.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/coding-coding-docs.git",
+            "latest_version": "",
+            "status": "idle",
+            "created_at": "2018-03-23 16:27:59 +0800",
+            "updated_at": "2018-03-23 16:27:59 +0800",
+            "scheduled_at": "2018-03-23 17:28:02 +0800"
+        },
+        {
+            "name": "spf13-viper",
+            "url": "https://github.com/spf13/viper.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/spf13-viper.git",
+            "latest_version": "v1.0.2",
+            "status": "idle",
+            "created_at": "2018-03-23 16:36:00 +0800",
+            "updated_at": "2018-03-23 16:36:00 +0800",
+            "scheduled_at": "2018-03-23 17:36:02 +0800"
+        }
+    ]
+}
+```
 
 ### 单个镜像仓库信息
 
@@ -181,7 +224,7 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.2.0",
+        "version": "0.6.2",
         "repositroies": {
             "total": 2,
             "entry": [
@@ -190,43 +233,24 @@ GET /info
             ]
         }
     },
-    "faktory": {
-        "default_size": 0,
-        "tasks": {
-            "Busy": {
-                "reaped": 0,
-                "size": 0
-            },
-            "Dead": {
-                "cycles": 0,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0
-            },
-            "Retries": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.00032004
-            },
-            "Scheduled": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.000807896
-            },
-            "Workers": {
-                "reaped": 0,
-                "size": 1
-            },
-            "backup": {
-                "count": 0
-            }
-        },
+    "jobs": {
+        "total_scheduled": 2,
         "total_enqueued": 0,
-        "total_failures": 2,
-        "total_processed": 36,
-        "total_queues": 1
-    }
+        "total_failures": 0,
+        "total_processed": 111,
+        "total_queues": {
+            "default": 0
+        }
+    },
+    "scheduleds": [
+        {
+            "name": "project1",
+            "scheduled_at": "2018-04-28 15:47:48 UTC"
+        },
+        {
+            "name": "project2",
+            "scheduled_at": "2018-04-28 20:47:48 UTC"
+        }
+    ]
 }
 ```

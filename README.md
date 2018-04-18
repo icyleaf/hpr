@@ -7,7 +7,7 @@
 <p align="center">
   ḫpr
   <br />
-  镜像任意 git 仓库到 gitlab 的同步工具，具有静态加速、定时更新的功能。
+  镜像任意 git 仓库到 gitlab 的同步工具，具有定时更新的功能。
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="http://hpr.ews.im/#/en/">English Documents</a>
+  <a href="https://icyleaf.github.io/hpr/#/en/">English Documents</a>
 </p>
 
 ## 独特优势

@@ -19,23 +19,26 @@ module Hpr
       server.logger.info "Starting processing with #{server.concurrency} workers"
       server.start
 
+      channel = Channel(Int32).new
+
       Signal::INT.trap do
         server.request_stop
-        server.logger.info "Done, bye with INT signal"
-        exit(0)
+        channel.send 0
       end
 
       Signal::TERM.trap do
         server.request_stop
-        server.logger.info "Done, bye with TERM signal"
-        exit(0)
+        channel.send 0
       end
 
       Signal::USR1.trap do
         server.request_stop
-        server.logger.info "Done, bye with USR1 signal"
-        exit(0)
+        channel.send 0
       end
+
+      channel.receive
+      server.logger.info "Done, bye with INT signal"
+      exit
     end
 
     private def file_logger(file = "logs/sidekiq.log")

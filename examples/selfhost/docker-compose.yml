@@ -1,16 +1,6 @@
 version: '2'
 
 services:
-  faktory:
-    image: contribsys/faktory
-    command: /faktory -b 0.0.0.0:7419 -e production
-    volumes:
-      - faktory-data:/var/lib/faktory
-    environment:
-      FAKTORY_PASSWORD: "password"
-    networks:
-      - hpr
-
   hpr:
     image: icyleafcn/hpr
     ports:
@@ -19,17 +9,21 @@ services:
       - ./config:/app/config
       - hpr-repositories:/app/repositories
     environment:
-      FAKTORY_URL: tcp://:password@faktory:7419
-      FAKTORY_PROVIDER: FAKTORY_URL
+      REDIS_URL: tcp://redis:6379
+      REDIS_PROVIDER: REDIS_URL
+
       HPR_SSH_HOST: gitlab
       HPR_SSH_PORT: 22
     depends_on:
-      - faktory
+      - redis
+    networks:
+      - hpr
+  redis:
+    image: redis:alpine
     networks:
       - hpr
 
 volumes:
-  faktory-data:
   hpr-repositories:
 
 networks:

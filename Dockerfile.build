@@ -1,17 +1,18 @@
-FROM icyleafcn/crystal:latest
+FROM icyleafcn/crystal:0.25.0
 
 ADD . /app
 WORKDIR /app
 
-RUN apk add --no-cache gcc openssl-dev git && \
+RUN apk update && \
+    apk add --update openssl-dev build-base git openssh-keygen && \
     chmod +x docker-entrypoint.sh && mv docker-entrypoint.sh /docker-entrypoint.sh && \
-    shards build --release --no-debug && \
+    mkdir -p bin && \
+    crystal build --release --no-debug src/cli.cr -o bin/hpr && \
     ldd bin/hpr | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'
 
 VOLUME ["/app/config", "/app/repositories"]
 
 EXPOSE 8848/tcp
-
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 

@@ -19,10 +19,10 @@ describe Hpr::Config do
       config.repository_path = "/path/to/repositories"
       config.repository_path.should eq "/path/to/repositories"
 
-      config.schedule.should eq 1.hour.to_i
-      config.schedule.should eq 3600
-      config.schedule = 5.minutes.to_i
-      config.schedule.should eq 300
+      config.schedule_in = "2.weeks"
+      config.schedule_in.should eq 2.weeks
+      config.schedule_in = 30
+      config.schedule_in.should eq 30.minutes
     end
   end
 end
