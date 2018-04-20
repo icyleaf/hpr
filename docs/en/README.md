@@ -58,18 +58,7 @@ Then set some optional `ENV` variables if you need in `docker-compose.yml`:
 version: '2'
 
 services:
-  faktory:
-    image: contribsys/faktory
-    command: /faktory -b 0.0.0.0:7419 -e production
-    ports:
-      - 7419:7419
-      - 7420:7420
-    volumes:
-      - faktory-data:/var/lib/faktory
-    environment:
-      FAKTORY_PASSWORD: "password"
   hpr:
-    build: .
     image: icyleafcn/hpr
     ports:
       - 8848:8848
@@ -77,15 +66,15 @@ services:
       - ./config:/app/config
       - ./repositories:/app/repositories
     environment:
-      FAKTORY_URL: tcp://:password@faktory:7419
-      FAKTORY_PROVIDER: FAKTORY_URL
-      HPR_SSH_HOST: git.example.com
-      HPR_SSH_PORT: 2233
-    depends_on:
-      - faktory
+      REDIS_URL: tcp://redis:6379
+      REDIS_PROVIDER: REDIS_URL
 
-volumes:
-  faktory-data:
+      HPR_SSH_HOST: git.example.com
+      HPR_SSH_PORT: 22
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
 ```
 
 the `HPR_SSH_HOST` and `HPR_SSH_PORT` variables will update your gitlab ssh config, ignore if your gitlab server use 22 port in ssh protocol.

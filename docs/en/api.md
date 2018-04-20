@@ -185,7 +185,7 @@ GET /info
             ]
         }
     },
-    "faktory": {
+    "jobs": {
         "default_size": 0,
         "tasks": {
             "Busy": {

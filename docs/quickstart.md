@@ -46,18 +46,7 @@ $ cd hpr
 version: '2'
 
 services:
-  faktory:
-    image: contribsys/faktory
-    command: /faktory -b 0.0.0.0:7419 -e production
-    ports:
-      - 7419:7419
-      - 7420:7420
-    volumes:
-      - faktory-data:/var/lib/faktory
-    environment:
-      FAKTORY_PASSWORD: "password"
   hpr:
-    build: .
     image: icyleafcn/hpr
     ports:
       - 8848:8848
@@ -65,15 +54,15 @@ services:
       - ./config:/app/config
       - ./repositories:/app/repositories
     environment:
-      FAKTORY_URL: tcp://:password@faktory:7419
-      FAKTORY_PROVIDER: FAKTORY_URL
-      HPR_SSH_HOST: git.example.com
-      HPR_SSH_PORT: 2233
-    depends_on:
-      - faktory
+      REDIS_URL: tcp://redis:6379
+      REDIS_PROVIDER: REDIS_URL
 
-volumes:
-  faktory-data:
+      HPR_SSH_HOST: git.example.com
+      HPR_SSH_PORT: 22
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
 ```
 
 其中 `HPR_SSH_HOST` 和 `HPR_SSH_PORT` 变量用于设置 Docker 实例中的 SSH 配置。如果 SSH 端口是 22 的可忽略设置这俩参数。
@@ -112,18 +101,6 @@ hpr 提供两者方法来管理 git 仓库:
 
 - [Web API](#web-api) (推荐)
 - [命令行工具](#cli-tool)
-
-**注意** hpr 依赖一个第三方的任务队列 [faktory](http://contribsys.com/faktory/)，所以你需要先开一个终端运行：
-
-```bash
-$ faktory
-Faktory 0.7.0
-Copyright © 2018 Contributed Systems LLC
-Licensed under the GNU Public License 3.0
-I 2018-03-21T09:33:24.506Z Initializing storage at /Users/wiiseer/.faktory/db
-I 2018-03-21T09:33:24.541Z PID 53301 listening at localhost:7419, press Ctrl-C to stop
-I 2018-03-21T09:33:24.542Z Web server now listening on port 7420
-```
 
 ### Web API
 
