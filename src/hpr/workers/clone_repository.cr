@@ -21,6 +21,7 @@ module Hpr
 
     private def setting_mirror_settings_and_push(url, name)
       Dir.cd Utils.repository_path(name)
+      # Clone
       Utils.run_cmd "git config credential.helper store"
       Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name)}"
       Utils.run_cmd "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'"
@@ -28,6 +29,8 @@ module Hpr
       Utils.run_cmd "git config remote.mirror.mirror true"
       Utils.run_cmd "git config hpr.status 'idle'"
       Utils.run_cmd "git config hpr.created '#{Utils.current_datetime}'"
+
+      # Push
       Utils.run_cmd "git push mirror"
       Utils.run_cmd "git config hpr.status 'busy'"
       Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"

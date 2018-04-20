@@ -1,9 +1,5 @@
 version: 1.0
 shards:
-  baked_file_system:
-    github: schovi/baked_file_system
-    version: 0.9.5
-
   gitlab:
     github: icyleaf/gitlab.cr
     version: 0.3.3
@@ -19,14 +15,6 @@ shards:
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
     version: 0.2.0
-
-  kemal-csrf:
-    github: kemalcr/kemal-csrf
-    version: 0.4.0
-
-  kemal-session:
-    github: kemalcr/kemal-session
-    version: 0.9.0
 
   kilt:
     github: jeromegn/kilt
@@ -46,5 +34,5 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 4d7b8901fb3a35e30c02a7c899b14805e21c07fa
+    commit: 4fff783d501eda4e0ecd2aaac12754a83e357b34
 

@@ -11,7 +11,7 @@ module Hpr::API::Repository
 
     {
       total: repositories.size,
-      data:  repositories,
+      data:  repositories
     }.to_json
   end
 
@@ -29,14 +29,11 @@ module Hpr::API::Repository
         message = Utils.repository_info(name)
       end
     else
-      status_code = 200
-      message = {
-        message: "Not found repository."
-      }
+      status_code = 404
     end
 
-    env.response.content_type = "application/json"
     env.response.status_code = status_code
+    env.response.content_type = "application/json"
     message.to_json
   end
 
@@ -53,7 +50,7 @@ module Hpr::API::Repository
       status_code = 201
     rescue e : Exception
       message = {
-        message: e.message,
+        message: e.message
       }
       status_code = 400
     end
@@ -79,5 +76,12 @@ module Hpr::API::Repository
     env.response.content_type = "application/json"
     env.response.status_code = 200
     true.to_json
+  end
+
+  error 404 do |env|
+    env.response.content_type = "application/json"
+    {
+      message: "Not found."
+    }.to_json
   end
 end

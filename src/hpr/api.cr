@@ -12,9 +12,9 @@ module Hpr::API
       basic_auth Hpr.config.basic_auth.user, Hpr.config.basic_auth.password
     end
 
-    Kemal.config.logging = false
-    Kemal.config.env = "production"
-    Kemal.run port
+    Kemal.run(port) do |config|
+      config.env = "production"
+    end
   end
 
   include Entrance

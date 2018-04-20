@@ -92,27 +92,69 @@ module Hpr
     end
 
     private def create_repository
-      spawn do
-        @client.create_repository(@repo_url, @repo_name, (@mirror_only == true ? "true" : "false"))
+      start_worker
+      sleep 100.milliseconds # waiting sidekiq is ready
+
+      @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
+      if Utils.repository_path?(@repo_name)
+        project_path = Utils.repository_path(@repo_name)
+        project_info = Utils.repository_info(@repo_name)
+
+        puts "repository was exists ... #{@repo_name}"
+        puts "* path: #{project_path}"
+        puts "* original url: #{project_info["url"]}"
+        puts "* mirror url: #{project_info["mirror_url"]}"
+        puts "* status: #{project_info["status"]}"
+        puts "* created at: #{project_info["created_at"]}"
+        puts "* updated at: #{project_info["updated_at"]}"
+        puts "* scheduled at: #{project_info["scheduled_at"]}"
+
+        exit
       end
 
-      start_worker
+      @client.create_repository(@repo_url, @repo_name, @mirror_only)
+      print "* repository is creating "
+      loop do
+        sleep 1.seconds
+        print "."
+
+        if !Utils.repository_cloning?(@repo_name) &&
+           (info = Utils.repository_info(@repo_name)) &&
+           !info["updated_at"].empty?
+          break
+        end
+      end
+      puts " [done]"
     end
 
     private def update_repository
-      spawn do
-        @client.update_repository(@repo_name)
-      end
-
       start_worker
+      sleep 1.seconds # waiting sidekiq is ready
+      @client.update_repository(@repo_name)
+
+      print "* repository is updating "
+      loop do
+        sleep 1.seconds
+        print "."
+
+        break unless Utils.repository_updating?(@repo_name)
+      end
+      puts " [done]"
     end
 
     private def delete_repository
-      spawn do
-        @client.delete_repository(@repo_name)
-      end
-
       start_worker
+      sleep 1.seconds # waiting sidekiq is ready
+
+      print "* repository is deleting "
+      @client.delete_repository(@repo_name)
+      loop do
+        sleep 1.seconds
+        print "."
+
+        break unless Utils.repository_path?(@repo_name)
+      end
+      puts " [done]"
     end
 
     private def start_server
