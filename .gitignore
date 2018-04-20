@@ -6,4 +6,5 @@
 /logs/
 /repositories/
 /config/hpr*.json
+docker-compose.dev.yml
 hpr

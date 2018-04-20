@@ -100,22 +100,23 @@ volumes:
 ```bash
 $ docker-compose up
 ...
-hpr_1      | Generating public/private rsa key pair ...
-hpr_1      |
-hpr_1      | GENERATED SSH PUBLIC KEY:
-hpr_1      | ##################################################################
-hpr_1      | ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARmEbd6BOIBQ+UWm8NUKthQ7UOavmlsq4j8lY4kyFW2eFX2qWcbvI+s2gI+05MXax+mAukSszaNSnpAoTyJCRipilSkqiOV99V8JIJhrHPtTO0o/Ui
-9WiyyWsUM4M9lEKHpZ486lDGk3IM2XQW+pxAoMKb0TYzqCsrduHUtjzy0M0BqgMPe9EtVQqCbnTMzDLXmRONoTYyTV51NQ12mMwEQcDaLQ28e5gqouQJKS81JaoRpQWa7pHsOCki6Fk9TB+EQFrGz5nOrmYYM+O1MKnFkzmVHv7Fh50Sz7d2nYzzOKAkR hpr@docker
-hpr_1      | ##################################################################
-hpr_1      |
-hpr_1      | Configuring ssh config ...
-hpr_1      | Starting hpr server ...
-hpr_1      |   _
-hpr_1      |  | |__  _ __  _ __
-hpr_1      |  | '_ \| '_ \| '__|
-hpr_1      |  | | | | |_) | |
-hpr_1      |  |_| |_| .__/|_|
-hpr_1      |        |_|
+redis_1  | 1:M 20 Apr 11:08:19.210 * Ready to accept connections
+hpr_1    | Generating public/private rsa key pair ...
+hpr_1    |
+hpr_1    | GENERATED SSH PUBLIC KEY:
+hpr_1    | ##################################################################
+hpr_1    | ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCZ2v+qkX87ituSimUMMuNY6tW1v+ULZ9uuXQBySIWBN9gf+HYoWGGdzhR13jwzXdDv1FgVwgdm8d2qRrcCEeUj+qPIGOsnrc/tk6oV92r8HbzYugxiDOkYHiR4n0FDgiDq7iCZ/LvsdpY8khWUGU9UGM1nZs8WH4JoZU4GwVNAqrS/3N3SM/lDcqU6ebSWTCqa/hRAmXefzCaSsjkHV1Jlk8sZq8MlEh5qyt4pxauC0CzNU4HjWtrGTRVxIUDJ9VJg5m19LZQy4vrw7NrOrGUCMlFH/N7E0dd2vuYyJi/uOTu7ONiGSxnlHhEpQ9kTVprgFXF25D+Fqtwk4+GT0HZV hpr@docker
+hpr_1    | ##################################################################
+hpr_1    |
+hpr_1    | Configuring ssh config ...
+hpr_1    | Starting hpr server ...
+hpr_1    |   _
+hpr_1    |  | |__  _ __  _ __
+hpr_1    |  | '_ \| '_ \| '__|
+hpr_1    |  | | | | |_) | |
+hpr_1    |  |_| |_| .__/|_|
+hpr_1    |        |_|
+hpr_1    | I, [2018-04-20 11:08:20 +00:00 #10]  INFO -- hpr: API Server now listening at localhost:8848, press Ctrl-C to stop
 ```
 
 最后从执行命令的输出找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），

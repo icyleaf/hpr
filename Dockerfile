@@ -6,7 +6,7 @@ COPY deps/ /
 
 WORKDIR /app
 
-RUN apk update && apk add --no-cache git bash openssl-dev
+RUN apk update && apk add --no-cache openssh-keygen git bash openssl-dev
 
 VOLUME ["/app/config", "/app/repositories"]
 

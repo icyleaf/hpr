@@ -4,9 +4,9 @@ hpr_version ?= 0.3.0
 all: build release
 
 build: clean ## Docker build image
-	docker build -t $(hpr_image_name):build -f Dockerfile.build .
+	docker build --no-cache -t $(hpr_image_name):build -f Dockerfile.build .
 
-release: build ## Docker release image
+release:  ## Docker release image
 	docker container create --name extract icyleafcn/hpr:build
 	docker container cp extract:/app/bin/hpr ./hpr
 	docker container cp extract:/app/deps ./deps
