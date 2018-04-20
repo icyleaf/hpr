@@ -6,6 +6,11 @@ module Hpr
       Time.now.to_s("%F %T %z")
     end
 
+    def project_name(url : String)
+      repo = Repository.new url
+      repo.mirror_name
+    end
+
     def run_cmd(command : String)
       process = Process.new(command, shell: true, output: Process::Redirect::Pipe, error: Process::Redirect::Pipe)
       output = process.output.gets_to_end.strip
@@ -38,6 +43,7 @@ module Hpr
 
     def repository_info(name : String)
       Dir.cd repository_path(name)
+
       {
         "name"           => name,
         "url"            => run_cmd("git remote get-url --push origin").first.as(String),
