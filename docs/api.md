@@ -191,42 +191,13 @@ GET /info
         }
     },
     "jobs": {
-        "default_size": 0,
-        "tasks": {
-            "Busy": {
-                "reaped": 0,
-                "size": 0
-            },
-            "Dead": {
-                "cycles": 0,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0
-            },
-            "Retries": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.00032004
-            },
-            "Scheduled": {
-                "cycles": 5,
-                "enqueued": 0,
-                "size": 0,
-                "wall_time_sec": 0.000807896
-            },
-            "Workers": {
-                "reaped": 0,
-                "size": 1
-            },
-            "backup": {
-                "count": 0
-            }
-        },
+        "total_scheduled": 7,
         "total_enqueued": 0,
-        "total_failures": 2,
-        "total_processed": 36,
-        "total_queues": 1
+        "total_failures": 0,
+        "total_processed": 111,
+        "total_queues": {
+            "default": 0
+        }
     }
 }
 ```

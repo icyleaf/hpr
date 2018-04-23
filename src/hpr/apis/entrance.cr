@@ -1,3 +1,5 @@
+require "sidekiq/api"
+
 module Hpr::API::Entrance
   get "/" do |env|
     env.response.content_type = "application/json"
@@ -9,6 +11,7 @@ module Hpr::API::Entrance
   get "/info" do |env|
     env.response.content_type = "application/json"
 
+    stats = Sidekiq::Stats.new
     names = CLIENT.list_repositories
 
     {
@@ -20,7 +23,11 @@ module Hpr::API::Entrance
         },
       },
       jobs: {
-        todo: "dependence",
+        total_scheduled: stats.scheduled_size,
+        total_enqueued: stats.enqueued,
+        total_failures: stats.failed,
+        total_processed: stats.processed,
+        total_queues: stats.queues
       },
     }.to_json
   end
