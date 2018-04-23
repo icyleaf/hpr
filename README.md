@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="http://hpr.ews.im/#/en/">English Documents</a>
+  <a href="https://icyleaf.github.io/hpr/#/en/">English Documents</a>
 </p>
 
 ## 独特优势
