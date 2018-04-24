@@ -28,7 +28,7 @@ $ cd hpr
 
 ```json
 {
-  "schedule": 3600,
+  "schedule_in": "1.day",
   "basic_auth": {
     "enable": false,
     "user": "hpr",

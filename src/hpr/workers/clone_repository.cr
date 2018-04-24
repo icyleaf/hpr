@@ -38,11 +38,11 @@ module Hpr
     end
 
     private def update_schedule(url, name)
-      scheduled = Time::Span.new(0, 0, Hpr.config.schedule)
-      UpdateRepositoryWorker.async.perform_in(scheduled, name)
+      schedule_in = Hpr.config.schedule_in
+      UpdateRepositoryWorker.async.perform_in(schedule_in, name)
 
       Dir.cd Utils.repository_path(name)
-      Utils.run_cmd "git config hpr.scheduled '#{(Time.now + scheduled).to_s("%F %T %z")}'"
+      Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
     end
 
     private def mirror_ssh_url(name)

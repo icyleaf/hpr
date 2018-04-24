@@ -20,7 +20,7 @@ module Hpr::API::Entrance
         repositroies: {
           total: names.size,
           entry: names,
-        },
+        }
       },
       jobs: {
         total_scheduled: stats.scheduled_size,

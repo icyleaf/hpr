@@ -1,5 +1,5 @@
 hpr_image_name ?= icyleafcn/hpr
-hpr_version ?= 0.3.0
+hpr_version ?= 0.4.0
 
 all: build release publish
 
@@ -19,6 +19,9 @@ publish:
 	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
 	docker push $(hpr_image_name):latest
 	docker push $(hpr_image_name):$(hpr_version)
+
+doc:
+	docsify serve docs -p 3001
 
 clean:
 	rm -rf bin hpr deps

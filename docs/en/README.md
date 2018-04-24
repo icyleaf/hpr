@@ -23,7 +23,7 @@ Copy [config/hpr.json.example](config/hpr.json.example) to `config/config.json` 
 
 ```json
 {
-  "schedule": 3600,
+  "schedule_in": "1.day",
   "basic_auth": {
     "enable": false,
     "user": "hpr",

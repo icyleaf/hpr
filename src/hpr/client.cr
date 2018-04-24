@@ -47,7 +47,7 @@ module Hpr
           break
         rescue e : Gitlab::Error::BadRequest
           if (message = e.message) && message.includes?("still being deleted")
-            sleep 1
+            sleep 1.seconds
           else
             raise e
           end
