@@ -50,11 +50,15 @@ Usage: hpr <action> [--name=<name>] [<url>]
 
 Actions:
 
-    -s, --server                     Run a web api server (port 8848)
+    -s, --server                     Run a web api server
     -l, --list                       List mirrored repositories
     -c, --create                     Create a mirror repository
     -u, --update                     Updated a mirrored repository
     -d, --delete                     Delete a mirrored repository
+
+Option in server action:
+
+    -P PORT, --port PORT             the port of server (by default is 8848)
 
 Option in create action:
 
@@ -68,6 +72,38 @@ Global options:
 
     -v, --version                    Show version
     -h, --help                       Show this help
+
+Examples:
+
+       o Start a API server:
+
+               $ hpr -s
+
+       o List all mirrored repositories:
+
+               $ hpr -l
+
+       o Start a API server with custom port:
+
+               $ hpr -s --port 3001
+
+       o Create a new repository:
+
+               $ hpr -c --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+
+       o Clone and push a new repository without create gitlab project:
+
+               $ hpr -c --mirror-only --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+
+       o Update a repository:
+
+               $ hpr -u --name "icyleaf-hpr"
+
+       o Delete a repository:
+
+               $ hpr -d --name "icyleaf-hpr"
+
+       More detail to check: https://icyleaf.github.io/hpr/
 
 hpr v0.4.0 in Crystal v0.24.2
 ```
