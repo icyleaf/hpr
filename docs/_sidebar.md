@@ -1,5 +1,6 @@
 - 开始使用
   - [快速上手](quickstart.md)
+  - [安装](install.md)
 - 指南详解
   - [配置文件](configuration.md)
   - [API 接口](api.md)

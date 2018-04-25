@@ -24,6 +24,7 @@ module Hpr
       @repo_url = ""
       @repo_name = ""
       @mirror_only = false
+      @server_port = 8848
 
       need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
 
@@ -31,21 +32,58 @@ module Hpr
         parser.banner = usage
 
         parser.separator("\nActions:\n")
-        parser.on("-s", "--server", "Run a web api server (port 8848)") { @action = Action::Server }
+        parser.on("-s", "--server", "Run a web api server") { @action = Action::Server }
         parser.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
         parser.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
         parser.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
         parser.on("-d", "--delete", "Delete a mirrored repository") { @action = Action::Delete }
 
+        parser.separator("\nOption in server action:\n")
+        parser.on("-P PORT", "--port PORT", "the port of server (by default is 8848)") { |port| @server_port = port.to_i }
+
         parser.separator("\nOption in create action:\n")
         parser.on("--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
 
         parser.separator("\nOption in create/update/delete action:\n")
-        parser.on("--name NAME", "The name of mirror repository") { |n| @repo_name = n }
+        parser.on("--name NAME", "The name of mirror repository") { |name| @repo_name = name }
 
         parser.separator("\nGlobal options:\n")
         parser.on("-v", "--version", "Show version") { puts version }
         parser.on("-h", "--help", "Show this help") { puts parser }
+
+        parser.separator <<-EXAMPLES
+\nExamples:
+
+       o Start a API server:
+
+               $ hpr -s 
+
+       o List all mirrored repositories:
+
+               $ hpr -l
+
+       o Start a API server with custom port:
+
+               $ hpr -s --port 3001
+
+       o Create a new repository:
+
+               $ hpr -c --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+
+       o Clone and push a new repository without create gitlab project:
+
+               $ hpr -c --mirror-only --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+
+       o Update a repository:
+
+               $ hpr -u --name "icyleaf-hpr"
+
+       o Delete a repository:
+
+               $ hpr -d --name "icyleaf-hpr"
+
+       More detail to check: https://icyleaf.github.io/hpr/
+EXAMPLES
 
         parser.separator("\n#{version}")
 
@@ -159,7 +197,7 @@ module Hpr
       print_banner
       start_worker
 
-      Hpr::API.run
+      Hpr::API.run(@server_port)
     end
 
     private def start_worker
