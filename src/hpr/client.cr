@@ -32,6 +32,8 @@ module Hpr
 
       raise RepositoryExistsError.new "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
 
+      Hpr.logger.info "creating repository in gitlab ... #{@group["name"]}/#{project_name}"
+
       loop do
         begin
           Hpr.gitlab.create_project project_name, {
@@ -68,6 +70,7 @@ module Hpr
       unless projects.as_a.empty?
         project = projects[0]
 
+        Hpr.logger.info "destroying repository in gitlab ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 

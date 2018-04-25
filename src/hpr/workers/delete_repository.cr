@@ -3,6 +3,7 @@ module Hpr
     include Sidekiq::Worker
 
     def perform(name : String)
+      Hpr.logger.info "deleting folder ... #{name}"
       FileUtils.rm_rf Utils.repository_path(name)
     end
   end

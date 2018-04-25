@@ -34,5 +34,5 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 4fff783d501eda4e0ecd2aaac12754a83e357b34
+    commit: c56c6f1b45fed7745e43df9355108e2968aadca6
 
