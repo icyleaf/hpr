@@ -60,8 +60,6 @@ module Hpr
 
       if @action != Action::None
         run
-      else
-        puts parser
       end
     end
 
