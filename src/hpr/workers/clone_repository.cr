@@ -16,7 +16,7 @@ module Hpr
       repository_path = Hpr.config.repository_path
       Dir.cd repository_path
 
-      Hpr.logger.info "cloning from #{url} ... #{name}"
+      Hpr.logger.info "cloning #{url} ... #{name}"
       Utils.run_cmd "git clone --mirror #{url} #{name}"
     end
 

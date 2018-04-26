@@ -5,10 +5,16 @@ module Hpr
     def perform(name : String)
       repository_path = Utils.repository_path(name)
       # Skip when repository id not exists (may be deleted).
-      return unless Dir.exists?(repository_path)
+      unless Dir.exists?(repository_path)
+        Hpr.logger.error "repository folder not exists ... #{name}"
+        return
+      end
 
       # Sikp when repository not exists at gitlab service(deleted remotely)
-      return unless project = search_project(name)
+      unless project = search_project(name)
+        Hpr.logger.error "repository of gitlab not exists ... #{name}"
+        return
+      end
 
       description = project["description"].to_s
       update_project_description(project, "[Syncing] #{description}")

@@ -39,17 +39,6 @@ module Hpr
       end
     end
 
-    private def extract_name_and_user(path : String)
-      namespace = if paths.size >= 2
-                    strip_tail paths[-2]
-                  else
-                    ""
-                  end
-      name = strip_tail paths.last
-
-      [namespace, name]
-    end
-
     private def strip_tail(text : String)
       text.gsub(".git", "")
           .gsub("~", "")

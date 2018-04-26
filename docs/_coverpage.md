@@ -1,6 +1,6 @@
 ![logo](_media/icon.png)
 
-# ḫpr <small>0.4.0</small>
+# ḫpr <small>0.5.0</small>
 
 > 镜像任意 git 仓库到 gitlab 的同步工具，具有静态加速、定时更新的功能。
 

@@ -181,7 +181,7 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.2.0",
+        "version": "0.5.0",
         "repositroies": {
             "total": 2,
             "entry": [
@@ -191,13 +191,23 @@ GET /info
         }
     },
     "jobs": {
-        "total_scheduled": 7,
+        "total_scheduled": 2,
         "total_enqueued": 0,
         "total_failures": 0,
         "total_processed": 111,
         "total_queues": {
             "default": 0
         }
-    }
+    },
+    "scheduleds": [
+        {
+            "name": "project1",
+            "scheduled_at": "2018-04-28 15:47:48 UTC"
+        },
+        {
+            "name": "project2",
+            "scheduled_at": "2018-04-28 20:47:48 UTC"
+        }
+    ]
 }
 ```

@@ -15,8 +15,6 @@ module Hpr
       Delete
     end
 
-    NEDD_URL_FLAGS = ["-c", "--create"]
-
     def initialize(args = ARGV)
       @client = Client.new
 
@@ -25,8 +23,6 @@ module Hpr
       @repo_name = ""
       @mirror_only = false
       @server_port = 8848
-
-      need_flags = args.select { |v| NEDD_URL_FLAGS.includes?(v) }.size > 0
 
       parser = OptionParser.parse(args) do |parser|
         parser.banner = usage
@@ -42,10 +38,8 @@ module Hpr
         parser.on("-P PORT", "--port PORT", "the port of server (by default is 8848)") { |port| @server_port = port.to_i }
 
         parser.separator("\nOption in create action:\n")
-        parser.on("--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
-
-        parser.separator("\nOption in create/update/delete action:\n")
-        parser.on("--name NAME", "The name of mirror repository") { |name| @repo_name = name }
+        parser.on("-U URL", "--url URL", "The url of mirror repository") { |url| @repo_url = url }
+        parser.on("-M", "--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
 
         parser.separator("\nGlobal options:\n")
         parser.on("-v", "--version", "Show version") { puts version }
@@ -56,7 +50,7 @@ module Hpr
 
        o Start a API server:
 
-               $ hpr -s 
+               $ hpr -s
 
        o List all mirrored repositories:
 
@@ -68,19 +62,19 @@ module Hpr
 
        o Create a new repository:
 
-               $ hpr -c --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+               $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Clone and push a new repository without create gitlab project:
 
-               $ hpr -c --mirror-only --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+               $ hpr -c --mirror-only --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Update a repository:
 
-               $ hpr -u --name "icyleaf-hpr"
+               $ hpr -u icyleaf-hpr
 
        o Delete a repository:
 
-               $ hpr -d --name "icyleaf-hpr"
+               $ hpr -d icyleaf-hpr
 
        More detail to check: https://icyleaf.github.io/hpr/
 EXAMPLES
@@ -88,11 +82,7 @@ EXAMPLES
         parser.separator("\n#{version}")
 
         parser.unknown_args do |unknown_args|
-          if need_flags
-            raise Error.new("Missing url argument.") if unknown_args.size.zero?
-
-            @repo_url = unknown_args.first
-          end
+          @repo_name = unknown_args.first if unknown_args.size > 0
         end
       end
 
@@ -121,22 +111,21 @@ EXAMPLES
         obj << Utils.repository_info(name) if Utils.repository_path?(name)
       end
 
-      puts "Here are #{repositories.size} mirrored repositories:\n"
+      Hpr.logger.info "listing repositories (#{repositories.size}):"
       @client.list_repositories.each do |repository|
         puts "* #{repository}"
       end
     end
 
     private def create_repository
-      start_worker
-      sleep 100.milliseconds # waiting sidekiq is ready
+      Utils.user_error! "Missing url argument." if @repo_url.empty?
 
       @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
       if Utils.repository_path?(@repo_name)
         project_path = Utils.repository_path(@repo_name)
         project_info = Utils.repository_info(@repo_name)
 
-        puts "repository was exists ... #{@repo_name}"
+        Hpr.logger.info "repository exists ... #{@repo_name}"
         puts "* path: #{project_path}"
         puts "* original url: #{project_info["url"]}"
         puts "* mirror url: #{project_info["mirror_url"]}"
@@ -148,49 +137,47 @@ EXAMPLES
         exit
       end
 
+      start_worker
+      sleep 100.milliseconds # waiting sidekiq is ready
+
       @client.create_repository(@repo_url, @repo_name, @mirror_only)
-      print "* repository is creating "
       loop do
         sleep 1.seconds
-        print "."
-
         if !Utils.repository_cloning?(@repo_name) &&
            (info = Utils.repository_info(@repo_name)) &&
            !info["updated_at"].empty?
           break
         end
       end
-      puts " [done]"
+      Hpr.logger.info "create repository ... done"
     end
 
     private def update_repository
+      Utils.user_error! "Missing name argument." if @repo_name.empty?
+
       start_worker
       sleep 1.seconds # waiting sidekiq is ready
       @client.update_repository(@repo_name)
 
-      print "* repository is updating "
       loop do
         sleep 1.seconds
-        print "."
-
         break unless Utils.repository_updating?(@repo_name)
       end
-      puts " [done]"
+      Hpr.logger.info "update repository ... done"
     end
 
     private def delete_repository
+      Utils.user_error! "Missing name argument." if @repo_name.empty?
+
       start_worker
       sleep 1.seconds # waiting sidekiq is ready
 
-      print "* repository is deleting "
       @client.delete_repository(@repo_name)
       loop do
         sleep 1.seconds
-        print "."
-
         break unless Utils.repository_path?(@repo_name)
       end
-      puts " [done]"
+      Hpr.logger.info "delete repository ... done"
     end
 
     private def start_server
@@ -207,7 +194,7 @@ EXAMPLES
     end
 
     private def usage
-      "Usage: hpr <action> [--name=<name>] [<url>]"
+      "Usage: hpr <action> [--url=<url>] <name>"
     end
 
     private def version

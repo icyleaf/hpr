@@ -2,6 +2,11 @@ module Hpr
   module Utils
     extend self
 
+    def user_error!(message)
+      Hpr.logger.error message
+      raise Hpr::Error.new message
+    end
+
     def current_datetime
       Time.now.to_s("%F %T %z")
     end

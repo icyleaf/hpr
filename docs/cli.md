@@ -17,17 +17,19 @@ Here are 4 mirrored repositories:
 ## 创建镜像仓库
 
 ```bash
-$ hpr -c --name icyleaf-salt https://github.com/icyleaf/salt.git
+$ hpr --create --url https://github.com/icyleaf/salt.git icyleaf-salt
+# or
+$ hpr -c -U https://github.com/icyleaf/salt.git
 ```
 
 ## 更新镜像仓库
 
 ```bash
-$ hpr -u --name icyleaf-salt
+$ hpr -u icyleaf-salt
 ```
 
 ## 删除镜像仓库
 
 ```bash
-$ hpr -d --name icyleaf-salt
+$ hpr -d icyleaf-salt
 ```

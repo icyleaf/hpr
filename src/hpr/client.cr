@@ -30,9 +30,9 @@ module Hpr
       repo = Repository.new url
       project_name = (name && !name.empty?) ? name : repo.mirror_name
 
-      raise RepositoryExistsError.new "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
+      Utils.user_error! "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
 
-      Hpr.logger.info "creating repository in gitlab ... #{@group["name"]}/#{project_name}"
+      Hpr.logger.info "creating repository ... #{@group["name"]}/#{project_name}"
 
       loop do
         begin
@@ -62,8 +62,7 @@ module Hpr
 
     def update_repository(name : String)
       unless reopsitory_stored?(name)
-        Hpr.logger.error "repository not exists ... #{name}"
-        raise NotFoundRepositoryError.new "Not found repository: #{name}"
+        Utils.user_error! "repository not exists ... #{name}"
       end
 
       UpdateRepositoryWorker.async.perform name
@@ -87,7 +86,7 @@ module Hpr
       end
     end
 
-    def reopsitory_stored?(name)
+    private def reopsitory_stored?(name)
       Dir.exists?(Utils.repository_path(name))
     end
 

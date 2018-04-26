@@ -10,12 +10,12 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 
 ## Docker
 
-> 需要拉取 [hpr]() 和 [redis]() 两个镜像。
+> 需要拉取 [hpr](https://hub.docker.com/r/icyleafcn/hpr) 和 [redis](https://hub.docker.com/_/redis) 两个镜像。
 
 获取指定版本的 hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.4.0
+$ docker pull icyleafcn/hpr:0.5.0
 ```
 
 或者获取最新版本的 hpr:
@@ -68,7 +68,7 @@ $ cd hpr
 $ shards build --release --no-debug
 ```
 
-### 运行 redis 
+### 运行 redis
 
 ```bash
 $ brew services start redis
@@ -79,7 +79,7 @@ $ brew services start redis
 
 ```bash
 $ ./bin/hpr --help
-Usage: hpr <action> [--name=<name>] [<url>]
+Usage: hpr <action> [--url=<url>] <name>
 
 Actions:
 
@@ -95,11 +95,8 @@ Option in server action:
 
 Option in create action:
 
-    --mirror-only                    Only mirror the repository without clone in create action
-
-Option in create/update/delete action:
-
-    --name NAME                      The name of mirror repository
+    -U URL, --url URL                The url of mirror repository
+    -M, --mirror-only                Only mirror the repository without clone in create action
 
 Global options:
 
@@ -122,21 +119,21 @@ Examples:
 
        o Create a new repository:
 
-               $ hpr -c --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+               $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Clone and push a new repository without create gitlab project:
 
-               $ hpr -c --mirror-only --name "icyleaf-hpr" https://github.com/icyleaf/hpr.git
+               $ hpr -c --mirror-only --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Update a repository:
 
-               $ hpr -u --name "icyleaf-hpr"
+               $ hpr -u icyleaf-hpr
 
        o Delete a repository:
 
-               $ hpr -d --name "icyleaf-hpr"
+               $ hpr -d icyleaf-hpr
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.4.0 in Crystal v0.24.2
+hpr v0.5.0 in Crystal v0.24.2
 ```

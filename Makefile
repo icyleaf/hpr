@@ -1,5 +1,5 @@
 hpr_image_name ?= icyleafcn/hpr
-hpr_version ?= 0.4.0
+hpr_version ?= 0.5.0
 
 all: build release publish
 
@@ -15,7 +15,7 @@ release:  ## Docker release image
 	docker build --no-cache -t $(hpr_image_name):$(hpr_version) .
 	rm -rf hpr deps
 
-publish: 
+publish:
 	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
 	docker push $(hpr_image_name):latest
 	docker push $(hpr_image_name):$(hpr_version)
