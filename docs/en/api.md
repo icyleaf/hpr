@@ -193,6 +193,16 @@ GET /info
         "total_queues": {
             "default": 0
         }
-    }
+    },
+    "scheduleds": [
+        {
+            "name": "project1",
+            "scheduled_at": "2018-04-28 15:47:48 UTC"
+        },
+        {
+            "name": "project2",
+            "scheduled_at": "2018-04-28 20:47:48 UTC"
+        }
+    ]
 }
 ```

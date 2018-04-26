@@ -116,25 +116,3 @@ hpr 提供两者方法来管理 git 仓库:
 ## Cli tool
 
 具体详情参见[命令行工具](cli.md)
-
-# 本地开发
-
-首先需要安装 [Crystal](https://crystal-lang.org/docs/installation/index.html) 之后执行：
-
-```bash
-$ shards install
-```
-
-# 贡献你的力量
-
-可能你对本项目是由 Crystal 编写的很陌生，不需要担心如果你熟悉 Ruby 就没有障碍了。
-
-1. [Fork 本项目](https://github.com/icyleaf/hpr/fork)
-2. 创建你的新特性/修复分支 (`git checkout -b my-new-feature`)
-3. 提交你的代码 (`git commit -am 'Add some feature'`)
-4. 推送分支到服务器 (`git push origin my-new-feature`)
-5. 创建一个新的 PR
-
-# 项目维护者
-
-- [icyleaf](https://github.com/icyleaf) - 核心开发维护者
