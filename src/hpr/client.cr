@@ -28,7 +28,7 @@ module Hpr
 
     def create_repository(url : String, name : String? = nil, mirror_only = false)
       repo = Repository.new url
-      project_name = name ? name : repo.mirror_name
+      project_name = (name && !name.empty?) ? name : repo.mirror_name
 
       raise RepositoryExistsError.new "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
 
@@ -38,6 +38,7 @@ module Hpr
         begin
           Hpr.gitlab.create_project project_name, {
             "namespace_id"           => @namespace["id"].to_s,
+            "path"                   => project_name,
             "description"            => "Mirror of #{url}",
             "visibility"             => (Hpr.config.gitlab.project_public ? "public" : "private"),
             "issues_enabled"         => Hpr.config.gitlab.project_issue.to_s,
@@ -60,7 +61,10 @@ module Hpr
     end
 
     def update_repository(name : String)
-      raise NotFoundRepositoryError.new "Not found repository: #{name}" unless reopsitory_stored?(name)
+      unless reopsitory_stored?(name)
+        Hpr.logger.error "repository not exists ... #{name}"
+        raise NotFoundRepositoryError.new "Not found repository: #{name}"
+      end
 
       UpdateRepositoryWorker.async.perform name
     end
@@ -70,7 +74,7 @@ module Hpr
       unless projects.as_a.empty?
         project = projects[0]
 
-        Hpr.logger.info "destroying repository in gitlab ... #{@group["name"]}/#{name}"
+        Hpr.logger.info "destroying project ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
