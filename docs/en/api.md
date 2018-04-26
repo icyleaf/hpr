@@ -1,10 +1,10 @@
-# API 接口
+# Web API
 
 hpr support a web api service (port `8848`) by default.
 
 ## Authentication
 
-Only support Basic Auth for now. Configure from `config/hpr.json` file，View detail in [Configuration](configuration?id=basic_auth-接口认证).
+Only support Basic Auth for now. Configure from `config/hpr.json` file，View detail in [Configuration](/en/configuration?id=basic_auth-接口认证).
 
 ```bash
 $ curl -u user@password http://hpr-ip:8848/info
@@ -83,7 +83,7 @@ GET /repositores/:name
 }
 ```
 
-### 创建镜像仓库
+### Create repository
 
 Create a git repository, it is recommand to use HTTP protocol. The name got from url by default if left it empty but only avaiables with
 

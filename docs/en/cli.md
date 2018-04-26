@@ -1,4 +1,4 @@
-# Cli
+# CLI
 
 hpr is a command line tool, it also support some commands to manage mirror repositories temporary.
 
