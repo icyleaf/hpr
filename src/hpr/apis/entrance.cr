@@ -12,6 +12,15 @@ module Hpr::API::Entrance
     env.response.content_type = "application/json"
 
     stats = Sidekiq::Stats.new
+
+    scheduled_set = Sidekiq::ScheduledSet.new
+    scheduleds = scheduled_set.each_with_object([] of Hash(String, String)) do |retri, obj|
+      obj << {
+        "name" => retri.args[0].to_s,
+        "scheduled_at" => retri.at.to_s
+      }
+    end
+
     names = CLIENT.list_repositories
 
     {
@@ -27,7 +36,8 @@ module Hpr::API::Entrance
         total_enqueued: stats.enqueued,
         total_failures: stats.failed,
         total_processed: stats.processed,
-        total_queues: stats.queues
+        total_queues: stats.queues,
+        scheduleds: scheduleds
       },
     }.to_json
   end
