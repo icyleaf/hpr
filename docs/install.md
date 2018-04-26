@@ -4,6 +4,32 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 
 > 虽然使用 Crystal 编写但你可以不用安装依赖环境，可以直接下载编译好的二进制包，虽然目前还为准备好。
 
+## Docker Compose
+
+参见[快速上手](quickstart.md)。
+
+## Docker
+
+> 需要拉取 [hpr]() 和 [redis]() 两个镜像。
+
+获取指定版本的 hpr:
+
+```bash
+$ docker pull icyleafcn/hpr:0.4.0
+```
+
+或者获取最新版本的 hpr:
+
+```bash
+$ docker pull icyleafcn/hpr:latest
+```
+
+之后在拉取依赖的 redis 镜像，这里我使用了基于 `alpine` 的镜像版本主要是为了镜像体积最小加快拉取速度。
+
+```bash
+$ docker pull redis:alpine
+```
+
 ## Homebrew
 
 > TODO
@@ -26,7 +52,7 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 安装依赖环境：
 
 ```bash
-$ brew install go crystal-lang
+$ brew install crystal-lang redis
 ```
 
 ### 从 Github 下载源码
@@ -42,7 +68,14 @@ $ cd hpr
 $ shards build --release --no-debug
 ```
 
-### 运行
+### 运行 redis 
+
+```bash
+$ brew services start redis
+==> Successfully started `redis` (label: homebrew.mxcl.redis)
+```
+
+### 运行 hpr
 
 ```bash
 $ ./bin/hpr --help

@@ -1,13 +1,20 @@
-## 快速上手
+# 快速上手
 
-鉴于 Docker 的便利性，目前教程只提供此种方法进行安装部署，首先克隆本项目：
+鉴于 Docker 的便利性，推荐使用 docker-compose 以最快速的安装使用：
 
+```bash
+$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/docker-compose.yml
 ```
-$ git clone https://github.com/icyleaf/hpr.git
-$ cd hpr
+
+获取配置模板：
+
+```bash
+$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
+$ mkdir config
+$ mv hpr.json.example.yml config/hpr.json
 ```
 
-复制 [config/hpr.json.example](config/hpr.json.example) 并改名 `config/config.json` 后可修改
+根据自己的情况修改 `config/config.json` 文件
 
 ```json
 {
@@ -95,108 +102,22 @@ hpr_1      |        |_|
 
 部署的部分介绍完毕，下面是具体使用方法。
 
-## 用法
+# 用法
 
 hpr 提供两者方法来管理 git 仓库:
 
 - [Web API](#web-api) (推荐)
 - [命令行工具](#cli-tool)
 
-### Web API
+## Web API
 
-执行 hpr 可在本地允许一个 Web API 服务（端口号 `8848`)：
+具体详情参见[API](api.md)
 
-```bash
-$ hpr --server
-       _
-      | |__  _ __  _ __
-      | '_ \| '_ \| '__|
-      | | | | |_) | |
-      |_| |_| .__/|_|
-            |_|
-I, [2018-03-21 16:44:50 +08:00 #55483]  INFO -- hpr: API Server now listening at localhost:8848, press Ctrl-C to stop
-```
+## Cli tool
 
-#### 显示已镜像的仓库列表
+具体详情参见[命令行工具](cli.md)
 
-```
-GET /repositores
-```
-
-##### 参数
-
-| 名称 | 类型 | 是否必须 | 描述 |
-|---|---|---|---|
-| page | Integer | false | |
-| per_page | Integer | false | |
-
-#### 创建镜像仓库
-
-```
-POST /repositores
-```
-
-##### 参数
-
-| 名称 | 类型 | 是否必须 | 描述 |
-|---|---|---|---|
-| url | String | true | |
-| name | String | false | |
-
-
-#### 更新镜像仓库
-
-```
-PUT /repositores/:name
-```
-
-##### 参数
-
-| 名称 | 类型 | 是否必须 | 描述 |
-|---|---|---|---|
-| name | String | false | |
-
-
-#### 删除镜像仓库
-
-```
-DELETE /repositores/:name
-```
-
-##### 参数
-
-| 名称 | 类型 | 是否必须 | 描述 |
-|---|---|---|---|
-| name | String | false | |
-
-
-### Cli tool
-
-#### 显示已镜像的仓库列表
-
-```bash
-$ hpr -l
-```
-
-#### 创建镜像仓库
-
-```bash
-$ hpr -c --name hpr-mirror https://github.com/icyleaf/hpr.git
-```
-
-#### 更新镜像仓库
-
-```bash
-$ hpr -u --name hpr-mirror
-```
-
-#### 删除镜像仓库
-
-```bash
-$ hpr -d --name hpr-mirror
-```
-
-## 本地开发
+# 本地开发
 
 首先需要安装 [Crystal](https://crystal-lang.org/docs/installation/index.html) 之后执行：
 
@@ -204,7 +125,7 @@ $ hpr -d --name hpr-mirror
 $ shards install
 ```
 
-## 贡献你的力量
+# 贡献你的力量
 
 可能你对本项目是由 Crystal 编写的很陌生，不需要担心如果你熟悉 Ruby 就没有障碍了。
 
@@ -214,6 +135,6 @@ $ shards install
 4. 推送分支到服务器 (`git push origin my-new-feature`)
 5. 创建一个新的 PR
 
-## 项目维护者
+# 项目维护者
 
 - [icyleaf](https://github.com/icyleaf) - 核心开发维护者
