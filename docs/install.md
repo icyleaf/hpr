@@ -32,7 +32,17 @@ $ docker pull redis:alpine
 
 ## Homebrew
 
-> TODO
+通过 brew 安装也是比较快捷的方式，但目前运行依赖配置文件：
+
+```
+$ brew tap icyleaf/core
+$ brew install hpr
+[have a cup of tea]
+$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
+$ mkdir config
+$ mv hpr.json.example.yml config/hpr.json
+$ hpr --help
+```
 
 ## 源码安装
 
