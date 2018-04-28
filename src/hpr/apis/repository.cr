@@ -78,6 +78,20 @@ module Hpr::API::Repository
     true.to_json
   end
 
+  get "/repositories/search" do |env|
+    query = env.params.query["q"]
+    repositories = @@client.search_repositories(query).each_with_object([] of Hash(String, String)) do |name, obj|
+      obj << Utils.repository_info(name)
+    end
+
+    env.response.content_type = "application/json"
+    env.response.status_code = 200
+    {
+      total: repositories.size,
+      data:  repositories
+    }.to_json
+  end
+
   error 404 do |env|
     env.response.content_type = "application/json"
     {

@@ -10,6 +10,7 @@ module Hpr
       None
       Server
       List
+      Search
       Create
       Update
       Delete
@@ -30,6 +31,7 @@ module Hpr
         parser.separator("\nActions:\n")
         parser.on("-s", "--server", "Run a web api server") { @action = Action::Server }
         parser.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
+        parser.on("-S", "--search", "Search mirrored repositories") { @action = Action::Search }
         parser.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
         parser.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
         parser.on("-d", "--delete", "Delete a mirrored repository") { @action = Action::Delete }
@@ -59,6 +61,10 @@ module Hpr
        o Start a API server with custom port:
 
                $ hpr -s --port 3001
+
+       o Search all repositories include icyleaf keywords:
+
+               $ hpr -S icyleaf
 
        o Create a new repository:
 
@@ -97,6 +103,8 @@ EXAMPLES
         start_server
       when Action::List
         list_repositories
+      when Action::Search
+        search_repositories
       when Action::Create
         create_repository
       when Action::Update
@@ -108,12 +116,24 @@ EXAMPLES
 
     private def list_repositories
       repositories = @client.list_repositories.each_with_object([] of Hash(String, String)) do |name, obj|
-        obj << Utils.repository_info(name) if Utils.repository_path?(name)
+        obj << Utils.repository_info(name)
       end
 
       Hpr.logger.info "listing repositories (#{repositories.size}):"
-      @client.list_repositories.each do |repository|
-        puts "* #{repository}"
+      repositories.each do |repo|
+        dump_repository(repo)
+      end
+    end
+
+    private def search_repositories
+      Hpr.logger.info "searching repositories ... #{@repo_name}"
+      repositories = @client.search_repositories(@repo_name).each_with_object([] of Hash(String, String)) do |name, obj|
+        obj << Utils.repository_info(name)
+      end
+
+      Hpr.logger.info "found repositories (#{repositories.size}):"
+      repositories.each do |repo|
+        dump_repository(repo)
       end
     end
 
@@ -122,17 +142,9 @@ EXAMPLES
 
       @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
       if Utils.repository_path?(@repo_name)
-        project_path = Utils.repository_path(@repo_name)
-        project_info = Utils.repository_info(@repo_name)
-
         Hpr.logger.info "repository exists ... #{@repo_name}"
-        puts "* path: #{project_path}"
-        puts "* original url: #{project_info["url"]}"
-        puts "* mirror url: #{project_info["mirror_url"]}"
-        puts "* status: #{project_info["status"]}"
-        puts "* created at: #{project_info["created_at"]}"
-        puts "* updated at: #{project_info["updated_at"]}"
-        puts "* scheduled at: #{project_info["scheduled_at"]}"
+        repo = Utils.repository_info(@repo_name)
+        dump_repository(repo)
 
         exit
       end
@@ -178,6 +190,18 @@ EXAMPLES
         break unless Utils.repository_path?(@repo_name)
       end
       Hpr.logger.info "delete repository ... done"
+    end
+
+    private def dump_repository(repo)
+      puts
+      puts "=> Name: #{repo["name"]}"
+      puts "   Path: #{Utils.repository_path(repo["name"])}"
+      puts "   OriginalUrl: #{repo["url"]}"
+      puts "   MirrorUrl: #{repo["mirror_url"]}"
+      puts "   Status: #{repo["status"]}"
+      puts "   CreatedAt: #{repo["created_at"]}"
+      puts "   UpdatedAt: #{repo["updated_at"]}"
+      puts "   ScheduledAt: #{repo["scheduled_at"]}"
     end
 
     private def start_server

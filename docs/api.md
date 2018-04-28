@@ -55,6 +55,50 @@ GET /repositores
 }
 ```
 
+### 搜索镜像仓库
+
+根据关键词搜索镜像仓库，只要关键词匹配到任意镜像仓库名的字符串均会命中。
+
+```
+GET /repositores/search/?q=[query]
+```
+
+#### 参数
+
+| 名称 | 类型 | 是否必须 | 描述 |
+|---|---|---|---|
+| q | String | true | 搜索关键词 |
+
+#### 返回样例
+
+```json
+{
+    "total": 2,
+    "data": [
+        {
+            "name": "coding-coding-docs",
+            "url": "https://git.coding.net/coding/coding-docs.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/coding-coding-docs.git",
+            "latest_version": "",
+            "status": "idle",
+            "created_at": "2018-03-23 16:27:59 +0800",
+            "updated_at": "2018-03-23 16:27:59 +0800",
+            "scheduled_at": "2018-03-23 17:28:02 +0800"
+        },
+        {
+            "name": "spf13-viper",
+            "url": "https://github.com/spf13/viper.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/spf13-viper.git",
+            "latest_version": "v1.0.2",
+            "status": "idle",
+            "created_at": "2018-03-23 16:36:00 +0800",
+            "updated_at": "2018-03-23 16:36:00 +0800",
+            "scheduled_at": "2018-03-23 17:36:02 +0800"
+        }
+    ]
+}
+```
+
 ### 单个镜像仓库信息
 
 ```
@@ -180,7 +224,7 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.5.0",
+        "version": "0.6.0",
         "repositroies": {
             "total": 2,
             "entry": [

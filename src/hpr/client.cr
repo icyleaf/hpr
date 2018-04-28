@@ -26,6 +26,13 @@ module Hpr
       end
     end
 
+    def search_repositories(query : String)
+      query = query.downcase
+      list_repositories.each_with_object([] of String) do |name, obj|
+        obj << name if name.downcase.includes?(query)
+      end
+    end
+
     def create_repository(url : String, name : String? = nil, mirror_only = false)
       repo = Repository.new url
       project_name = (name && !name.empty?) ? name : repo.mirror_name

@@ -15,7 +15,7 @@ Check [Quick start](/en/quickstart.md)。
 Pull specified version of hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.5.0
+$ docker pull icyleafcn/hpr:0.6.0
 ```
 
 Or pull the latest version:
@@ -95,6 +95,7 @@ Actions:
 
     -s, --server                     Run a web api server
     -l, --list                       List mirrored repositories
+    -S, --search                     Search mirrored repositories
     -c, --create                     Create a mirror repository
     -u, --update                     Updated a mirrored repository
     -d, --delete                     Delete a mirrored repository
@@ -127,6 +128,10 @@ Examples:
 
                $ hpr -s --port 3001
 
+       o Search all repositories include icyleaf keywords:
+
+               $ hpr -S icyleaf
+
        o Create a new repository:
 
                $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
@@ -145,5 +150,5 @@ Examples:
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.5.0 in Crystal v0.24.2
+hpr v0.6.0 in Crystal v0.24.2
 ```

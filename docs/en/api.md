@@ -55,6 +55,49 @@ GET /repositores
 }
 ```
 
+### Search repositories
+
+Search repositories by given query keywords, returns all include keyword matchs the name of mirrored reposotories.
+
+```
+GET /repositores/search/?q=[query]
+```
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|---|---|---|---|
+| q | String | true | keyworkd |
+
+#### Example Response
+
+```json
+{
+    "total": 2,
+    "data": [
+        {
+            "name": "coding-coding-docs",
+            "url": "https://git.coding.net/coding/coding-docs.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/coding-coding-docs.git",
+            "latest_version": "",
+            "status": "idle",
+            "created_at": "2018-03-23 16:27:59 +0800",
+            "updated_at": "2018-03-23 16:27:59 +0800",
+            "scheduled_at": "2018-03-23 17:28:02 +0800"
+        },
+        {
+            "name": "spf13-viper",
+            "url": "https://github.com/spf13/viper.git",
+            "mirror_url": "git@git.example.com:hpr-mirrors/spf13-viper.git",
+            "latest_version": "v1.0.2",
+            "status": "idle",
+            "created_at": "2018-03-23 16:36:00 +0800",
+            "updated_at": "2018-03-23 16:36:00 +0800",
+            "scheduled_at": "2018-03-23 17:36:02 +0800"
+        }
+    ]
+}
+```
 
 ### Get a repository info
 

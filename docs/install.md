@@ -15,7 +15,7 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 获取指定版本的 hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.5.0
+$ docker pull icyleafcn/hpr:0.6.0
 ```
 
 或者获取最新版本的 hpr:
@@ -95,6 +95,7 @@ Actions:
 
     -s, --server                     Run a web api server
     -l, --list                       List mirrored repositories
+    -S, --search                     Search mirrored repositories
     -c, --create                     Create a mirror repository
     -u, --update                     Updated a mirrored repository
     -d, --delete                     Delete a mirrored repository
@@ -127,6 +128,10 @@ Examples:
 
                $ hpr -s --port 3001
 
+       o Search all repositories include icyleaf keywords:
+
+               $ hpr -S icyleaf
+
        o Create a new repository:
 
                $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
@@ -145,5 +150,5 @@ Examples:
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.5.0 in Crystal v0.24.2
+hpr v0.6.0 in Crystal v0.24.2
 ```
