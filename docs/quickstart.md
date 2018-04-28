@@ -47,6 +47,8 @@ $ mv hpr.json.example.yml config/hpr.json
 - `group_name`: 项目镜像的项目都会归属到这个组内，**务必确保你的账户拥有创建组的权限** (如果是管理员请忽略加粗字样)
 - `ssh_port`: 如果 SSH 不是 22 端口的话需要根据你的实际情况修改
 
+> 更多参数详情参见[配置文件](configuration?id=basic_auth-接口认证)。
+
 配置文件修改保存后还需要在 `docker-compose.yml` 文件中配置下：
 
 ```yaml

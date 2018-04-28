@@ -4,7 +4,7 @@ hpr support a web api service (port `8848`) by default.
 
 ## Authentication
 
-Only support Basic Auth for now. Configure from `config/hpr.json` file，View detail in [Configuration](/en/configuration?id=basic_auth-接口认证).
+Only support Basic Auth for now. Configure to enable or not from `config/hpr.json` file，View detail in [Configuration](/en/configuration?id=basic_auth).
 
 ```bash
 $ curl -u user@password http://hpr-ip:8848/info

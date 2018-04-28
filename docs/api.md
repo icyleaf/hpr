@@ -1,10 +1,10 @@
 # API 接口
 
-hpr 运行后会提供 Web API 接口，端口号 `8848`。
+hpr 运行后会提供 Web API 接口，默认端口 `8848`。
 
 ## 认证
 
-接口请求目前仅支持 Basic Auth，通过配置文件 `config/hpr.json` 进行配置，详情参见[配置文件](configuration?id=basic_auth-接口认证)说明。
+接口请求目前仅支持 Basic Auth，通过配置文件 `config/hpr.json` 进行配置是否开启（默认关闭），详情参见[配置文件](configuration?id=basic_auth-接口认证)说明。
 
 ```bash
 $ curl -u user@password http://hpr-ip:8848/info
@@ -54,7 +54,6 @@ GET /repositores
     ]
 }
 ```
-
 
 ### 单个镜像仓库信息
 

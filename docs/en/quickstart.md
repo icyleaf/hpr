@@ -47,6 +47,8 @@ Here has 4 places to change your own.
 - `group_name`: all mirrored project will be in this group, **MAKE SUER YOU ACCOUNT HAS CREATE GROUP ROLE** (ignore if has admin role)
 - `ssh_port`: change it if you use custom ssh port
 
+> About more params check [Configuration](configuration?id=basic_auth-接口认证) page.
+
 Then set some optional `ENV` variables if you need in `docker-compose.yml`:
 
 ```yaml
