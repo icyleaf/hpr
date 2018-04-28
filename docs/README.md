@@ -16,7 +16,7 @@
 
 参见[快速上手](quickstart.md)文档。
 
-# 本地开发
+## 本地开发
 
 首先需要安装 [Crystal](https://crystal-lang.org/docs/installation/index.html) 和 redis 之后执行：
 
@@ -24,7 +24,7 @@
 $ shards install
 ```
 
-# 贡献你的力量
+## 贡献你的力量
 
 可能你对本项目是由 Crystal 编写的很陌生，不需要担心如果你熟悉 Ruby 就没有障碍了。
 
@@ -34,6 +34,6 @@ $ shards install
 4. 推送分支到服务器 (`git push origin my-new-feature`)
 5. 创建一个新的 PR
 
-# 项目维护者
+## 项目维护者
 
 - [icyleaf](https://github.com/icyleaf) - 核心开发维护者

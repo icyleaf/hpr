@@ -22,7 +22,7 @@ Mirror git repositories to self-host gitlab services. It's best choice for any r
 
 Check [Quick Start](quickstart.md).
 
-# Development
+## Development
 
 Install [Crystal](https://crystal-lang.org/docs/installation/index.html) and redis first and run：
 
