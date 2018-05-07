@@ -205,6 +205,8 @@ EXAMPLES
     end
 
     private def start_server
+      determine_redis!
+
       print_banner
       start_worker
 
@@ -215,6 +217,15 @@ EXAMPLES
       spawn do
         Hpr::Worker.run
       end
+    end
+
+    private def determine_redis!
+      if provider = ENV["REDIS_PROVIDER"]?
+        Redis.new(url: ENV[provider])
+      end
+    rescue e : Exception
+      Hpr.logger.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
+      exit
     end
 
     private def usage
