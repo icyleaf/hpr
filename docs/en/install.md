@@ -15,7 +15,7 @@ Check [Quick start](/en/quickstart.md)。
 Pull specified version of hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.6.0
+$ docker pull icyleafcn/hpr:0.6.1
 ```
 
 Or pull the latest version:
@@ -150,5 +150,5 @@ Examples:
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.6.0 in Crystal v0.24.2
+hpr v0.6.1 in Crystal v0.24.2
 ```
