@@ -6,9 +6,14 @@
 
 ## [Unreleased]
 
+> TODO
+
+## [0.6.2] (2018-06-20)
+
 ### Fixed
 
 - [CLI] 修复运行时 redis 服务器无法连接造成无法创建异步任务
+- [Core] 升级支持 Crystal 0.25.0
 
 ## [0.6.0] (2018-04-28)
 
@@ -65,7 +70,8 @@
 
 - 第一个测试版本
 
-[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.6.2
 [0.6.0]: https://github.com/icyleaf/hpr/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/icyleaf/hpr/compare/v0.3.0...v0.5.0
 [0.3.0]: https://github.com/icyleaf/hpr/compare/v0.2.0...v0.3.0

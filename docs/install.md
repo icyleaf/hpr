@@ -15,7 +15,7 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 获取指定版本的 hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.6.1
+$ docker pull icyleafcn/hpr:0.6.2
 ```
 
 或者获取最新版本的 hpr:
@@ -150,5 +150,5 @@ Examples:
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.6.1 in Crystal v0.24.2
+hpr v0.6.2 in Crystal v0.24.2
 ```

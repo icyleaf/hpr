@@ -40,7 +40,7 @@ module Hpr
 
     private def search_project(name) : JSON::Any?
       projects = Hpr.gitlab.projects({"search" => name})
-      selected = projects.select {|p|p["name"] == name}
+      selected = projects.as_a.select { |p| p["name"] == name }
       return if selected.empty?
 
       selected.first

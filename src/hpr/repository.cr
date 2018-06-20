@@ -41,7 +41,7 @@ module Hpr
 
     private def strip_tail(text : String)
       text.gsub(".git", "")
-          .gsub("~", "")
+        .gsub("~", "")
     end
   end
 end

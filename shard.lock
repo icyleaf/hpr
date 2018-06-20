@@ -2,15 +2,15 @@ version: 1.0
 shards:
   gitlab:
     github: icyleaf/gitlab.cr
-    version: 0.3.3
+    version: 0.3.4
 
   halite:
     github: icyleaf/halite
-    version: 0.3.1
+    version: 0.3.2
 
   kemal:
     github: kemalcr/kemal
-    version: 0.22.0
+    version: 0.23.0
 
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
@@ -30,9 +30,9 @@ shards:
 
   redis:
     github: stefanwille/crystal-redis
-    version: 1.9.0
+    version: 1.11.0
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: f7a614e3444d2ea2b308a1795d92c6a823d2d288
+    commit: 7c3c47875d59e9ea3ee622d15d1ab52e5bfcd9c5
 
