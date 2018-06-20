@@ -49,6 +49,7 @@ module Hpr
     def repository_info(name : String)
       Dir.cd repository_path(name)
 
+      # depend on git 2.7.0+
       {
         "name"           => name,
         "url"            => run_cmd("git remote get-url --push origin").first.as(String),
