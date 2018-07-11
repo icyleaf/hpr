@@ -19,6 +19,6 @@ dependencies:
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
 
-crystal: 0.25.0
+crystal: 0.25.1
 
 license: MIT

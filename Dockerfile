@@ -1,4 +1,4 @@
-FROM icyleafcn/alpine:3.7
+FROM icyleafcn/alpine:3.8
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY hpr /app/hpr
