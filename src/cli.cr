@@ -54,13 +54,13 @@ module Hpr
 
                $ hpr -s
 
-       o List all mirrored repositories:
-
-               $ hpr -l
-
        o Start a API server with custom port:
 
                $ hpr -s --port 3001
+
+       o List all mirrored repositories:
+
+               $ hpr -l
 
        o Search all repositories include icyleaf keywords:
 
