@@ -60,14 +60,14 @@ GET /repositores
 根据关键词搜索镜像仓库，只要关键词匹配到任意镜像仓库名的字符串均会命中。
 
 ```
-GET /repositores/search/?q=[query]
+GET /repositores/search/:name
 ```
 
 #### 参数
 
 | 名称 | 类型 | 是否必须 | 描述 |
 |---|---|---|---|
-| q | String | true | 搜索关键词 |
+| name | String | true | 搜索仓库的名称 |
 
 #### 返回样例
 

@@ -1,81 +1,102 @@
-module Hpr::API::Repository
-  @@client = Client.new
-
+module Hpr::API::Repositories
   # List all repositories
-  get "/repositories" do |env|
-    env.response.content_type = "application/json"
-    names = @@client.list_repositories
-    repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
-      obj << Utils.repository_info(name) if Utils.repository_path?(name)
-    end
+  class List < Salt::App
+    def call(env)
+      names = CLIENT.list_repositories
+      repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
+        obj << Utils.repository_info(name) if Utils.repository_path?(name)
+      end
 
-    {
-      total: repositories.size,
-      data:  repositories,
-    }.to_json
+      body = {
+        total: repositories.size,
+        data:  repositories,
+      }.to_json
+
+      {200, {"Content-Type" => "application/json"}, [body]}
+    end
   end
 
   # Get a repository by given name
-  get "/repositories/:name" do |env|
-    name = env.params.url["name"]
-    if Utils.repository_path?(name)
-      if Utils.repository_cloning?(name)
-        status_code = 202
-        message = {
-          message: "Repositoy is cloning, wait a moment.",
-        }
+  class Show < Salt::App
+    def call(env)
+      name = env.params["name"]
+      if Utils.repository_path?(name)
+        if Utils.repository_cloning?(name)
+          status_code = 202
+          body = {
+            message: "Repositoy is cloning, wait a moment.",
+          }
+        else
+          status_code = 200
+          body = Utils.repository_info(name)
+        end
       else
-        status_code = 200
-        message = Utils.repository_info(name)
+        status_code = 404
+        body = {
+          message: "Not found repository: #{name}",
+        }
       end
-    else
-      status_code = 404
-    end
 
-    env.response.status_code = status_code
-    env.response.content_type = "application/json"
-    message.to_json
+      {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
+    end
   end
 
   # Create new repository
-  post "/repositories" do |env|
-    begin
-      url = env.params.body["url"]
-      name = env.params.body["name"]?
-      @@client.create_repository(
-        url, name,
-        env.params.body.fetch("mirror_only", "false") == "true"
-      )
-      message = true
-      status_code = 201
-    rescue e : Exception
-      message = {
-        message: e.message,
-      }
-      status_code = 400
-    end
+  class Create < Salt::App
+    def call(env)
+      begin
+        url = env.params["url"]
+        name = env.params["name"]?
+        mirror_only = env.params["mirror_only"]? || "false"
+        CLIENT.create_repository(
+          url, name,
+          mirror_only == "true"
+        )
+        body = true
+        status_code = 201
+      rescue e : Exception
+        body = {
+          message: e.message,
+        }
+        status_code = 400
+      end
 
-    env.response.content_type = "application/json"
-    env.response.status_code = status_code
-    message.to_json
+      {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
+    end
   end
 
   # Update a repository by given name
-  put "/repositories/:name" do |env|
-    @@client.update_repository(env.params.url["name"])
-
-    env.response.content_type = "application/json"
-    env.response.status_code = 200
-    true.to_json
+  class Update < Salt::App
+    def call(env)
+      CLIENT.update_repository(env.params["name"])
+      {200, {"Content-Type" => "application/json"}, ["true"]}
+    end
   end
 
   # Remove a repository by given name
-  delete "/repositories/:name" do |env|
-    @@client.delete_repository env.params.url["name"]
+  class Delete < Salt::App
+    def call(env)
+      CLIENT.delete_repository env.params["name"]
+      {200, {"Content-Type" => "application/json"}, ["true"]}
+    end
+  end
 
-    env.response.content_type = "application/json"
-    env.response.status_code = 200
-    true.to_json
+  # Search repositories by name
+  class Search < Salt::App
+    def call(env)
+      keyword = env.params["name"]
+      repositories = CLIENT.search_repositories(keyword).each_with_object([] of Hash(String, String)) do |name, obj|
+        obj << Utils.repository_info(name)
+      end
+
+      status_code = 200
+      body = {
+        total: repositories.size,
+        data:  repositories,
+      }
+
+      {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
+    end
   end
 
   get "/repositories/search" do |env|

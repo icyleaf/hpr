@@ -1,23 +1,32 @@
-require "kemal"
-require "kemal-basic-auth"
+require "salt"
+require "salt/middlewares/basic_auth"
+require "salt/middlewares/router"
 require "./apis/*"
 
 module Hpr::API
   CLIENT = Client.new
 
-  def self.run(port = 8848)
-    enable_auth = Hpr.config.basic_auth.enable
-    if enable_auth
-      basic_auth Hpr.config.basic_auth.user, Hpr.config.basic_auth.password
+  def self.run(port = 8848, environment = "production")
+    if Hpr.config.basic_auth.enable
+      user = Hpr.config.basic_auth.user
+      password = Hpr.config.basic_auth.password
+      Salt.use Salt::BasicAuth, user: user, password: password
     end
 
-    Hpr.logger.info "API Server now listening at localhost:#{port}#{enable_auth ? " (basic auth)" : ""}, press Ctrl-C to stop"
-
-    Kemal.run(port) do |config|
-      config.env = "production"
+    app = Salt::Router.new do |r|
+      r.get "/", to: Entrance.new
+      r.get "/info", to: Info.new
+      r.get "/repositories", to: Repositories::List.new
+      r.get "/repositories/search/:name", to: Repositories::Search.new
+      r.get "/repositories/:name", to: Repositories::Show.new
+      r.post "/repositories", to: Repositories::Create.new
+      r.put "/repositories/:name", to: Repositories::Update.new
+      r.delete "/repositories/:name", to: Repositories::Delete.new
+      r.not_found do |env|
+        {404, {"Content-Type" => "application/json"}, [{messaeg: "Not found api"}.to_json]}
+      end
     end
+
+    Salt.run app, environment: environment, port: port
   end
-
-  include Entrance
-  include Repository
 end

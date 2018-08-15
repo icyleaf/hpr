@@ -154,7 +154,6 @@ describe Hpr::Repository do
       end
     end
 
-
     context "with git protocol" do
       it "should parse only one path" do
         url = "git://icyleaf.git.com:hpr.git"
@@ -198,7 +197,7 @@ describe Hpr::Repository do
         # https://github.com/berkshelf/berkshelf/issues/257
         urls = [
           "ftp://example.com:21/a/b/c/foo/bar",
-          "/tmp/git/icyleaf/hpr"
+          "/tmp/git/icyleaf/hpr",
         ]
 
         urls.each do |url|

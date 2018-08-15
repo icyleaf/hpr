@@ -8,17 +8,9 @@ shards:
     github: icyleaf/halite
     version: 0.5.0
 
-  kemal:
-    github: kemalcr/kemal
-    version: 0.23.0
-
-  kemal-basic-auth:
-    github: kemalcr/kemal-basic-auth
-    version: 0.2.0
-
-  kilt:
-    github: jeromegn/kilt
-    version: 0.4.0
+  mime:
+    github: icyleaf/mime.cr
+    version: 0.1.0
 
   pool:
     github: ysbaddaden/pool
@@ -30,9 +22,13 @@ shards:
 
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 1.11.0
+
+  salt:
+    github: icyleaf/salt
+    version: 0.4.2
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 94f54def4324a9d9fd8f7e6659a99b2c115a64c9
+    commit: 7c3c47875d59e9ea3ee622d15d1ab52e5bfcd9c5
 
