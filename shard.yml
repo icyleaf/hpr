@@ -9,15 +9,18 @@ targets:
     main: src/cli.cr
 
 dependencies:
-  gitlab:
-    github: icyleaf/gitlab.cr
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master
+  gitlab:
+    github: icyleaf/gitlab.cr
+    version: ~> 0.3.4
   kemal:
     github: kemalcr/kemal
+    version: ~> 0.23.0
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
+    version: ~> 0.2.0
 
 crystal: 0.25.1
 
