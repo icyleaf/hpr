@@ -60,14 +60,14 @@ GET /repositores
 Search repositories by given query keywords, returns all include keyword matchs the name of mirrored reposotories.
 
 ```
-GET /repositores/search/?q=[query]
+GET /repositores/search/:name
 ```
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| q | String | true | keyworkd |
+| name | String | true | the name of repository |
 
 #### Example Response
 
