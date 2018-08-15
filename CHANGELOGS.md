@@ -8,6 +8,10 @@
 
 > TODO
 
+### Changed
+
+## [API] `/repositories/search` 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
+
 ## [0.6.2] (2018-06-20)
 
 ### Fixed
