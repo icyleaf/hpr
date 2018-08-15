@@ -22,7 +22,7 @@ shards:
 
   redis:
     github: stefanwille/crystal-redis
-    version: 1.11.0
+    version: 2.0.0
 
   salt:
     github: icyleaf/salt
@@ -30,5 +30,5 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 7c3c47875d59e9ea3ee622d15d1ab52e5bfcd9c5
+    commit: 94f54def4324a9d9fd8f7e6659a99b2c115a64c9
 
