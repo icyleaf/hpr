@@ -30,7 +30,7 @@
 
 ## 快速上手
 
-文档在逐步整理中，请先看[这篇教程](https://icyleaf.github.io/hpr/#/?id=%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B)。
+文档在逐步整理中，请先看[这篇教程](https://hpr.ews.im/#/quickstart)。
 
 如果还有哪里遗漏或不足的请[提交申请](https://github.com/icyleaf/hpr/issues/new)。
 
