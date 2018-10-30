@@ -1,10 +1,7 @@
 /doc/
 /lib/
 /bin/
-/deps/
-/.shards/
 /logs/
 /repositories/
-/config/hpr*.json
-docker-compose.dev.yml
-hpr
+/config/
+docker-compose*.yml
