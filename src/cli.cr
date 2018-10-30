@@ -7,47 +7,46 @@ module Hpr
     class Error < Exception; end
 
     enum Action
-      None
       Server
       List
       Search
       Create
       Update
       Delete
+      ShowVersion
+      ShowHelp
     end
 
     def initialize(args = ARGV)
       @client = Client.new
 
-      @action = Action::None
+      @action = Action::ShowHelp
       @repo_url = ""
       @repo_name = ""
       @mirror_only = false
       @server_port = 8848
 
-      parser = OptionParser.parse(args) do |parser|
-        parser.banner = usage
+      @parser = OptionParser.parse(args) do |op|
+        op.banner = usage
 
-        parser.separator("\nActions:\n")
-        parser.on("-s", "--server", "Run a web api server") { @action = Action::Server }
-        parser.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
-        parser.on("-S", "--search", "Search mirrored repositories") { @action = Action::Search }
-        parser.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
-        parser.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
-        parser.on("-d", "--delete", "Delete a mirrored repository") { @action = Action::Delete }
+        op.separator("\nActions:\n")
+        op.on("-s", "--server", "Run a web api server") { @action = Action::Server }
+        op.on("-l", "--list", "List mirrored repositories") { @action = Action::List }
+        op.on("-S", "--search", "Search mirrored repositories") { @action = Action::Search }
+        op.on("-c", "--create", "Create a mirror repository") { @action = Action::Create }
+        op.on("-u", "--update", "Updated a mirrored repository") { @action = Action::Update }
+        op.on("-d", "--delete", "Delete a mirrored repository") { @action = Action::Delete }
+        op.on("-v", "--version", "Show version") { @action = Action::ShowVersion }
+        op.on("-h", "--help", "Show this help") { @action = Action::ShowHelp }
 
-        parser.separator("\nOption in server action:\n")
-        parser.on("-P PORT", "--port PORT", "the port of server (by default is 8848)") { |port| @server_port = port.to_i }
+        op.separator("\nOption in server action:\n")
+        op.on("-P PORT", "--port PORT", "the port of server (by default is 8848)") { |port| @server_port = port.to_i }
 
-        parser.separator("\nOption in create action:\n")
-        parser.on("-U URL", "--url URL", "The url of mirror repository") { |url| @repo_url = url }
-        parser.on("-M", "--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
+        op.separator("\nOption in create action:\n")
+        op.on("-U URL", "--url URL", "The url of mirror repository") { |url| @repo_url = url }
+        op.on("-M", "--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
 
-        parser.separator("\nGlobal options:\n")
-        parser.on("-v", "--version", "Show version") { puts version }
-        parser.on("-h", "--help", "Show this help") { puts parser }
-
-        parser.separator <<-EXAMPLES
+        op.separator <<-EXAMPLES
 \nExamples:
 
        o Start a API server:
@@ -85,19 +84,17 @@ module Hpr
        More detail to check: https://icyleaf.github.io/hpr/
 EXAMPLES
 
-        parser.separator("\n#{version}")
+        op.separator("\n#{version}")
 
-        parser.unknown_args do |unknown_args|
+        op.unknown_args do |unknown_args|
           @repo_name = unknown_args.first if unknown_args.size > 0
         end
       end
 
-      if @action != Action::None
-        run
-      end
+      run!
     end
 
-    private def run
+    private def run!
       case @action
       when Action::Server
         start_server
@@ -111,6 +108,10 @@ EXAMPLES
         update_repository
       when Action::Delete
         delete_repository
+      when Action::ShowVersion
+        puts version
+      else Action::ShowHelp
+      puts @parser
       end
     end
 
