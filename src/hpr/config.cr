@@ -9,7 +9,7 @@ module Hpr
 
     def self.load(file : String)
       cls = self.from_json File.open(file)
-      cls.repository_path = File.expand_path "repositories"
+      cls.repository_path = File.expand_path File.join("repositories", cls.gitlab.group_name)
       cls
     end
 

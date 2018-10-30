@@ -1,5 +1,4 @@
 require "./hpr"
-
 require "option_parser"
 
 module Hpr

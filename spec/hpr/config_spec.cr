@@ -7,7 +7,7 @@ describe Hpr::Config do
     it "should load from a file" do
       config = Hpr::Config.load CONFIG_FILE
       config.should be_a Hpr::Config
-      config.repository_path.should eq File.expand_path("repositories")
+      config.repository_path.should eq File.expand_path(File.join("repositories", config.gitlab.group_name))
 
       config.gitlab.should be_a Hpr::Config::GitlabStruct
       config.gitlab.ssh_port.should eq 22
