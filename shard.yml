@@ -17,7 +17,7 @@ dependencies:
     version: ~> 0.3.8
   gitlab:
     github: icyleaf/gitlab.cr
-    version: ~> 0.3.3
+    version: ~> 0.3.5
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master

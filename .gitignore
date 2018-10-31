@@ -1,7 +1,11 @@
-/doc/
+# crystal
 /lib/
 /bin/
+
+# hpr
+/config/
 /logs/
 /repositories/
-/config/
-docker-compose*.yml
+
+# ide
+/.vscode/
