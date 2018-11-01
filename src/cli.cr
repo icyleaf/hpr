@@ -17,12 +17,11 @@ module Hpr
     end
 
     def initialize(args = ARGV)
-      @client = Client.new
-
       @action = Action::ShowHelp
       @repo_url = ""
       @repo_name = ""
-      @mirror_only = false
+      @create = true
+      @clone = true
       @server_port = 8848
 
       @parser = OptionParser.parse(args) do |op|
@@ -43,7 +42,11 @@ module Hpr
 
         op.separator("\nOption in create action:\n")
         op.on("-U URL", "--url URL", "The url of mirror repository") { |url| @repo_url = url }
-        op.on("-M", "--mirror-only", "Only mirror the repository without clone in create action") { @mirror_only = true }
+        op.on("--no-create", "Do not create project in gitlab") { @create = false }
+        op.on("--no-clone", "Do not clone mirror of git repository from url") { @clone = false }
+
+        op.separator("\nGlobal options:\n")
+        op.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| Hpr.reload_config(path) }
 
         op.separator <<-EXAMPLES
 \nExamples:
@@ -52,9 +55,9 @@ module Hpr
 
                $ hpr -s
 
-       o Start a API server with custom port:
+       o Start a API server with custom port and different config path:
 
-               $ hpr -s --port 3001
+               $ hpr -s --port 3001 --file ~/.config/hpr/hpr.json
 
        o List all mirrored repositories:
 
@@ -70,7 +73,7 @@ module Hpr
 
        o Clone and push a new repository without create gitlab project:
 
-               $ hpr -c --mirror-only --url https://github.com/icyleaf/hpr.git icyleaf-hpr
+               $ hpr -c --no-create --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Update a repository:
 
@@ -90,6 +93,7 @@ EXAMPLES
         end
       end
 
+      @client = Client.new
       run!
     end
 
@@ -152,7 +156,7 @@ EXAMPLES
       start_worker
       sleep 100.milliseconds # waiting sidekiq is ready
 
-      @client.create_repository(@repo_url, @repo_name, @mirror_only)
+      @client.create_repository(@repo_url, @repo_name, @create, @clone)
       loop do
         sleep 1.seconds
         if !Utils.repository_cloning?(@repo_name) &&
