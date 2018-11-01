@@ -1,17 +1,17 @@
 # crystal
 main.cr
 docs
-output
 config
 bin
 logs
 spec
-.shards
 repositories
 examples
 Makefile
 README.md
+CHANGELOGS.md
 LICENSE
+.*env
 
 # git
 .git
@@ -20,11 +20,11 @@ LICENSE
 # editor
 .history
 .editorconfig
+.vscode
 
 # docker
-docker-compose.yml
+docker-compose*.yml
 Dockerfile
-.env*
 .dockerignore
 
 # CI

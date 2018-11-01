@@ -3,7 +3,7 @@ set -e
 
 [[ $DEBUG == true ]] && set -x
 
-HPR_SSH_PATH=/app/.ssh
+export HPR_SSH_PATH=/app/.ssh
 
 cleanup_workspace() {
   mkdir -p /app/repositories
@@ -27,11 +27,10 @@ generate_ssh_key() {
 }
 
 config_ssh_config() {
-  echo "Configuring ssh config ..."
-
   HPR_SSH_HOST=${HPR_SSH_HOST:-*}
   HPR_SSH_PORT=${HPR_SSH_PORT:-22}
 
+  echo "Configuring ssh config ..."
   echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
   echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
   echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
@@ -40,7 +39,15 @@ config_ssh_config() {
 
 start_hpr_server() {
   echo "Starting hpr server ..."
-  /app/hpr --server
+  run_hpr --server
+}
+
+run_hpr() {
+  hpr --file /app/config/hpr.json $@
+}
+
+run_hpr_migration() {
+  hpr-migration --file /app/config/hpr.json $@
 }
 
 case ${1} in
@@ -54,7 +61,10 @@ case ${1} in
     start_hpr_server
     ;;
   hpr)
-    /app/hpr $@
+    run_hpr $@
+    ;;
+  hpr-migration)
+    run_hpr_migration $@
     ;;
   *)
     exec "$@"

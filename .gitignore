@@ -9,3 +9,6 @@
 
 # ide
 /.vscode/
+
+# docker
+docker-compose*.yml
