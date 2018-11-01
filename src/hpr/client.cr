@@ -33,53 +33,28 @@ module Hpr
       end
     end
 
-    def create_repository(url : String, name : String? = nil, mirror_only = false)
+    def create_repository(url : String, name : String? = nil, create = true, clone = true)
       repo = Repository.new url
       project_name = (name && !name.empty?) ? name : repo.mirror_name
 
       Utils.user_error! "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
+      project = if create
+        create_gitlab_repository(project_name, url)
+      else
+        search_gitlab_repository(project_name)
+      end
 
-      Hpr.logger.info "creating repository ... #{@group["name"]}/#{project_name}"
-
-      loop do
-        begin
-          Hpr.gitlab.create_project project_name, {
-            "namespace_id"           => @namespace["id"].to_s,
-            "path"                   => project_name,
-            "description"            => "Mirror of #{url}",
-            "visibility"             => (Hpr.config.gitlab.project_public ? "public" : "private"),
-            "issues_enabled"         => Hpr.config.gitlab.project_issue.to_s,
-            "wiki_enabled"           => Hpr.config.gitlab.project_wiki.to_s,
-            "snippets_enabled"       => Hpr.config.gitlab.project_snippet.to_s,
-            "merge_requests_enabled" => Hpr.config.gitlab.project_merge_request.to_s,
-          }
-
-          break
-        rescue e : Gitlab::Error::BadRequest
-          if (message = e.message) && message.includes?("still being deleted")
-            sleep 1.seconds
-          else
-            raise e
-          end
-        end
-      end unless mirror_only
-
-      CloneRepositoryWorker.async.perform repo.url, project_name
+      Utils.user_error! "Not found gitlab project: #{project_name}" unless project
+      CloneRepositoryWorker.async.perform repo.url, project_name, project["path"].as_s if clone
     end
 
     def update_repository(name : String)
-      unless reopsitory_stored?(name)
-        Utils.user_error! "repository not exists ... #{name}"
-      end
-
+      Utils.user_error! "repository not exists ... #{name}" unless reopsitory_stored?(name)
       UpdateRepositoryWorker.async.perform name
     end
 
     def delete_repository(name : String)
-      projects = Hpr.gitlab.group_projects @group["id"].as_i, {"search" => name}
-      unless projects.as_a.empty?
-        project = projects[0]
-
+      if project = search_gitlab_repository(name)
         Hpr.logger.info "destroying project ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
@@ -90,6 +65,39 @@ module Hpr
     def delete_repository(all = true)
       list_repositories.each do |name|
         delete_repository name
+      end
+    end
+
+    def search_gitlab_repository(name)
+      projects = Hpr.gitlab.project_search(name)
+                           .as_a
+                           .select {|project| project.as_h["namespace"].as_h["id"] == @group["id"] }
+
+      return projects[0] unless projects.empty?
+    end
+
+    def create_gitlab_repository(name, url)
+      Hpr.logger.info "creating gitlab repository ... #{@group["name"]}/#{name}"
+
+      loop do
+        begin
+          return Hpr.gitlab.create_project name, {
+            "namespace_id"           => @namespace["id"].to_s,
+            "path"                   => name,
+            "description"            => "Mirror of #{url}",
+            "visibility"             => (Hpr.config.gitlab.project_public ? "public" : "private"),
+            "issues_enabled"         => Hpr.config.gitlab.project_issue.to_s,
+            "wiki_enabled"           => Hpr.config.gitlab.project_wiki.to_s,
+            "snippets_enabled"       => Hpr.config.gitlab.project_snippet.to_s,
+            "merge_requests_enabled" => Hpr.config.gitlab.project_merge_request.to_s,
+          }
+        rescue e : Gitlab::Error::BadRequest
+          if (message = e.message) && message.includes?("still being deleted")
+            sleep 1.seconds
+          else
+            raise e
+          end
+        end
       end
     end
 
