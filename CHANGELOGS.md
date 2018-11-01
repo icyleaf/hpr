@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [0.7.0] (2018-11-01)
+
 > TODO
 
 ### Changed
@@ -34,7 +36,7 @@
 
 - [API] `/repositories/search` 搜索仓库 API 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
 
-## [0.7.0] (2018-06-20)
+## [0.6.2] (2018-06-20)
 
 ### Fixed
 
@@ -97,7 +99,8 @@
 - 第一个测试版本
 
 [Unreleased]: https://github.com/icyleaf/hpr/compare/v0.7.0...HEAD
-[0.7.0]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.7.0
+[0.7.0]: https://github.com/icyleaf/hpr/compare/v0.6.2...v0.7.0
+[0.6.2]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.6.2
 [0.6.0]: https://github.com/icyleaf/hpr/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/icyleaf/hpr/compare/v0.3.0...v0.5.0
 [0.3.0]: https://github.com/icyleaf/hpr/compare/v0.2.0...v0.3.0
