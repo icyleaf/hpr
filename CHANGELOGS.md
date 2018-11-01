@@ -20,7 +20,7 @@
 
 ### Added
 
-- [CLI] 新增独立命令 `hpr-migration` 迁移命令 (目前为止仅支持 gitlab-mirror`)
+- [CLI] 新增独立命令 `hpr-migration` 迁移命令 (目前为止仅支持 gitlab-mirrors`)
 - [CLI] 新增全局参数 `--file` 可以指定自定义的 hpr.json 配置文件.
 
 ### Fixed
@@ -34,7 +34,7 @@
 
 - [API] `/repositories/search` 搜索仓库 API 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
 
-## [0.6.2] (2018-06-20)
+## [0.7.0] (2018-06-20)
 
 ### Fixed
 
@@ -96,8 +96,8 @@
 
 - 第一个测试版本
 
-[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.6.2...HEAD
-[0.6.2]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.6.2
+[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/icyleaf/hpr/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/icyleaf/hpr/compare/v0.3.0...v0.5.0
 [0.3.0]: https://github.com/icyleaf/hpr/compare/v0.2.0...v0.3.0

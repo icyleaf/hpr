@@ -6,8 +6,7 @@ services:
     ports:
       - 8848:8848
     volumes:
-      - ./config:/app/config
-      - ./repositories:/app/repositories
+      - /my/own/hprdir:/app
     environment:
       REDIS_URL: tcp://redis:6379
       REDIS_PROVIDER: REDIS_URL

@@ -22,17 +22,9 @@ gitlab 分组名 | gitlab_namespace | gitlab.group_name | **必须**
 
 其他参数不需要迁移，对于 hpr 额外的参数定义参加[配置文件](configuration.md)。
 
-配置文件迁移完毕好之后，需要把当前已经管理的仓库文件夹复制到 hpr 对于文件夹中。
+配置文件迁移完毕好之后，需要获取 gitlab-mirrors 的仓库路径。从 gitlab-mrrors 的 config.sh 拿到 $repo_dir 的路径，默认是 /home/gitmirror/repositories
 
-```bash
-# 从 gitlab-mrrors 的 config.sh 拿到 $repo_dir 的路径，默认是 /home/gitmirror/repositories
-$ cd /home/gitmirror/repositories
-
-# 把 gitlab_namespace 的名称的文件夹制到新的项目，这里比方说是 mirrors
-$ cp -r mirrors /path/to/hpr/repositories
-```
-
-编辑 docker-compose.yml
+编辑 docker-compose.yml 并把刚才得到的仓库路径加到 volumes 里面。
 
 ```yaml
 version: '2'
@@ -43,8 +35,8 @@ services:
     ports:
       - 8848:8848
     volumes:
-      - ./config:/app/config
-      - /path/to/hpr/repositories:/app/repositories
+      - /my/own/hprdir:/app
+      - /home/gitmirror/repositories:/tmp/old-repositories
     environment:
       REDIS_URL: tcp://redis:6379
       REDIS_PROVIDER: REDIS_URL
@@ -57,22 +49,23 @@ services:
     image: redis:alpine
 ```
 
-运行实例: `docker-compose up -d` 
+运行实例: `docker-compose up -d`
 
-这里只是那老的数据迁移到 hpr，还需要设置定时任务更新，在配置好 ssh key 之后这里目前没有工具需要通过脚本完成：
+目前只是把 hpr 运行起来了，但还没有真正迁移数据。Hpr 提供了一个迁移工具来帮助你轻松快速完全，确保还在刚才的目录下执行：
 
-```ruby
-# gem install http
-require 'http'
-
-# 这里修改成你的 hpr 实例的地址或 IP
-hpr_url = 'http://localhost:8848/repositories'
-
-repositories = HTTP.get(hpr_url).parse
-repositories.each do |repo|
-  url = File.join(hpr_url, repo["name"])
-  HTTP.put url
-end
+```bash
+$ docker-compose exec hpr hpr-migration --endpoint "http://localhost:8848" /tmp/old-repositories
+* project1
+ - Configuring git remote ...
+ - Updating and pushing mirror
+* project2
+ - Create gitlab repository
+ - Configuring git remote ...
+ - Updating and pushing mirror
+* project3
+ - Existed, Skip
 ```
 
-如果你没有修改 `config/hpr.json` 的 `schedule` 的值默认是每小时进行更新。
+> 温馨提示：工具会把三种情况都会考虑在内，分别包括本地已存在项目但 gitlab 没有/没有的项目/存在的项目。
+
+命令执行完毕后可通过 [统计接口](api.md#id=统计信息) 获取同步状态，包括定时更新到时间。如果你没有修改 `config/hpr.json` 的 `schedule` 的值默认是每小时进行更新。

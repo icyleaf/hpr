@@ -60,8 +60,7 @@ services:
     ports:
       - 8848:8848
     volumes:
-      - ./config:/app/config
-      - ./repositories:/app/repositories
+      - /my/own/hprdir:/app
     environment:
       REDIS_URL: tcp://redis:6379
       REDIS_PROVIDER: REDIS_URL
@@ -74,7 +73,8 @@ services:
     image: redis:alpine
 ```
 
-其中 `HPR_SSH_HOST` 和 `HPR_SSH_PORT` 变量用于设置 Docker 实例中的 SSH 配置。如果 SSH 端口是 22 的可忽略设置这俩参数。
+其中需要修改 **/my/own/hprdir** 为实际存放数据的地方而 `HPR_SSH_HOST` 和 `HPR_SSH_PORT` 变量用于设置 Docker 实例中的 SSH 配置。
+如果 SSH 端口是 22 的可忽略设置这俩参数。
 
 编辑完成后运行下面命令快完成了！
 
@@ -83,7 +83,7 @@ $ docker-compose up
 ...
 hpr_1      | Generating public/private rsa key pair ...
 hpr_1      |
-hpr_1      | GENERATED SSH PUBLIC KEY:
+hpr_1      | SSH PUBLIC KEY:
 hpr_1      | ##################################################################
 hpr_1      | ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARmEbd6BOIBQ+UWm8NUKthQ7UOavmlsq4j8lY4kyFW2eFX2qWcbvI+s2gI+05MXax+mAukSszaNSnpAoTyJCRipilSkqiOV99V8JIJhrHPtTO0o/Ui
 9WiyyWsUM4M9lEKHpZ486lDGk3IM2XQW+pxAoMKb0TYzqCsrduHUtjzy0M0BqgMPe9EtVQqCbnTMzDLXmRONoTYyTV51NQ12mMwEQcDaLQ28e5gqouQJKS81JaoRpQWa7pHsOCki6Fk9TB+EQFrGz5nOrmYYM+O1MKnFkzmVHv7Fh50Sz7d2nYzzOKAkR hpr@docker
@@ -97,6 +97,12 @@ hpr_1      |  | '_ \| '_ \| '__|
 hpr_1      |  | | | | |_) | |
 hpr_1      |  |_| |_| .__/|_|
 hpr_1      |        |_|
+hpr_1      |        |_|
+hpr_1      | [12] Salt server starting ...
+hpr_1      | [12] * Version 0.4.2 (Crystal 0.26.1)
+hpr_1      | [12] * Environment: production
+hpr_1      | [12] * Listening on http://0.0.0.0:8848/
+hpr_1      | [12] Use Ctrl-C to stop
 ```
 
 最后从执行命令的输出找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），

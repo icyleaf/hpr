@@ -22,8 +22,8 @@ GET /repositores
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| page | Integer | false | |
-| per_page | Integer | false |  |
+| page | Integer | false | The number of current page |
+| per_page | Integer | false | The number of per page |
 
 #### Example Response
 
@@ -67,7 +67,7 @@ GET /repositores/search/:name
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| name | String | true | the name of repository |
+| name | String | true | The name of mirrored repository |
 
 #### Example Response
 
@@ -109,7 +109,7 @@ GET /repositores/:name
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| name | String | false | Name of mirrored repository |
+| name | String | false | The name of mirrored repository |
 
 #### Example Response
 
@@ -149,8 +149,10 @@ POST /repositores
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| url | String | true | |
-| name | String | false |  |
+| url | String | true | The clone url of origin |
+| name | String | false | The name of mirrored repository |
+| create | String | false | Should to create gitlab project, by default is "true" |
+| clone | String | false | Should to clone origin repository, by default is "true" |
 
 #### Example Response
 

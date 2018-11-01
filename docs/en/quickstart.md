@@ -49,7 +49,8 @@ Here has 4 places to change your own.
 
 > About more params check [Configuration](configuration?id=basic_auth-接口认证) page.
 
-Then set some optional `ENV` variables if you need in `docker-compose.yml`:
+1. Create a data directory on a suitable volume on your host system. e.g. **/my/own/hprdir**.
+2. Set some optional `ENV` variables if you need in `docker-compose.yml`:
 
 ```yaml
 version: '2'
@@ -74,7 +75,7 @@ services:
     image: redis:alpine
 ```
 
-the `HPR_SSH_HOST` and `HPR_SSH_PORT` variables will update your gitlab ssh config, ignore if your gitlab server use 22 port in ssh protocol.
+The `HPR_SSH_HOST` and `HPR_SSH_PORT` variables will update your gitlab ssh config, ignore if your gitlab server use 22 port in ssh protocol.
 
 Then run it:
 
@@ -97,6 +98,11 @@ hpr_1      |  | '_ \| '_ \| '__|
 hpr_1      |  | | | | |_) | |
 hpr_1      |  |_| |_| .__/|_|
 hpr_1      |        |_|
+hpr_1      | [12] Salt server starting ...
+hpr_1      | [12] * Version 0.4.2 (Crystal 0.26.1)
+hpr_1      | [12] * Environment: production
+hpr_1      | [12] * Listening on http://0.0.0.0:8848/
+hpr_1      | [12] Use Ctrl-C to stop
 ```
 
 Be attention to copy generated ssh public key in terminal output.

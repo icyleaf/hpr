@@ -15,7 +15,7 @@ Check [Quick start](/en/quickstart.md)。
 Pull specified version of hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.6.2
+$ docker pull icyleafcn/hpr:0.7.0
 ```
 
 Or pull the latest version:
@@ -99,6 +99,8 @@ Actions:
     -c, --create                     Create a mirror repository
     -u, --update                     Updated a mirrored repository
     -d, --delete                     Delete a mirrored repository
+    -v, --version                    Show version
+    -h, --help                       Show this help
 
 Option in server action:
 
@@ -107,12 +109,12 @@ Option in server action:
 Option in create action:
 
     -U URL, --url URL                The url of mirror repository
-    -M, --mirror-only                Only mirror the repository without clone in create action
+    --no-create                      Do not create project in gitlab
+    --no-clone                       Do not clone mirror of git repository from url
 
 Global options:
 
-    -v, --version                    Show version
-    -h, --help                       Show this help
+    -f FILE, --file FILE             the path of hpr.json config file
 
 Examples:
 
@@ -120,13 +122,13 @@ Examples:
 
                $ hpr -s
 
+       o Start a API server with custom port and different config path:
+
+               $ hpr -s --port 3001 --file ~/.config/hpr/hpr.json
+
        o List all mirrored repositories:
 
                $ hpr -l
-
-       o Start a API server with custom port:
-
-               $ hpr -s --port 3001
 
        o Search all repositories include icyleaf keywords:
 
@@ -138,7 +140,7 @@ Examples:
 
        o Clone and push a new repository without create gitlab project:
 
-               $ hpr -c --mirror-only --url https://github.com/icyleaf/hpr.git icyleaf-hpr
+               $ hpr -c --no-create --url https://github.com/icyleaf/hpr.git icyleaf-hpr
 
        o Update a repository:
 
@@ -150,5 +152,5 @@ Examples:
 
        More detail to check: https://icyleaf.github.io/hpr/
 
-hpr v0.6.2 in Crystal v0.24.2
+hpr v0.7.0 in Crystal v0.26.1
 ```

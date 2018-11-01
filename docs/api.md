@@ -154,6 +154,8 @@ POST /repositores
 |---|---|---|---|
 | url | String | true | 仓库地址 |
 | name | String | false | 镜像名字，不填写默认从 url 自动获取 |
+| create | String | false | 是否创建 gitlab 项目，默认是 "true" |
+| clone | String | false | 是否克隆原仓库并推送到 gitlab，默认是 "true" |
 
 #### 返回样例
 
@@ -224,7 +226,7 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.6.2",
+        "version": "0.7.0",
         "repositroies": {
             "total": 2,
             "entry": [

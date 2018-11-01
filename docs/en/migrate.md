@@ -23,17 +23,9 @@ Enable MR | merge_requests_enabled | gitlab.project_merge_request | Yes
 
 More about hpr's config to check [Configurateion](/en/configuration.md) page.
 
-Then, migrate old repositories directory to hpr:
+Next step, you need get the path of gitlab-mirrors's repositories directory: get $repo_dir value from config.sh，default is /home/gitmirror/repositories
 
-```bash
-# get $repo_dir value from config.sh，default is /home/gitmirror/repositories
-$ cd /home/gitmirror/repositories
-
-# Copy the whole directory to hpr's directory
-$ cp -r mirrors /path/to/hpr/repositories
-```
-
-Finally, edit docker-compose.yml file:
+Then edit docker-compose.yml file, next move is run `docker-compose up -d`
 
 ```yaml
 version: '2'
@@ -44,8 +36,8 @@ services:
     ports:
       - 8848:8848
     volumes:
-      - ./config:/app/config
-      - /path/to/hpr/repositories:/app/repositories
+      - /my/own/hprdir:/app
+      - /home/gitmirror/repositories:/tmp/old-repositories
     environment:
       REDIS_URL: tcp://redis:6379
       REDIS_PROVIDER: REDIS_URL
@@ -58,22 +50,20 @@ services:
     image: redis:alpine
 ```
 
-Run `docker-compose up -d`
+Hpr is running now, but the data is not migrate, hpr provides a migration command tool named "hpr-migration" to make this move easily:
 
-Apply the update by schedule, you need do this:
-
-```ruby
-# gem install http
-require 'http'
-
-# Change to ip or address which hpr is
-hpr_url = 'http://localhost:8848/repositories'
-
-repositories = HTTP.get(hpr_url).parse
-repositories.each do |repo|
-  url = File.join(hpr_url, repo["name"])
-  HTTP.put url
-end
+```bash
+$ docker-compose exec hpr hpr-migration --endpoint "http://localhost:8848" /tmp/old-repositories
+* project1
+ - Configuring git remote ...
+ - Updating and pushing mirror
+* project2
+ - Create gitlab repository
+ - Configuring git remote ...
+ - Updating and pushing mirror
+* project3
+ - Existed, Skip
 ```
 
+You can get migrated data via [stats](/en/api.md#id=stats) api.
 By default, Update cycle is every hour in `schedule` (`config/hpr.json`).
