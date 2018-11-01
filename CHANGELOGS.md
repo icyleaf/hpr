@@ -10,7 +10,29 @@
 
 ### Changed
 
-## [API] `/repositories/search` 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
+- [API] `/repositories` 创建仓库 API 参数改名 `mirror_only` 为 `create` 并新增 `clone` 参数
+- [CLI] 创建仓库传递参数保持上面一条的同步：参数改名 `--mirror_only` 改为 `--no-create` 并新增 `--no-clone` 参数
+- [CLI] 执行 `hpr` 命令没有带任何参数时默认显示帮助文档
+- [Core] 新版本 Gitlab 项目的 path 支持大小写区分，此版本将会尽量保证和原仓库大小写一致(**不再强制小写**)
+- [Core] 镜像的仓库目录结构发生变动，由原来的 `repositories` 和镜像仓库目录中间新增了 `group_name` (从配置文件获取)，为以后支持多 group 做扩展
+- [Core] 为了消除歧义修改 git remote 名为 `hpr` (之前是 `mirror`)
+- [Core] 仓库的状态删除 `busy` 并扩展为 `fetching`/`pushing`
+
+### Added
+
+- [CLI] 新增独立命令 `hpr-migration` 迁移命令 (目前为止仅支持 gitlab-mirror`)
+- [CLI] 新增全局参数 `--file` 可以指定自定义的 hpr.json 配置文件.
+
+### Fixed
+
+- [API] 修复丢失 layer 入口文件(docker 镜像不受影响)
+- [API] 修复删除仓库可能会出现随机删除的问题(gitlab 接口发生变化)
+- [Core] 修复在更新仓库过程中 gitlab 对于项目的描述没有更新或只保留了 `[Syncing]` 文案
+- [Core] 修复一些日志输出多处不一致的文案
+
+### Changed
+
+- [API] `/repositories/search` 搜索仓库 API 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
 
 ## [0.6.2] (2018-06-20)
 
@@ -44,7 +66,7 @@
 
 - [CLI] 统一所有的日志的格式
 - [CLI] 增加更有帮助的日志
-- [配置] 修改 `schedule` 为 `schedule_in` 并修改规则（单位从秒改为分钟，并接受可读的字符串时间单位）
+- [配置] 修改 `schedule` 为 `schedule_in` 并修改规则 (单位从秒改为分钟，并接受可读的字符串时间单位)
 
 ### Fixed
 
@@ -55,7 +77,7 @@
 
 ### Added
 
-- [API] 新增仓库在 clone 的状态（在获取仓库详情接口返回 `202`）
+- [API] 新增仓库在 clone 的状态 (在获取仓库详情接口返回 `202`)
 - [文档] 新增专属的文档系统
 - [功能] 新增 Makefile 管理常用操作
 - [CLI] 统一所有的日志的格式
