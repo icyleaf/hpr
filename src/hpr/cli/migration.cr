@@ -54,32 +54,40 @@ halite = Halite::Client.new do
 end
 
 current_path = Dir.current
+repo_uri = URI.parse(hpr_endpoint)
+repo_uri.path = "/repositories"
+repo_url = repo_uri.to_s
+
 Dir.glob("#{source_path}/*") do |repo_path|
   Dir.cd current_path
   repo_name = File.basename(repo_path)
   desc_path = File.join(repository_path, repo_name)
 
-  puts "#{repo_name}"
+  puts "* #{repo_name}"
   if File.directory?(repo_path) && !Dir.exists?(desc_path)
     puts " - Coping repository"
     FileUtils.cp_r(repo_path, desc_path)
-    Hpr::Utils.write_mirror_to_git_config(repo_name)
-    Hpr::Utils.run_cmd "git remote remove gitlab" if clean
-
-    repo_uri = URI.parse(hpr_endpoint)
-    repo_uri.path = "/repositories"
-    repo_url = repo_uri.to_s
 
     client = Hpr::Client.new
-    gitlab_repo = client.search_gitlab_repository(repo_name)
-    pp gitlab_repo
-    if gitlab_repo
+    gitlab_project = client.search_gitlab_repository(repo_name)
+
+    unless gitlab_project
+      puts " - Create gitlab repository"
+      repo_info = Hpr::Utils.repository_info(repo_name)
+      halite.post repo_url, form: {url: repo_info["url"], name: repo_name, clone: "false"}
+      gitlab_project = client.search_gitlab_repository(repo_name) unless gitlab_project
+    end
+
+    if gitlab_project
+      puts " - Configuring git remote"
+      Hpr::Utils.write_mirror_to_git_config(repo_name, gitlab_project.as_h["path"].as_s)
+
       puts " - Updating and pushing mirror"
       halite.put "#{repo_url}/#{repo_name}"
     else
-      puts " - Create gitlab repository"
-      repo = Hpr::Utils.repository_info(repo_name)
-      halite.post repo_url, form: {url: repo["url"], name: repo_name}
+      puts " - Not exists project in gitlab"
     end
+  else
+    puts " - Existed, Skip"
   end
 end

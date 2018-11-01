@@ -49,27 +49,6 @@ module Hpr
       status == "busy"
     end
 
-    def mirror_ssh_url(name, namespace : String? = nil)
-      gitlab_host = Hpr.config.gitlab.endpoint.host
-      gitlab_port = if Hpr.config.gitlab.ssh_port != 22
-                      "#{Hpr.config.gitlab.ssh_port}/"
-                    else
-                      ""
-                    end
-
-      namespace ||= name.downcase
-      "git@#{gitlab_host}:#{gitlab_port}#{Hpr.config.gitlab.group_name}/#{namespace}.git"
-    end
-
-    def repository_path?(name : String) : String?
-      path = repository_path(name)
-      Dir.exists?(path) ? path : nil
-    end
-
-    def repository_path(name : String)
-      File.join(Hpr.config.repository_path, name)
-    end
-
     def repository_info(name : String)
       Dir.cd repository_path(name)
 
@@ -84,6 +63,24 @@ module Hpr
         "updated_at"     => run_cmd("git config hpr.updated").first.as(String),
         "scheduled_at"   => run_cmd("git config hpr.scheduled").first.as(String),
       }
+    end
+
+    def mirror_ssh_url(name, namespace : String? = nil)
+      gitlab = Hpr.config.gitlab
+      gitlab_host = gitlab.endpoint.host
+      gitlab_port = (gitlab.ssh_port != 22) ? "#{Hpr.config.gitlab.ssh_port}/" : ""
+      namespace ||= name.downcase
+
+      "git@#{gitlab_host}:#{gitlab_port}#{gitlab.group_name}/#{namespace}.git"
+    end
+
+    def repository_path?(name : String) : String?
+      path = repository_path(name)
+      Dir.exists?(path) ? path : nil
+    end
+
+    def repository_path(name : String)
+      File.join(Hpr.config.repository_path, name)
     end
 
     def tryable(max_connect = 3, verbose = false, &block)

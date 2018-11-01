@@ -37,7 +37,6 @@ module Hpr
       repo = Repository.new url
       project_name = (name && !name.empty?) ? name : repo.mirror_name
 
-      Utils.user_error! "Exists Repository: #{project_name}" if reopsitory_stored?(project_name)
       project = if create
         create_gitlab_repository(project_name, url)
       else
@@ -45,6 +44,8 @@ module Hpr
       end
 
       Utils.user_error! "Not found gitlab project: #{project_name}" unless project
+
+      Utils.user_error! "Exists Repository: #{project_name}" if clone && reopsitory_stored?(project_name)
       CloneRepositoryWorker.async.perform repo.url, project_name, project["path"].as_s if clone
     end
 
