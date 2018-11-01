@@ -79,7 +79,7 @@ Dir.glob("#{source_path}/*") do |repo_path|
     end
 
     if gitlab_project
-      puts " - Configuring git remote"
+      puts " - Configuring git remote ..."
       Hpr::Utils.write_mirror_to_git_config(repo_name, gitlab_project.as_h["path"].as_s)
 
       puts " - Updating and pushing mirror"

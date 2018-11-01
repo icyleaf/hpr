@@ -20,9 +20,9 @@ module Hpr
       Utils.write_mirror_to_git_config(name, namespace)
 
       # Push
-      Hpr.logger.info "pushing to mirror ... #{name}"
-      Utils.run_cmd "git push mirror"
-      Utils.run_cmd "git config hpr.status 'busy'"
+      Hpr.logger.info "pushing to hpr ... #{name}"
+      Utils.run_cmd "git push hpr"
+      Utils.run_cmd "git config hpr.status 'pushing to hpr'"
       Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
       Utils.run_cmd "git config hpr.status 'idle'"
     end

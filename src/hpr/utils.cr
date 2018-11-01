@@ -20,10 +20,10 @@ module Hpr
       Dir.cd Utils.repository_path(name)
 
       Utils.run_cmd "git config credential.helper store"
-      Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name, namespace)}"
-      Utils.run_cmd "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'"
-      Utils.run_cmd "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'"
-      Utils.run_cmd "git config remote.mirror.mirror true"
+      Utils.run_cmd "git remote add hpr #{mirror_ssh_url(name, namespace)}"
+      Utils.run_cmd "git config --add remote.hpr.push '+refs/heads/*:refs/heads/*'"
+      Utils.run_cmd "git config --add remote.hpr.push '+refs/tags/*:refs/tags/*'"
+      Utils.run_cmd "git config remote.hpr.mirror true"
       Utils.run_cmd "git config hpr.status 'idle'"
       Utils.run_cmd "git config hpr.created '#{Utils.current_datetime}'"
     end
@@ -46,7 +46,7 @@ module Hpr
 
       Dir.cd repository_path(name)
       status = run_cmd("git config hpr.status").first.as(String)
-      status == "busy"
+      status == "pushing to hpr"
     end
 
     def repository_info(name : String)
@@ -56,7 +56,7 @@ module Hpr
       {
         "name"           => name,
         "url"            => run_cmd("git remote get-url --push origin").first.as(String),
-        "mirror_url"     => run_cmd("git remote get-url --push mirror").first.as(String),
+        "mirror_url"     => run_cmd("git remote get-url --push hpr").first.as(String),
         "latest_version" => run_cmd("git describe --abbrev=0 --tags 2>/dev/null").first.as(String),
         "status"         => run_cmd("git config hpr.status").first.as(String),
         "created_at"     => run_cmd("git config hpr.created").first.as(String),

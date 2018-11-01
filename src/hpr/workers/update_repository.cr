@@ -25,11 +25,13 @@ module Hpr
 
       Dir.cd repository_path
       Hpr.logger.info "updating from origin ... #{name}"
-      Utils.run_cmd "git config hpr.status 'busy'"
+      Utils.run_cmd "git config hpr.status 'fetching from origin'"
       Utils.run_cmd "git fetch origin"
 
       Hpr.logger.info "pushing to mirror ... #{name}"
-      Utils.run_cmd "git push mirror"
+      Utils.run_cmd "git push hpr"
+      Utils.run_cmd "git config hpr.status 'pushing to hpr'"
+      Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
       Utils.run_cmd "git config hpr.status 'idle'"
 
       update_project_description(project, description)
