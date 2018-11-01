@@ -4,12 +4,17 @@ require "gitlab"
 module Hpr
   extend self
 
-  CONFIG_FILE = "config/hpr.json"
+  CONFI_PATH = "config/hpr.json"
 
   @@config : Config | Nil
 
   def config
-    @@config ||= Config.load(CONFIG_FILE)
+    @@config ||= Config.load(CONFI_PATH)
+    @@config.not_nil!
+  end
+
+  def reload_config(path : String)
+    @@config = Config.load(path)
     @@config.not_nil!
   end
 

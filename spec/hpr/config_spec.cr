@@ -1,6 +1,6 @@
 require "../spec_helper.cr"
 
-CONFIG_FILE = "./config/hpr.json.example"
+private CONFIG_FILE = "./config/hpr.json.example"
 
 describe Hpr::Config do
   describe ".load" do

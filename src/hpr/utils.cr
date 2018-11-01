@@ -16,14 +16,14 @@ module Hpr
       repo.mirror_name
     end
 
-    def write_mirror_to_git_config(name)
+    def write_mirror_to_git_config(name, namespace : String? = nil)
       Dir.cd Utils.repository_path(name)
 
       Utils.run_cmd "git config credential.helper store"
-      Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name)}"
-      Utils.run_cmd "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'"
-      Utils.run_cmd "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'"
-      Utils.run_cmd "git config remote.mirror.mirror true"
+      Utils.run_cmd "git remote add hpr #{mirror_ssh_url(name, namespace)}"
+      Utils.run_cmd "git config --add remote.hpr.push '+refs/heads/*:refs/heads/*'"
+      Utils.run_cmd "git config --add remote.hpr.push '+refs/tags/*:refs/tags/*'"
+      Utils.run_cmd "git config remote.hpr.mirror true"
       Utils.run_cmd "git config hpr.status 'idle'"
       Utils.run_cmd "git config hpr.created '#{Utils.current_datetime}'"
     end
@@ -46,27 +46,7 @@ module Hpr
 
       Dir.cd repository_path(name)
       status = run_cmd("git config hpr.status").first.as(String)
-      status == "busy"
-    end
-
-    def mirror_ssh_url(name)
-      gitlab_host = Hpr.config.gitlab.endpoint.host
-      gitlab_port = if Hpr.config.gitlab.ssh_port != 22
-                      "#{Hpr.config.gitlab.ssh_port}/"
-                    else
-                      ""
-                    end
-
-      "git@#{gitlab_host}:#{gitlab_port}#{Hpr.config.gitlab.group_name}/#{name.downcase}.git"
-    end
-
-    def repository_path?(name : String) : String?
-      path = repository_path(name)
-      Dir.exists?(path) ? path : nil
-    end
-
-    def repository_path(name : String)
-      File.join(Hpr.config.repository_path, name)
+      status == "pushing to hpr"
     end
 
     def repository_info(name : String)
@@ -76,13 +56,31 @@ module Hpr
       {
         "name"           => name,
         "url"            => run_cmd("git remote get-url --push origin").first.as(String),
-        "mirror_url"     => run_cmd("git remote get-url --push mirror").first.as(String),
+        "mirror_url"     => run_cmd("git remote get-url --push hpr").first.as(String),
         "latest_version" => run_cmd("git describe --abbrev=0 --tags 2>/dev/null").first.as(String),
         "status"         => run_cmd("git config hpr.status").first.as(String),
         "created_at"     => run_cmd("git config hpr.created").first.as(String),
         "updated_at"     => run_cmd("git config hpr.updated").first.as(String),
         "scheduled_at"   => run_cmd("git config hpr.scheduled").first.as(String),
       }
+    end
+
+    def mirror_ssh_url(name, namespace : String? = nil)
+      gitlab = Hpr.config.gitlab
+      gitlab_host = gitlab.endpoint.host
+      gitlab_port = (gitlab.ssh_port != 22) ? "#{Hpr.config.gitlab.ssh_port}/" : ""
+      namespace ||= name.downcase
+
+      "git@#{gitlab_host}:#{gitlab_port}#{gitlab.group_name}/#{namespace}.git"
+    end
+
+    def repository_path?(name : String) : String?
+      path = repository_path(name)
+      Dir.exists?(path) ? path : nil
+    end
+
+    def repository_path(name : String)
+      File.join(Hpr.config.repository_path, name)
     end
 
     def tryable(max_connect = 3, verbose = false, &block)

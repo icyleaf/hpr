@@ -6,7 +6,7 @@ shards:
 
   halite:
     github: icyleaf/halite
-    version: 0.7.4
+    version: 0.7.5
 
   mime:
     github: icyleaf/mime.cr

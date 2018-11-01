@@ -7,6 +7,8 @@ authors:
 targets:
   hpr:
     main: src/cli.cr
+  hpr-migration:
+    main: src/hpr/cli/migration.cr
 
 dependencies:
   salt:
