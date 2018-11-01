@@ -47,10 +47,12 @@ module Hpr::API::Repositories
       begin
         url = env.params["url"]
         name = env.params["name"]?
-        mirror_only = env.params["mirror_only"]? || "false"
+        create = env.params["create"]? || "true"
+        clone = env.params["clone"]? || "true"
         CLIENT.create_repository(
           url, name,
-          mirror_only == "true"
+          create == "true",
+          clone == "true"
         )
         body = true
         status_code = 201

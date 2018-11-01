@@ -2,13 +2,9 @@ module Hpr
   struct CloneRepositoryWorker
     include Sidekiq::Worker
 
-    def perform(url : String, name : String)
-      clone_and_push!(url, name)
-    end
-
-    private def clone_and_push!(url, name)
+    def perform(url : String, name : String, namespace : String)
       clone_repository(url, name)
-      setting_mirror_settings_and_push(url, name)
+      setting_mirror_settings_and_push(url, name, namespace)
       update_schedule(url, name)
     end
 
@@ -20,8 +16,8 @@ module Hpr
       Utils.run_cmd "git clone --mirror #{url} #{name}"
     end
 
-    private def setting_mirror_settings_and_push(url, name)
-      Utils.write_mirror_to_git_config(name)
+    private def setting_mirror_settings_and_push(url, name, namespace)
+      Utils.write_mirror_to_git_config(name, namespace)
 
       # Push
       Hpr.logger.info "pushing to mirror ... #{name}"

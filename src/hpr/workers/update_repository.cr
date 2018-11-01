@@ -17,10 +17,13 @@ module Hpr
       end
 
       description = project["description"].to_s
+      if description.empty?
+        repo_info = Utils.repository_info(name)
+        description = "Mirror of #{repo_info["url"]}"
+      end
       update_project_description(project, "[Syncing] #{description}")
 
       Dir.cd repository_path
-
       Hpr.logger.info "updating from origin ... #{name}"
       Utils.run_cmd "git config hpr.status 'busy'"
       Utils.run_cmd "git fetch origin"

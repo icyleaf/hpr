@@ -16,11 +16,11 @@ module Hpr
       repo.mirror_name
     end
 
-    def write_mirror_to_git_config(name)
+    def write_mirror_to_git_config(name, namespace : String? = nil)
       Dir.cd Utils.repository_path(name)
 
       Utils.run_cmd "git config credential.helper store"
-      Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name)}"
+      Utils.run_cmd "git remote add mirror #{mirror_ssh_url(name, namespace)}"
       Utils.run_cmd "git config --add remote.mirror.push '+refs/heads/*:refs/heads/*'"
       Utils.run_cmd "git config --add remote.mirror.push '+refs/remotes/tags/*:refs/remotes/tags/*'"
       Utils.run_cmd "git config remote.mirror.mirror true"
@@ -49,7 +49,7 @@ module Hpr
       status == "busy"
     end
 
-    def mirror_ssh_url(name)
+    def mirror_ssh_url(name, namespace : String? = nil)
       gitlab_host = Hpr.config.gitlab.endpoint.host
       gitlab_port = if Hpr.config.gitlab.ssh_port != 22
                       "#{Hpr.config.gitlab.ssh_port}/"
@@ -57,7 +57,8 @@ module Hpr
                       ""
                     end
 
-      "git@#{gitlab_host}:#{gitlab_port}#{Hpr.config.gitlab.group_name}/#{name.downcase}.git"
+      namespace ||= name.downcase
+      "git@#{gitlab_host}:#{gitlab_port}#{Hpr.config.gitlab.group_name}/#{namespace}.git"
     end
 
     def repository_path?(name : String) : String?
