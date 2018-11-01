@@ -20,9 +20,9 @@ module Hpr
       Utils.write_mirror_to_git_config(name, namespace)
 
       # Push
-      Hpr.logger.info "pushing to hpr ... #{name}"
+      Hpr.logger.info "pushing to gitlab ... #{name}"
       Utils.run_cmd "git push hpr"
-      Utils.run_cmd "git config hpr.status 'pushing to hpr'"
+      Utils.run_cmd "git config hpr.status 'pushing'"
       Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
       Utils.run_cmd "git config hpr.status 'idle'"
     end

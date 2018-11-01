@@ -46,7 +46,7 @@ module Hpr
 
       Dir.cd repository_path(name)
       status = run_cmd("git config hpr.status").first.as(String)
-      status == "pushing to hpr"
+      status == "pushing"
     end
 
     def repository_info(name : String)
