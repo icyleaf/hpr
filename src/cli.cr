@@ -46,7 +46,7 @@ module Hpr
         op.on("--no-clone", "Do not clone mirror of git repository from url") { @clone = false }
 
         op.separator("\nGlobal options:\n")
-        op.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| Hpr.reload_config(path) }
+        op.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| Hpr.config(path) }
 
         op.separator <<-EXAMPLES
 \nExamples:
@@ -114,7 +114,7 @@ EXAMPLES
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-      puts @parser
+        puts @parser
       end
     end
 
@@ -154,8 +154,6 @@ EXAMPLES
       end
 
       start_worker
-      sleep 100.milliseconds # waiting sidekiq is ready
-
       @client.create_repository(@repo_url, @repo_name, @create, @clone)
       loop do
         sleep 1.seconds
@@ -172,7 +170,6 @@ EXAMPLES
       Utils.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
-      sleep 1.seconds # waiting sidekiq is ready
       @client.update_repository(@repo_name)
 
       loop do
@@ -186,8 +183,6 @@ EXAMPLES
       Utils.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
-      sleep 1.seconds # waiting sidekiq is ready
-
       @client.delete_repository(@repo_name)
       loop do
         sleep 1.seconds
@@ -213,7 +208,8 @@ EXAMPLES
 
       print_banner
       start_worker
-
+      puts Hpr.config.config_file
+      pp Hpr.config
       Hpr::API.run(@server_port)
     end
 
@@ -221,6 +217,8 @@ EXAMPLES
       spawn do
         Hpr::Worker.run
       end
+
+      sleep 100.milliseconds # waiting sidekiq is ready
     end
 
     private def determine_redis!
