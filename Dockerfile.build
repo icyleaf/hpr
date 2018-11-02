@@ -1,0 +1,9 @@
+FROM icyleafcn/crystal:0.26.1
+
+ADD . /app
+WORKDIR /app
+
+RUN set -ex && \
+    apk add --update --no-cache build-base openssl-dev && \
+    shards build --production && \
+    for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done

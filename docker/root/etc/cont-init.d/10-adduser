@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv sh
+
+# PUID=${PUID:-8848}
+# PGID=${PGID:-8848}
+
+# PUNAME=hpr
+# PGNAME=hpr
+
+# groupmod -o -g "$PGID" $PUNAME
+# usermod -o -u "$PUID" $PGNAME
+
+# echo "
+# -------------------------------------
+# GID/UID
+# -------------------------------------
+# User uid:    $(id -u $PUNAME)
+# User gid:    $(id -g $PUNAME)
+# -------------------------------------
+# "
+
+# chown $PUNAME:$PGNAME /app

@@ -1,6 +1,7 @@
 module Hpr
   struct Config
     JSON.mapping(
+      file: {type: String, default: ""},
       repository_path: {type: String, default: ""},
       schedule_in: {type: String | Int32 | Int64, getter: false},
       basic_auth: BasicAuthStruct,
@@ -9,6 +10,7 @@ module Hpr
 
     def self.load(file : String)
       cls = self.from_json File.open(file)
+      cls.file = file
       cls.repository_path = File.expand_path File.join("repositories", cls.gitlab.group_name)
       cls
     end

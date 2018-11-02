@@ -24,6 +24,6 @@ dependencies:
     github: icyleaf/sidekiq.cr
     branch: master
 
-crystal: 0.25.1
+crystal: 0.26.1
 
 license: MIT

@@ -3,8 +3,11 @@ hpr_version ?= 0.7.0
 
 all: build
 
+builder:
+	docker build -t $(hpr_image_name):$(hpr_version)-builder -f Dockerfile.build .
+
 build:
-	docker build --no-cache -t $(hpr_image_name):$(hpr_version) .
+	docker build -t $(hpr_image_name):$(hpr_version) .
 	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
 
 publish:

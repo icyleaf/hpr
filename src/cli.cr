@@ -46,7 +46,7 @@ module Hpr
         op.on("--no-clone", "Do not clone mirror of git repository from url") { @clone = false }
 
         op.separator("\nGlobal options:\n")
-        op.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| Hpr.reload_config(path) }
+        op.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| puts "1111"; Hpr.reload_config(path) }
 
         op.separator <<-EXAMPLES
 \nExamples:
@@ -93,7 +93,9 @@ EXAMPLES
         end
       end
 
+      puts "222222"
       @client = Client.new
+      puts "333333"
       run!
     end
 
@@ -211,9 +213,9 @@ EXAMPLES
     private def start_server
       determine_redis!
 
-      print_banner
       start_worker
-
+      print_banner
+      puts "Using config: #{Hpr.config.file}"
       Hpr::API.run(@server_port)
     end
 
