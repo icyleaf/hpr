@@ -18,6 +18,6 @@ WORKDIR /app
 
 RUN apk add --update --no-cache openssh-client openssh-keygen git bash redis
 
-VOLUME ["/app"]
+VOLUME ["/app", "/data"]
 
 EXPOSE 8848 6379
