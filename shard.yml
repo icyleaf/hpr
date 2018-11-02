@@ -11,15 +11,18 @@ targets:
     main: src/hpr/cli/migration.cr
 
 dependencies:
+  totem:
+    github: icyleaf/totem
+    version: ~> 0.5.0
+  gitlab:
+    github: icyleaf/gitlab.cr
+    version: ~> 0.3.5
   salt:
     github: icyleaf/salt
     version: ~> 0.4.2
   radix:
     github: luislavena/radix
     version: ~> 0.3.8
-  gitlab:
-    github: icyleaf/gitlab.cr
-    version: ~> 0.3.5
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master

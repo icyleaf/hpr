@@ -17,7 +17,7 @@ OptionParser.parse! do |parser|
   parser.banner = "Usage: hpr-migration [options] path"
 
   parser.separator("\nOptions:\n")
-  parser.on("-f FILE", "--file FILE", "the path of hpr.json config file") { |path| Hpr.reload_config(path) }
+  parser.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| Hpr.config(path) }
   parser.on("-s SOURCE", "--source=SOURCE", "The source of migration came from (avaiable gitlab-mirror only)") { |s| source = s }
   parser.on("--group-name=NAME", "The group name from gitlab-mirror config") { |name| group_name = name }
   parser.on("--clean", "The clean config in gitlab-mirror") { clean = true }

@@ -38,10 +38,10 @@ module Hpr
       project_name = (name && !name.empty?) ? name : repo.mirror_name
 
       project = if create
-        create_gitlab_repository(project_name, url)
-      else
-        search_gitlab_repository(project_name)
-      end
+                  create_gitlab_repository(project_name, url)
+                else
+                  search_gitlab_repository(project_name)
+                end
 
       Utils.user_error! "Not found gitlab project: #{project_name}" unless project
 
@@ -71,8 +71,8 @@ module Hpr
 
     def search_gitlab_repository(name)
       projects = Hpr.gitlab.project_search(name)
-                           .as_a
-                           .select {|project| project.as_h["namespace"].as_h["id"] == @group["id"] }
+        .as_a
+        .select { |project| project.as_h["namespace"].as_h["id"] == @group["id"] }
 
       return projects[0] unless projects.empty?
     end

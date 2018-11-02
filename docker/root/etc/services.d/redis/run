@@ -1,4 +1,6 @@
 #!/usr/bin/with-contenv sh
 
+mkdir -p /data
+
 echo "** Starting Redis.."
-redis-server
+exec s6-setuidgid redis redis-server --dir /data

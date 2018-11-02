@@ -9,6 +9,7 @@ module Hpr::API
 
   class Info < Salt::App
     def call(env)
+      client = Client.new
       stats = Sidekiq::Stats.new
       scheduled_set = Sidekiq::ScheduledSet.new
       scheduleds = scheduled_set.each_with_object([] of Hash(String, String)) do |retri, obj|
@@ -18,7 +19,7 @@ module Hpr::API
         }
       end
 
-      names = CLIENT.list_repositories
+      names = client.list_repositories
       body = {
         hpr: {
           version:      Hpr::VERSION.to_s,

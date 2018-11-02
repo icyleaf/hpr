@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv sh
 
-export HPR_SSH_PATH=/app/.ssh
+HPR_SSH_PATH=/app/.ssh
 
 cleanup_workspace() {
   mkdir -p /app/repositories
@@ -27,11 +27,13 @@ config_ssh_config() {
   HPR_SSH_HOST=${HPR_SSH_HOST:-*}
   HPR_SSH_PORT=${HPR_SSH_PORT:-22}
 
-  echo "Configuring ssh config ..."
-  echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
-  echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
-  echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
-  echo "    StrictHostKeyChecking no" >> ${HPR_SSH_PATH}/config
+  if ! grep -q "$HPR_SSH_HOST" "/app/.ssh/config"; then
+    echo "Configuring ssh config ..."
+    echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
+    echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
+    echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
+    echo "    StrictHostKeyChecking no" >> ${HPR_SSH_PATH}/config
+  fi
 }
 
 cleanup_workspace
