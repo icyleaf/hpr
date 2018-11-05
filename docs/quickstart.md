@@ -1,20 +1,15 @@
 # 快速上手
 
-鉴于 Docker 的便利性，推荐使用 docker-compose 以最快速的安装使用：
+鉴于 Docker 的便利性，推荐使用 Docker 以最快速的安装使用：
+
+首先需要获取配置模板：
 
 ```bash
-$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/docker-compose.yml
+$ mkdir -p /my/hpr/config && cd /my/hpr/config
+$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.json -o hpr.json
 ```
 
-获取配置模板：
-
-```bash
-$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
-$ mkdir config
-$ mv hpr.json.example.yml config/hpr.json
-```
-
-根据自己的情况修改 `config/config.json` 文件
+根据自己的情况修改 `hpr.json` 文件
 
 ```json
 {
@@ -31,7 +26,7 @@ $ mv hpr.json.example.yml config/hpr.json
 
     "group_name": "mirrors",
 
-    "project_public": false,
+    "project_public": true,
     "project_issue": false,
     "project_wiki": false,
     "project_merge_request": false,
@@ -49,60 +44,34 @@ $ mv hpr.json.example.yml config/hpr.json
 
 > 更多参数详情参见[配置文件](configuration?id=basic_auth-接口认证)。
 
-配置文件修改保存后还需要在 `docker-compose.yml` 文件中配置下：
-
-```yaml
-version: '2'
-
-services:
-  hpr:
-    image: icyleafcn/hpr
-    ports:
-      - 8848:8848
-    volumes:
-      - /my/own/hprdir:/app
-    environment:
-      REDIS_URL: tcp://redis:6379
-      REDIS_PROVIDER: REDIS_URL
-
-      HPR_SSH_HOST: git.example.com
-      HPR_SSH_PORT: 22
-    depends_on:
-      - redis
-  redis:
-    image: redis:alpine
-```
-
-其中需要修改 **/my/own/hprdir** 为实际存放数据的地方而 `HPR_SSH_HOST` 和 `HPR_SSH_PORT` 变量用于设置 Docker 实例中的 SSH 配置。
-如果 SSH 端口是 22 的可忽略设置这俩参数。
-
-编辑完成后运行下面命令快完成了！
+最后执行如下命令即可运行 hpr：
 
 ```bash
-$ docker-compose up
+$ docker run icyleafcn/hpr:0.8.0 -v /my/hpr:/app -p 8848:8848 icyleafcn/hpr
 ...
-hpr_1      | Generating public/private rsa key pair ...
-hpr_1      |
-hpr_1      | SSH PUBLIC KEY:
-hpr_1      | ##################################################################
-hpr_1      | ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARmEbd6BOIBQ+UWm8NUKthQ7UOavmlsq4j8lY4kyFW2eFX2qWcbvI+s2gI+05MXax+mAukSszaNSnpAoTyJCRipilSkqiOV99V8JIJhrHPtTO0o/Ui
+[cont-init.d] 10-configure-ssh: executing...
+Generating public/private rsa key pair ...
+
+SSH PUBLIC KEY:
+##################################################################
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARmEbd6BOIBQ+UWm8NUKthQ7UOavmlsq4j8lY4kyFW2eFX2qWcbvI+s2gI+05MXax+mAukSszaNSnpAoTyJCRipilSkqiOV99V8JIJhrHPtTO0o/Ui
 9WiyyWsUM4M9lEKHpZ486lDGk3IM2XQW+pxAoMKb0TYzqCsrduHUtjzy0M0BqgMPe9EtVQqCbnTMzDLXmRONoTYyTV51NQ12mMwEQcDaLQ28e5gqouQJKS81JaoRpQWa7pHsOCki6Fk9TB+EQFrGz5nOrmYYM+O1MKnFkzmVHv7Fh50Sz7d2nYzzOKAkR hpr@docker
-hpr_1      | ##################################################################
-hpr_1      |
-hpr_1      | Configuring ssh config ...
-hpr_1      | Starting hpr server ...
-hpr_1      |   _
-hpr_1      |  | |__  _ __  _ __
-hpr_1      |  | '_ \| '_ \| '__|
-hpr_1      |  | | | | |_) | |
-hpr_1      |  |_| |_| .__/|_|
-hpr_1      |        |_|
-hpr_1      |        |_|
-hpr_1      | [12] Salt server starting ...
-hpr_1      | [12] * Version 0.4.2 (Crystal 0.26.1)
-hpr_1      | [12] * Environment: production
-hpr_1      | [12] * Listening on http://0.0.0.0:8848/
-hpr_1      | [12] Use Ctrl-C to stop
+##################################################################
+...
+[services.d] starting services
+** Starting Hpr..
+  _
+ | |__  _ __  _ __
+ | '_ \| '_ \| '__|
+ | | | | |_) | |
+ |_| |_| .__/|_|
+       |_|
+Using config: /app/config/hpr.json
+[205] Salt server starting ...
+[205] * Version 0.4.2 (Crystal 0.26.1)
+[205] * Environment: production
+[205] * Listening on http://0.0.0.0:8848/
+[205] Use Ctrl-C to stop
 ```
 
 最后从执行命令的输出找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），

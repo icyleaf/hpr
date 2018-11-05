@@ -4,30 +4,16 @@ Install hpr on macOS, Linux, FreeBSD, and on any machine where the Crystal compi
 
 > There is lots of talk about “hpr being written in Crystal”, but you don’t need to install Crystal to enjoy hpr. Just grab a precompiled binary! (Not ready for now, sadly)
 
-## Docker Compose
-
-Check [Quick start](/en/quickstart.md)。
-
 ## Docker
 
-> Pull [hpr](https://hub.docker.com/r/icyleafcn/hpr) 和 [redis](https://hub.docker.com/_/redis) images first。
-
-Pull specified version of hpr:
-
 ```bash
-$ docker pull icyleafcn/hpr:0.7.0
+$ docker pull icyleafcn/hpr:0.8.0
 ```
 
 Or pull the latest version:
 
 ```bash
 $ docker pull icyleafcn/hpr:latest
-```
-
-Pull redis image by use `alpine` tag to speed up download time。
-
-```bash
-$ docker pull redis:alpine
 ```
 
 ## Homebrew
