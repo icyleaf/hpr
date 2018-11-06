@@ -4,30 +4,20 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 
 > 虽然使用 Crystal 编写但你可以不用安装依赖环境，可以直接下载编译好的二进制包，虽然目前还为准备好。
 
-## Docker Compose
-
-参见[快速上手](quickstart.md)。
-
 ## Docker
 
-> 需要拉取 [hpr](https://hub.docker.com/r/icyleafcn/hpr) 和 [redis](https://hub.docker.com/_/redis) 两个镜像。
+从 `0.8.0` 版本开始只需要拉取 hpr 这一个镜像即可。
 
 获取指定版本的 hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:0.7.0
+$ docker pull icyleafcn/hpr:0.8.0
 ```
 
 或者获取最新版本的 hpr:
 
 ```bash
 $ docker pull icyleafcn/hpr:latest
-```
-
-之后在拉取依赖的 redis 镜像，这里我使用了基于 `alpine` 的镜像版本主要是为了镜像体积最小加快拉取速度。
-
-```bash
-$ docker pull redis:alpine
 ```
 
 ## Homebrew
@@ -89,68 +79,4 @@ $ brew services start redis
 
 ```bash
 $ ./bin/hpr --help
-Usage: hpr <action> [--url=<url>] <name>
-
-Actions:
-
-    -s, --server                     Run a web api server
-    -l, --list                       List mirrored repositories
-    -S, --search                     Search mirrored repositories
-    -c, --create                     Create a mirror repository
-    -u, --update                     Updated a mirrored repository
-    -d, --delete                     Delete a mirrored repository
-    -v, --version                    Show version
-    -h, --help                       Show this help
-
-Option in server action:
-
-    -P PORT, --port PORT             the port of server (by default is 8848)
-
-Option in create action:
-
-    -U URL, --url URL                The url of mirror repository
-    --no-create                      Do not create project in gitlab
-    --no-clone                       Do not clone mirror of git repository from url
-
-Global options:
-
-    -f FILE, --file FILE             the path of hpr.json config file
-
-Examples:
-
-       o Start a API server:
-
-               $ hpr -s
-
-       o Start a API server with custom port and different config path:
-
-               $ hpr -s --port 3001 --file ~/.config/hpr/hpr.json
-
-       o List all mirrored repositories:
-
-               $ hpr -l
-
-       o Search all repositories include icyleaf keywords:
-
-               $ hpr -S icyleaf
-
-       o Create a new repository:
-
-               $ hpr -c --url https://github.com/icyleaf/hpr.git icyleaf-hpr
-
-       o Clone and push a new repository without create gitlab project:
-
-               $ hpr -c --no-create --url https://github.com/icyleaf/hpr.git icyleaf-hpr
-
-       o Update a repository:
-
-               $ hpr -u icyleaf-hpr
-
-       o Delete a repository:
-
-               $ hpr -d icyleaf-hpr
-
-       More detail to check: https://icyleaf.github.io/hpr/
-
-hpr v0.7.0 in Crystal v0.26.1
 ```

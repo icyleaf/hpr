@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+## [0.8.0] (2018-11-06)
+
+### Changed
+
+- [Docker] 舍弃 docker-compose 并把依赖的服务打为一个镜像
+- [CLI] 全局参数 `--file` 修改为 `--path`，原为配置文件现在为 hpr 项目根目录
+
 ## [0.7.0] (2018-11-01)
 
 > TODO

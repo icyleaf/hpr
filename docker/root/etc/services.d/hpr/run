@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv sh
+
+REDIS_URL=tcp://localhost:6379
+REDIS_PROVIDER=REDIS_URL
+
+echo "** Starting Hpr.."
+cd /app
+exec hpr --server 2>&1 | tee -a /app/logs/hpr.log

@@ -2,7 +2,8 @@ module Hpr::API::Repositories
   # List all repositories
   class List < Salt::App
     def call(env)
-      names = CLIENT.list_repositories
+      client = Client.new
+      names = client.list_repositories
       repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
         obj << Utils.repository_info(name) if Utils.repository_path?(name)
       end
@@ -44,12 +45,13 @@ module Hpr::API::Repositories
   # Create new repository
   class Create < Salt::App
     def call(env)
+      client = Client.new
       begin
         url = env.params["url"]
         name = env.params["name"]?
         create = env.params["create"]? || "true"
         clone = env.params["clone"]? || "true"
-        CLIENT.create_repository(
+        client.create_repository(
           url, name,
           create == "true",
           clone == "true"
@@ -70,7 +72,8 @@ module Hpr::API::Repositories
   # Update a repository by given name
   class Update < Salt::App
     def call(env)
-      CLIENT.update_repository(env.params["name"])
+      client = Client.new
+      client.update_repository(env.params["name"])
       {200, {"Content-Type" => "application/json"}, ["true"]}
     end
   end
@@ -78,7 +81,8 @@ module Hpr::API::Repositories
   # Remove a repository by given name
   class Delete < Salt::App
     def call(env)
-      CLIENT.delete_repository env.params["name"]
+      client = Client.new
+      client.delete_repository env.params["name"]
       {200, {"Content-Type" => "application/json"}, ["true"]}
     end
   end
@@ -86,8 +90,9 @@ module Hpr::API::Repositories
   # Search repositories by name
   class Search < Salt::App
     def call(env)
+      client = Client.new
       keyword = env.params["name"]
-      repositories = CLIENT.search_repositories(keyword).each_with_object([] of Hash(String, String)) do |name, obj|
+      repositories = client.search_repositories(keyword).each_with_object([] of Hash(String, String)) do |name, obj|
         obj << Utils.repository_info(name)
       end
 

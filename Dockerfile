@@ -4,27 +4,20 @@ ADD . /app
 WORKDIR /app
 
 RUN set -ex && \
-    apk add --update --no-cache build-base openssl-dev && \
-    chmod +x docker-entrypoint.sh && \
+    apk add --update --no-cache build-base openssl-dev yaml-dev && \
     shards build --production && \
     for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
-    # ldd bin/hpr | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%' && \
-    # ldd bin/hpr-migration | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'
 
-FROM icyleafcn/alpine:3.8
+FROM icyleafcn/s6-overlay
 
 COPY --from=builder /app/deps /
-COPY --from=builder /app/bin /usr/local/bin
-COPY --from=builder /app/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=builder /app/bin/ /bin/
+COPY --from=builder /app/docker/root /
 
 WORKDIR /app
 
-RUN apk add --update --no-cache openssh-client openssh-keygen git bash openssl-dev
+RUN apk add --update --no-cache openssh-client openssh-keygen git bash redis
 
-VOLUME ["/app"]
+VOLUME ["/app", "/data"]
 
-EXPOSE 8848
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
-CMD ["hpr:init"]
+EXPOSE 8848 6379

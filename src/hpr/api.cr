@@ -4,8 +4,6 @@ require "salt/middlewares/router"
 require "./apis/*"
 
 module Hpr::API
-  CLIENT = Client.new
-
   def self.run(port = 8848, environment = "production")
     if Hpr.config.basic_auth.enable
       user = Hpr.config.basic_auth.user

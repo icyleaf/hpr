@@ -16,6 +16,10 @@ shards:
     github: ysbaddaden/pool
     version: 0.2.3
 
+  popcorn:
+    github: icyleaf/popcorn
+    version: 0.2.0
+
   radix:
     github: luislavena/radix
     version: 0.3.8
@@ -31,4 +35,8 @@ shards:
   sidekiq:
     github: icyleaf/sidekiq.cr
     commit: 94f54def4324a9d9fd8f7e6659a99b2c115a64c9
+
+  totem:
+    github: icyleaf/totem
+    version: 0.5.0
 
