@@ -1,7 +1,11 @@
 #!/usr/bin/with-contenv sh
 
+# Config redis server
 REDIS_URL=tcp://localhost:6379
 REDIS_PROVIDER=REDIS_URL
+
+# create logs directory
+mkdir -p /app/logs
 
 echo "** Starting Hpr.."
 cd /app
