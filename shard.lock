@@ -18,7 +18,7 @@ shards:
 
   popcorn:
     github: icyleaf/popcorn
-    version: 0.2.0
+    version: 0.2.1
 
   radix:
     github: luislavena/radix
@@ -26,17 +26,21 @@ shards:
 
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 2.1.1
 
   salt:
     github: icyleaf/salt
-    version: 0.4.2
+    version: 0.4.3
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 94f54def4324a9d9fd8f7e6659a99b2c115a64c9
+    commit: c38b262e17fa9e8a54daf2a7dd6bd7ffb087becf
+
+  terminal:
+    github: icyleaf/terminal
+    version: 0.2.0
 
   totem:
     github: icyleaf/totem
-    version: 0.5.0
+    commit: 20876da2547214cbf0ab04a709dc2b5c7699f8f8
 

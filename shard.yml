@@ -13,13 +13,15 @@ targets:
 dependencies:
   totem:
     github: icyleaf/totem
-    version: ~> 0.5.0
+    branch: master
   gitlab:
     github: icyleaf/gitlab.cr
     version: ~> 0.3.5
   salt:
     github: icyleaf/salt
-    version: ~> 0.4.2
+    version: ~> 0.4.3
+  terminal:
+    github: icyleaf/terminal
   radix:
     github: luislavena/radix
     version: ~> 0.3.8
@@ -27,6 +29,6 @@ dependencies:
     github: icyleaf/sidekiq.cr
     branch: master
 
-crystal: 0.26.1
+crystal: 0.27.0
 
 license: MIT

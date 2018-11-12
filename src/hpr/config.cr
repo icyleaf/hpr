@@ -4,34 +4,14 @@ module Hpr
   struct Config
     include Totem::ConfigBuilder
 
-    def self.load(path : String? = nil, index : Int = -1)
-      Hpr::Config.configure do |config|
-        config.set_default "hpr_path", hpr_path(config, path, index)
-        config.set_default "repository_path", repository_path(config)
-      end
-    end
-
-    private def self.hpr_path(config, path : String? = nil, index : Int = -1)
-      path ? load_config_path(config, path, index) : File.expand_path(".")
-    end
-
-    private def self.load_config_path(config, path, index)
-      raise "Pass directory path only" if File.file?(path)
-
-      config.config_paths.insert index, File.join(path, "config")
-      config.load!
-
-      File.expand_path(path)
-    end
-
-    private def self.repository_path(config)
-      File.join(config["hpr_path"].to_s, "repositories", config.get("gitlab.group_name").to_s)
-    end
+    CONFIG_NAME = "hpr"
+    CONFIG_TYPE = "json"
+    CONFIG_PATH = File.expand_path("config")
 
     build do
-      config_name "hpr"
-      config_type "json"
-      config_paths ["config"]
+      config_name CONFIG_NAME
+      config_type CONFIG_TYPE
+      config_paths [CONFIG_PATH]
     end
 
     property hpr_path : String
@@ -61,6 +41,38 @@ module Hpr
         Time::Span.new(0, value.to_i, 0) # convert to minutes
       end
     end
+
+    module LoadHelper
+      def load
+        Hpr::Config.configure do |config|
+          default_config(config)
+        end
+      end
+
+      def load(file : String)
+        file = File.join(file, "#{CONFIG_NAME}.#{CONFIG_TYPE}") if File.directory?(file)
+        Hpr::Config.configure(file, 0) do |config|
+          default_config(config, file)
+        end
+      end
+
+      private def default_config(config, path = CONFIG_PATH)
+        config.set_default "hpr_path", root_path(path)
+        config.set_default "repository_path", repository_path(config)
+        config
+      end
+
+      private def root_path(path)
+        path = File.dirname(path) if File.file?(path)
+        File.expand_path("../", path)
+      end
+
+      private def repository_path(config)
+        File.join(config["hpr_path"].to_s, "repositories", config.get("gitlab.group_name").to_s)
+      end
+    end
+
+    extend LoadHelper
 
     struct BasicAuth
       include JSON::Serializable

@@ -13,8 +13,8 @@ module Hpr
     @@config.not_nil!
   end
 
-  def config(path : String, index : Int32 = 0)
-    @@config = Config.load(path, index)
+  def config(file : String)
+    @@config = Config.load(file)
     @@config.not_nil!
   end
 
