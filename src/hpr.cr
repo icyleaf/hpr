@@ -8,6 +8,16 @@ module Hpr
   @@gitlab : Gitlab::Client?
   @@logger : Logger?
 
+  @@debugging = false
+
+  def debugging
+    @@debugging
+  end
+
+  def debugging(value : Bool)
+    @@debugging = value
+  end
+
   def config
     @@config ||= Config.load
     @@config.not_nil!
