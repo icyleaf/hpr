@@ -23,16 +23,17 @@ module Hpr
       end
       update_project_description(project, "[Syncing] #{description}")
 
-      Dir.cd repository_path
-      Hpr.logger.info "updating from origin ... #{name}"
-      Utils.run_cmd "git config hpr.status 'fetching'"
-      Utils.run_cmd "git fetch origin"
+      Dir.cd(repository_path) do
+        Hpr.logger.info "updating from origin ... #{name}"
+        Utils.run_cmd "git config hpr.status 'fetching'"
+        Utils.run_cmd "git fetch origin"
 
-      Hpr.logger.info "pushing to gitlab ... #{name}"
-      Utils.run_cmd "git push hpr"
-      Utils.run_cmd "git config hpr.status 'pushing'"
-      Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
-      Utils.run_cmd "git config hpr.status 'idle'"
+        Hpr.logger.info "pushing to gitlab ... #{name}"
+        Utils.run_cmd "git push hpr"
+        Utils.run_cmd "git config hpr.status 'pushing'"
+        Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
+        Utils.run_cmd "git config hpr.status 'idle'"
+      end
 
       update_project_description(project, description)
 
@@ -55,8 +56,9 @@ module Hpr
       schedule_in = Hpr.config.schedule_in
       UpdateRepositoryWorker.async.perform_in(schedule_in, name)
 
-      Dir.cd Utils.repository_path(name)
-      Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
+      Utils.path_to_repo(name) do
+        Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
+      end
     end
   end
 end

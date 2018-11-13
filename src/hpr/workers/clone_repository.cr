@@ -9,11 +9,10 @@ module Hpr
     end
 
     private def clone_repository(url, name)
-      repository_path = Hpr.config.repository_path
-      Dir.cd repository_path
-
-      Hpr.logger.info "cloning #{url} ... #{name}"
-      Utils.run_cmd "git clone --mirror #{url} #{name}"
+      Dir.cd(Hpr.config.repository_path) do
+        Hpr.logger.info "cloning #{url} ... #{name}"
+        Utils.run_cmd "git clone --mirror #{url} #{name}"
+      end
     end
 
     private def setting_mirror_settings_and_push(url, name, namespace)
@@ -31,8 +30,9 @@ module Hpr
       schedule_in = Hpr.config.schedule_in
       UpdateRepositoryWorker.async.perform_in(schedule_in, name)
 
-      Dir.cd Utils.repository_path(name)
-      Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
+      Utils.path_to_repo(name) do
+        Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
+      end
     end
   end
 end
