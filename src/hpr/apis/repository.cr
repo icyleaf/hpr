@@ -58,7 +58,7 @@ module Hpr::API::Repositories
         )
         body = true
         status_code = 201
-      rescue e : Exception
+      rescue e : Gitlab::Error::APIError
         body = {
           message: e.message,
         }
