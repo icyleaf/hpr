@@ -26,7 +26,8 @@ module Hpr
 
       private def has_scheduled?(name)
         scheduled = Sidekiq::ScheduledSet.new
-        !scheduled.select {|s| s.args[0].to_s == name}.size.zero?
+        rs = scheduled.select {|s| s.args[0].to_s == name}
+        rs.empty? ? nil : rs.first
       end
     end
 

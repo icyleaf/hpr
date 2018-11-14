@@ -4,11 +4,12 @@ module Hpr
 
     def perform(name : String)
       info "deleting directory ... #{name}"
-      if path = Git::Repo.repository_path?(name)
-        FileUtils.rm_rf path
-
-        # TODO: delete schedule if exists
+      if job = has_scheduled?(name)
+        job.delete
       end
+
+      return unless path = Git::Repo.repository_path?(name)
+      FileUtils.rm_rf path
     end
   end
 end
