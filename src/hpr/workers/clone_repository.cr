@@ -1,38 +1,33 @@
 module Hpr
   struct CloneRepositoryWorker
-    include Sidekiq::Worker
+    include Worker::Base
 
     def perform(url : String, name : String, namespace : String)
-      clone_repository(url, name)
-      setting_mirror_settings_and_push(url, name, namespace)
-      update_schedule(url, name)
-    end
-
-    private def clone_repository(url, name)
-      Dir.cd(Hpr.config.repository_path) do
-        Hpr.logger.info "cloning #{url} ... #{name}"
-        Utils.run_cmd "git clone --mirror #{url} #{name}"
+      if Git::Repo.repository_path?(name)
+        error "Repository #{name} was exists with #{url}"
+        return
       end
+
+      repo = Git::Repo.new(Hpr.config.repository_path)
+      clone_repository(repo, url, name)
+      setting_mirror_settings_and_push(repo, name, namespace)
+      update_schedule(name)
     end
 
-    private def setting_mirror_settings_and_push(url, name, namespace)
-      Utils.write_mirror_to_git_config(name, namespace)
+    private def clone_repository(repo, url, name)
+      info "cloning #{url} ... #{name}"
+      repo.clone(url, name, mirror: true)
+    end
+
+    private def setting_mirror_settings_and_push(repo, name, namespace)
+      Utils.write_mirror_to_git_config(repo, name, namespace)
 
       # Push
-      Hpr.logger.info "pushing to gitlab ... #{name}"
-      Utils.run_cmd "git push hpr"
-      Utils.run_cmd "git config hpr.status 'pushing'"
-      Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
-      Utils.run_cmd "git config hpr.status 'idle'"
-    end
-
-    private def update_schedule(url, name)
-      schedule_in = Hpr.config.schedule_in
-      UpdateRepositoryWorker.async.perform_in(schedule_in, name)
-
-      Utils.path_to_repo(name) do
-        Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
-      end
+      info "pushing to gitlab ... #{name}"
+      repo.set_config("hpr.status", "pushing")
+      repo.push_remote("hpr")
+      repo.set_config("hpr.status", "idle")
+      repo.set_config("hpr.updated", "#{Utils.current_datetime}")
     end
   end
 end

@@ -1,4 +1,5 @@
 require "file_utils"
+require "terminal"
 require "json"
 
 module Hpr
@@ -43,14 +44,13 @@ module Hpr
                   search_gitlab_repository(project_name)
                 end
 
-      Utils.user_error! "Not found gitlab project: #{project_name}" unless project
-
-      Utils.user_error! "Exists Repository: #{project_name}" if clone && reopsitory_stored?(project_name)
+      Terminal.user_error! "Not found gitlab project: #{project_name}" unless project
+      Terminal.user_error! "Exists Repository: #{project_name}" if clone && Git::Repo.repository_path?(project_name)
       CloneRepositoryWorker.async.perform repo.url, project_name, project["path"].as_s if clone
     end
 
     def update_repository(name : String)
-      Utils.user_error! "repository not exists ... #{name}" unless reopsitory_stored?(name)
+      Terminal.user_error! "repository not exists ... #{name}" unless Git::Repo.repository_path?(name)
       UpdateRepositoryWorker.async.perform name
     end
 
@@ -102,10 +102,6 @@ module Hpr
       end
     end
 
-    private def reopsitory_stored?(name)
-      Dir.exists?(Utils.repository_path(name))
-    end
-
     private def current_user
       Hpr.gitlab.user
     end
@@ -122,8 +118,7 @@ module Hpr
     end
 
     def determine_git!
-      _, _, success = Utils.run_cmd "which git"
-      raise NotFoundGitError.new "Please install git." unless success
+      Git.ensure!
     end
 
     def determine_gitlab_configure!

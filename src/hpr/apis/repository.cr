@@ -5,7 +5,7 @@ module Hpr::API::Repositories
       client = Client.new
       names = client.list_repositories
       repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
-        obj << Utils.repository_info(name) if Utils.repository_path?(name)
+        obj << Utils.repository_info(name) if Git::Repo.repository_path?(name)
       end
 
       body = {
@@ -21,8 +21,9 @@ module Hpr::API::Repositories
   class Show < Salt::App
     def call(env)
       name = env.params["name"]
-      if Utils.repository_path?(name)
-        if Utils.repository_cloning?(name)
+      repo = Git::Repo.repository(name)
+      if repo.exists?
+        if repo.cloning?
           status_code = 202
           body = {
             message: "Repositoy is cloning, wait a moment.",
@@ -51,6 +52,7 @@ module Hpr::API::Repositories
         name = env.params["name"]?
         create = env.params["create"]? || "true"
         clone = env.params["clone"]? || "true"
+
         client.create_repository(
           url, name,
           create == "true",

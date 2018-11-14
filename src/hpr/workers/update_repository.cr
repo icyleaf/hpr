@@ -1,21 +1,38 @@
 module Hpr
   struct UpdateRepositoryWorker
-    include Sidekiq::Worker
+    include Worker::Base
 
     def perform(name : String)
-      repository_path = Utils.repository_path(name)
       # Skip when repository id not exists (may be deleted).
-      unless Dir.exists?(repository_path)
-        Hpr.logger.error "repository folder not exists ... #{name}"
+      unless Git::Repo.repository_path?(name)
+        error "repository folder not exists ... #{name}"
         return
       end
 
-      # Sikp when repository not exists at gitlab service(deleted remotely)
+      # Skip when repository not exists at gitlab service(deleted remotely)
       unless project = search_project(name)
-        Hpr.logger.error "repository of gitlab not exists ... #{name}"
+        error "repository of gitlab not exists ... #{name}"
         return
       end
 
+      with_syncing(project, name) do
+        repo = Git::Repo.repository(name)
+
+        info "updating from origin ... #{name}"
+        repo.set_config("hpr.status", "fetching")
+        repo.fetch_remote("origin")
+
+        info "pushing to gitlab ... #{name}"
+        repo.set_config("hpr.status", "pushing")
+        repo.push_remote("hpr")
+        repo.set_config("hpr.updated", Utils.current_datetime)
+        repo.set_config("hpr.status", "idle")
+      end
+
+      update_schedule(name)
+    end
+
+    private def with_syncing(project, name)
       description = project["description"].to_s
       if description.empty?
         repo_info = Utils.repository_info(name)
@@ -23,21 +40,9 @@ module Hpr
       end
       update_project_description(project, "[Syncing] #{description}")
 
-      Dir.cd(repository_path) do
-        Hpr.logger.info "updating from origin ... #{name}"
-        Utils.run_cmd "git config hpr.status 'fetching'"
-        Utils.run_cmd "git fetch origin"
-
-        Hpr.logger.info "pushing to gitlab ... #{name}"
-        Utils.run_cmd "git push hpr"
-        Utils.run_cmd "git config hpr.status 'pushing'"
-        Utils.run_cmd "git config hpr.updated '#{Utils.current_datetime}'"
-        Utils.run_cmd "git config hpr.status 'idle'"
-      end
+      yield
 
       update_project_description(project, description)
-
-      update_schedule(name)
     end
 
     private def update_project_description(project, description)
@@ -50,15 +55,6 @@ module Hpr
       return if selected.empty?
 
       selected.first
-    end
-
-    private def update_schedule(name : String)
-      schedule_in = Hpr.config.schedule_in
-      UpdateRepositoryWorker.async.perform_in(schedule_in, name)
-
-      Utils.path_to_repo(name) do
-        Utils.run_cmd "git config hpr.scheduled '#{(schedule_in.from_now).to_s("%F %T %z")}'"
-      end
     end
   end
 end

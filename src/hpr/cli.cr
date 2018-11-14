@@ -1,5 +1,6 @@
 require "../hpr"
 require "option_parser"
+require "terminal"
 
 module Hpr
   class Cli
@@ -86,30 +87,30 @@ module Hpr
         obj << Utils.repository_info(name)
       end
 
-      Hpr.logger.info "listing repositories (#{repositories.size}):"
+      Terminal.message "listing repositories (#{repositories.size}):"
       repositories.each do |repo|
         dump_repository(repo)
       end
     end
 
     private def search_repositories
-      Hpr.logger.info "searching repositories ... #{@repo_name}"
+      Terminal.message "searching repositories ... #{@repo_name}"
       repositories = @client.search_repositories(@repo_name).each_with_object([] of Hash(String, String)) do |name, obj|
         obj << Utils.repository_info(name)
       end
 
-      Hpr.logger.info "found repositories (#{repositories.size}):"
+      Terminal.message "found repositories (#{repositories.size}):"
       repositories.each do |repo|
         dump_repository(repo)
       end
     end
 
     private def create_repository
-      Utils.user_error! "Missing url argument." if @repo_url.empty?
+      Terminal.user_error! "Missing url argument." if @repo_url.empty?
 
       @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
-      if Utils.repository_path?(@repo_name)
-        Hpr.logger.info "repository exists ... #{@repo_name}"
+      if Git::Repo.repository_path?(@repo_name)
+        Terminal.important "repository exists ... #{@repo_name}"
         repo = Utils.repository_info(@repo_name)
         dump_repository(repo)
 
@@ -118,19 +119,19 @@ module Hpr
 
       start_worker
       @client.create_repository(@repo_url, @repo_name, @create, @clone)
+      repo = Git::Repo.repository(@repo_name)
+
       loop do
         sleep 1.seconds
-        if !Utils.repository_cloning?(@repo_name) &&
-           (info = Utils.repository_info(@repo_name)) &&
-           !info["updated_at"].empty?
+        if !repo.cloning? && (info = Utils.repository_info(@repo_name)) && !info["updated_at"].empty?
           break
         end
       end
-      Hpr.logger.info "create repository ... done"
+      Terminal.success "create repository ... done"
     end
 
     private def update_repository
-      Utils.user_error! "Missing name argument." if @repo_name.empty?
+      Terminal.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
       @client.update_repository(@repo_name)
@@ -139,25 +140,25 @@ module Hpr
         sleep 1.seconds
         break unless Utils.repository_updating?(@repo_name)
       end
-      Hpr.logger.info "update repository ... done"
+      Terminal.success "update repository ... done"
     end
 
     private def delete_repository
-      Utils.user_error! "Missing name argument." if @repo_name.empty?
+      Terminal.user_error! "Missing name argument." if @repo_name.empty?
 
       start_worker
       @client.delete_repository(@repo_name)
       loop do
         sleep 1.seconds
-        break unless Utils.repository_path?(@repo_name)
+        break unless Git::Repo.repository_path?(@repo_name)
       end
-      Hpr.logger.info "delete repository ... done"
+      Terminal.success "delete repository ... done"
     end
 
     private def dump_repository(repo)
       puts
       puts "=> Name: #{repo["name"]}"
-      puts "   Path: #{Utils.repository_path(repo["name"])}"
+      puts "   Path: #{Git::Repo.repository_path(repo["name"])}"
       puts "   OriginalUrl: #{repo["url"]}"
       puts "   MirrorUrl: #{repo["mirror_url"]}"
       puts "   Status: #{repo["status"]}"
@@ -188,7 +189,7 @@ module Hpr
         Redis.new(url: ENV[provider])
       end
     rescue e : Exception
-      Hpr.logger.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
+      Terminal.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
       exit
     end
 

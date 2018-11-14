@@ -1,8 +1,16 @@
 version: 1.0
 shards:
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.5.1
+
   gitlab:
     github: icyleaf/gitlab.cr
     version: 0.3.5
+
+  granite:
+    github: amberframework/granite
+    version: 0.15.0
 
   halite:
     github: icyleaf/halite
@@ -34,13 +42,17 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: c38b262e17fa9e8a54daf2a7dd6bd7ffb087becf
+    commit: a9105456e557101f6c4535c839d488a20102e51a
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: 0.10.0
 
   terminal:
     github: icyleaf/terminal
-    version: 0.2.0
+    version: 0.2.1
 
   totem:
     github: icyleaf/totem
-    commit: 20876da2547214cbf0ab04a709dc2b5c7699f8f8
+    commit: 8a8d83d2922ac7308f86c4780726dcd964e0298f
 

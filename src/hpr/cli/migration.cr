@@ -1,5 +1,6 @@
 require "option_parser"
 require "file_utils"
+require "terminal"
 require "halite"
 require "uri"
 require "../../hpr"
@@ -32,13 +33,13 @@ OptionParser.parse! do |parser|
 end
 
 if source_path.empty?
-  puts "Path is empty!"
+  Terminal.error "Path is empty!"
   exit
 end
 
 source_path = File.join(source_path, group_name)
 unless Dir.exists?(source_path)
-  puts "Path must be directory which was copy from #{source}'s repositories."
+  Terminal.error "Path must be directory which was copy from #{source}'s repositories."
   exit
 end
 
@@ -63,31 +64,32 @@ Dir.glob("#{source_path}/*") do |repo_path|
   repo_name = File.basename(repo_path)
   desc_path = File.join(repository_path, repo_name)
 
-  puts "* #{repo_name}"
+  Terminal.header repo_name
   if File.directory?(repo_path) && !Dir.exists?(desc_path)
-    puts " - Coping repository"
+    Terminal.message " - Coping repository"
     FileUtils.cp_r(repo_path, desc_path)
 
     client = Hpr::Client.new
     gitlab_project = client.search_gitlab_repository(repo_name)
 
     unless gitlab_project
-      puts " - Create gitlab repository"
+      Terminal.message " - Create gitlab repository"
       repo_info = Hpr::Utils.repository_info(repo_name)
       halite.post repo_url, form: {url: repo_info["url"], name: repo_name, clone: "false"}
       gitlab_project = client.search_gitlab_repository(repo_name) unless gitlab_project
     end
 
     if gitlab_project
-      puts " - Configuring git remote"
-      Hpr::Utils.write_mirror_to_git_config(repo_name, gitlab_project.as_h["path"].as_s)
+      Terminal.message " - Configuring git remote"
+      repo = Hpr::Git::Repo.repository(repo_name)
+      Hpr::Utils.write_mirror_to_git_config(repo, repo_name, gitlab_project.as_h["path"].as_s)
 
-      puts " - Updating and pushing mirror"
+      Terminal.message " - Updating and pushing mirror"
       halite.put "#{repo_url}/#{repo_name}"
     else
-      puts " - Not exists project in gitlab"
+      Terminal.important " - Not exists project in gitlab"
     end
   else
-    puts " - Existed, Skip"
+    Terminal.important " - Existed, Skip"
   end
 end

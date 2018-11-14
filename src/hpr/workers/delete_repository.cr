@@ -1,10 +1,14 @@
 module Hpr
   struct DeleteRepositoryWorker
-    include Sidekiq::Worker
+    include Worker::Base
 
     def perform(name : String)
-      Hpr.logger.info "deleting directory ... #{name}"
-      FileUtils.rm_rf Utils.repository_path(name)
+      info "deleting directory ... #{name}"
+      if path = Git::Repo.repository_path?(name)
+        FileUtils.rm_rf path
+
+        # TODO: delete schedule if exists
+      end
     end
   end
 end
