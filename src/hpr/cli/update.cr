@@ -6,16 +6,7 @@ class Hpr::Cli
 
       start_worker
       client.update_repository(name)
-
-      loop do
-        print "." if progress
-        sleep 1.seconds
-        unless repository_updating?(name)
-          puts
-          break
-        end
-      end
-
+      wait_updating(name, progress)
       Terminal.success "update repository ... done"
     rescue ex : Gitlab::Error::APIError
       Terminal.error ex.message

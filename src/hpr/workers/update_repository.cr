@@ -17,9 +17,9 @@ module Hpr
 
       with_syncing(project, name) do
         repo = Git::Repo.repository(name)
+        repo.set_config("hpr.status", "fetching")
 
         info "updating from origin ... #{name}"
-        repo.set_config("hpr.status", "fetching")
         repo.fetch_remote("origin")
 
         info "pushing to gitlab ... #{name}"
@@ -33,12 +33,15 @@ module Hpr
     end
 
     private def with_syncing(project, name)
+      flag = "[Syncing]"
       description = project["description"].to_s
-      if description.empty?
-        repo_info = repository_info(name)
-        description = "Mirror of #{repo_info["url"]}"
-      end
-      update_project_description(project, "[Syncing] #{description}")
+      description = if description.empty?
+                      repo_info = repository_info(name)
+                      "Mirror of #{repo_info["url"]}"
+                    else
+                      description.gsub(flag, "").strip
+                    end
+      update_project_description(project, "#{flag} #{description}")
 
       yield
 

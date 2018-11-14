@@ -125,8 +125,8 @@ module Hpr::Git
       exec("config", key, quote_string(value))
     end
 
-    def add_config(key : String, value, append = false)
-      exec("config", append ? "--add" : nil, key, quote_string(value))
+    def add_config(key : String, value)
+      exec("config --add", key, quote_string(value))
     end
 
     def cloning?
@@ -134,8 +134,10 @@ module Hpr::Git
     end
 
     def repo?
-      Dir.cd(path) do
-        Terminal.test(Git.binary, "rev-parse --git-dir")
+      Dir.cd(@path) do
+        result = Terminal.test(Git.binary, "rev-parse --git-dir")
+        return false if result && ![".", ".git"].includes?(exec("rev-parse --git-dir"))
+        result
       end
     end
 

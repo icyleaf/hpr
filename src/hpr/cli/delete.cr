@@ -6,14 +6,7 @@ class Hpr::Cli
 
       start_worker
       client.delete_repository(name)
-      loop do
-        print "." if progress
-        sleep 1.seconds
-        unless Git::Repo.repository_path?(name)
-          puts
-          break
-        end
-      end
+      wait_updating(name, progress)
 
       Terminal.success "deleting repository ... done"
     rescue ex : Gitlab::Error::APIError

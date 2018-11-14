@@ -26,7 +26,8 @@ module Hpr::Git
       return false unless Git::Repo.repository_path?(name)
 
       repo = Git::Repo.repository(name)
-      repo.config("hpr.status") == "pushing"
+      status = repo.config("hpr.status")
+      %w(fetching pushing).includes?(status)
     end
 
     def repository_info(name : String)

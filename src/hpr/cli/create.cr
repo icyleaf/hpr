@@ -24,17 +24,18 @@ class Hpr::Cli
       start_worker
       client.create_repository(url, name, create, clone)
 
-      sleep 1.seconds  # wait for sidekiq job to run
+      sleep 1.seconds # wait for sidekiq job to run
       repo = Git::Repo.repository(name)
 
       loop do
         print "." if progress
         sleep 1.seconds
         if !repo.cloning? && (info = repository_info(name)) && !info["updated_at"].empty?
-          puts
+          puts if progress
           break
         end
       end
+
       Terminal.success "create repository ... done"
     rescue ex : Gitlab::Error::APIError
       Terminal.error ex.message

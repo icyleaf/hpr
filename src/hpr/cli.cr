@@ -36,6 +36,17 @@ module Hpr
         puts "   ScheduledAt: #{repo["scheduled_at"]}"
       end
 
+      protected def wait_updating(name, progress = false)
+        loop do
+          print "." if progress
+          sleep 1.seconds
+          unless repository_updating?(name)
+            puts if progress
+            break
+          end
+        end
+      end
+
       protected def start_worker
         spawn do
           Hpr::Worker.run
@@ -61,6 +72,7 @@ module Hpr
       Create
       Update
       Delete
+      Migration
       ShowVersion
       ShowHelp
     end
@@ -82,6 +94,10 @@ module Hpr
       @create = true
       @clone = true
 
+      # migration
+      @source = "gitlab-mirrors"
+      @preview_mode = false
+
       @parser = OptionParser.parse(args) do |op|
         op.banner = usage
         op.separator help
@@ -96,6 +112,10 @@ module Hpr
 
         op.separator("\nOption in create/update/delete command:\n")
         op.on("--progress", "show progress") { @progress = true }
+
+        op.separator("\nOption in migration command:\n")
+        op.on("-s SOURCE", "--source SOURCE", "The source of migration came from (avaiable gitlab-mirrors only)") { |source| @source = source }
+        op.on("--preview", "list repositories to see the actions") { @preview_mode = true }
 
         op.separator("\nGlobal options:\n")
         op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| Hpr.config(path) }
@@ -117,15 +137,22 @@ module Hpr
                         Action::Update
                       when "delete"
                         Action::Delete
+                      when "migration"
+                        Action::Migration
                       when "version"
                         Action::ShowVersion
                       else
                         Action::ShowHelp
                       end
 
-            if [Action::Update, Action::Delete, Action::Search].includes?(@action)
+            if [Action::Update, Action::Delete, Action::Search, Action::Migration].includes?(@action)
               if unknown_args.size != 2
-                Terminal.error "Missing the name of repository, run `hpr #{@action.to_s.downcase} [name]`"
+                message = if @action == Action::Migration
+                            "Missing the path of source, run `hpr migration [--source <name>] [source-path]"
+                          else
+                            "Missing the name of repository, run `hpr #{@action.to_s.downcase} [name]`"
+                          end
+                Terminal.error message
                 exit
               end
 
@@ -153,10 +180,12 @@ module Hpr
         List.run
       when Action::Search
         Search.run(name: @repo_name)
+      when Action::Migration
+        Migration.run(source: @source, source_path: @repo_name, preview_mode: @preview_mode)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-        puts @parser
+      puts @parser
       end
     end
 
@@ -170,7 +199,7 @@ EOF
     end
 
     private def help
-<<-EOF
+      <<-EOF
 
 Available Commands:
     server    Run a web api server
