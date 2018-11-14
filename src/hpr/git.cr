@@ -2,7 +2,6 @@ require "../hpr"
 require "./git/*"
 require "terminal"
 
-
 module Hpr::Git
   @@binary : String = `which git`.strip
 
@@ -15,8 +14,12 @@ module Hpr::Git
 
     Dir.cd(path) do
       cmd = args.to_a.compact.join(" ")
-      Terminal.sh(@@binary, cmd, print_command: Hpr.debugging, print_command_output: Hpr.debugging).output
+      Terminal.sh(binary, cmd, print_command: Hpr.debugging, print_command_output: Hpr.debugging).output
     end
+  end
+
+  def self.binary
+    @@binary
   end
 
   class Repo
@@ -114,7 +117,7 @@ module Hpr::Git
       exec("describe --tags --abbrev=0 2>/dev/null")
     end
 
-    def config(key : String, default_value : (String|Int32|Float64|Bool)? = nil)
+    def config(key : String, default_value : (String | Int32 | Float64 | Bool)? = nil)
       exec("config --get", default_value ? "--default #{quote_string(default_value)}" : nil, key)
     end
 
@@ -131,7 +134,9 @@ module Hpr::Git
     end
 
     def repo?
-      has_refs?(bare? ? nil : ".git")
+      Dir.cd(path) do
+        Terminal.test(Git.binary, "rev-parse --git-dir")
+      end
     end
 
     def bare?
