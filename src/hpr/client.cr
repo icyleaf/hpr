@@ -35,22 +35,21 @@ module Hpr
     end
 
     def create_repository(url : String, name : String? = nil, create = true, clone = true)
-      repo = Git::URLParser.new url
-      project_name = (name && !name.empty?) ? name : repo.mirror_name
-
+      url_parser = Git::URLParser.new(url)
+      project_name = (name && !name.empty?) ? name : url_parser.mirror_name
       project = if create
                   create_gitlab_repository(project_name, url)
                 else
                   search_gitlab_repository(project_name)
                 end
 
-      Terminal.user_error! "Not found gitlab project: #{project_name}" unless project
-      Terminal.user_error! "Exists Repository: #{project_name}" if clone && Git::Repo.repository_path?(project_name)
-      CloneRepositoryWorker.async.perform repo.url, project_name, project["path"].as_s if clone
+      Terminal.crash! "Not found gitlab project: #{project_name}" unless project
+      Terminal.crash! "Exists Repository: #{project_name}" if clone && Git::Repo.repository_path?(project_name)
+      CloneRepositoryWorker.async.perform url_parser.url, project_name, project["path"].as_s if clone
     end
 
     def update_repository(name : String)
-      Terminal.user_error! "repository not exists ... #{name}" unless Git::Repo.repository_path?(name)
+      Terminal.crash! "repository not exists ... #{name}" unless Git::Repo.repository_path?(name)
       UpdateRepositoryWorker.async.perform name
     end
 

@@ -38,7 +38,7 @@ module Hpr::Git
         "latest_version" => repo.latest_tag,
         "status"         => repo.config("hpr.status"),
         "created_at"     => repo.config("hpr.created"),
-        "updated_at"     => repo.config("hpr.updated"),
+        "updated_at"     => repo.config("hpr.updated", ""),
         "scheduled_at"   => repo.config("hpr.scheduled", ""),
       }
     end

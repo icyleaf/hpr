@@ -45,7 +45,10 @@ module Hpr::Git
     end
 
     def clone(url : String, mirror = false)
-      exec("clone", mirror ? "--mirror" : "", url, File.basename(@path))
+      name = File.basename(@path)
+      @path = File.expand_path("../", @path)
+
+      clone(url, name, mirror)
     end
 
     def remotes
