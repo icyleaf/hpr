@@ -25,7 +25,7 @@ module Hpr
         info "pushing to gitlab ... #{name}"
         repo.set_config("hpr.status", "pushing")
         repo.push_remote("hpr")
-        repo.set_config("hpr.updated", Utils.current_datetime)
+        repo.set_config("hpr.updated", current_datetime)
         repo.set_config("hpr.status", "idle")
       end
 
@@ -35,7 +35,7 @@ module Hpr
     private def with_syncing(project, name)
       description = project["description"].to_s
       if description.empty?
-        repo_info = Utils.repository_info(name)
+        repo_info = repository_info(name)
         description = "Mirror of #{repo_info["url"]}"
       end
       update_project_description(project, "[Syncing] #{description}")

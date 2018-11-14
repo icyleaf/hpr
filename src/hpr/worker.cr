@@ -5,6 +5,7 @@ module Hpr
     module Base
       macro included
         include Sidekiq::Worker
+        include Git::Helper
       end
 
       {% for ivar in %w(info debug error warn fatal) %}

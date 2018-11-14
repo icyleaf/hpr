@@ -1,5 +1,5 @@
-module Hpr
-  module Utils
+module Hpr::Git
+  module Helper
     extend self
 
     def current_datetime
@@ -7,19 +7,19 @@ module Hpr
     end
 
     def project_name(url : String)
-      repo = Repository.new url
+      repo = URLParser.new url
       repo.mirror_name
     end
 
     def write_mirror_to_git_config(repo, name, namespace : String? = nil)
       repo = Git::Repo.repository(name)
       repo.set_config("credential.helper", "store")
-      repo.add_remote("hpr", Utils.mirror_ssh_url(name, namespace))
+      repo.add_remote("hpr", mirror_ssh_url(name, namespace))
       repo.add_config("remote.hpr.push", "+refs/heads/*:refs/heads/*")
       repo.add_config("remote.hpr.push", "+refs/tags/*:refs/tags/*")
       repo.set_config("remote.hpr.mirror", true)
       repo.set_config("hpr.status", "idle")
-      repo.set_config("hpr.created", "#{Utils.current_datetime}")
+      repo.set_config("hpr.created", "#{current_datetime}")
     end
 
     def repository_updating?(name : String)

@@ -1,6 +1,7 @@
 require "salt"
 require "salt/middlewares/basic_auth"
 require "salt/middlewares/router"
+require "./git/*"
 require "./apis/*"
 
 module Hpr::API

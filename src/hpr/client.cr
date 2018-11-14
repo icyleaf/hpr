@@ -35,7 +35,7 @@ module Hpr
     end
 
     def create_repository(url : String, name : String? = nil, create = true, clone = true)
-      repo = Repository.new url
+      repo = Git::URLParser.new url
       project_name = (name && !name.empty?) ? name : repo.mirror_name
 
       project = if create

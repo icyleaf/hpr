@@ -1,5 +1,7 @@
 require "../hpr"
+require "./git/*"
 require "terminal"
+
 
 module Hpr::Git
   @@binary : String = `which git`.strip
@@ -30,6 +32,8 @@ module Hpr::Git
     def self.repository_path(name)
       File.join(Hpr.config.repository_path, name)
     end
+
+    getter path
 
     def initialize(@path : String)
     end

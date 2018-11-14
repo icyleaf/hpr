@@ -4,6 +4,8 @@ require "terminal"
 
 module Hpr
   class Cli
+    include Git::Helper
+
     class Error < Exception; end
 
     enum Action
@@ -84,7 +86,7 @@ module Hpr
 
     private def list_repositories
       repositories = @client.list_repositories.each_with_object([] of Hash(String, String)) do |name, obj|
-        obj << Utils.repository_info(name)
+        obj << repository_info(name)
       end
 
       Terminal.message "listing repositories (#{repositories.size}):"
@@ -96,7 +98,7 @@ module Hpr
     private def search_repositories
       Terminal.message "searching repositories ... #{@repo_name}"
       repositories = @client.search_repositories(@repo_name).each_with_object([] of Hash(String, String)) do |name, obj|
-        obj << Utils.repository_info(name)
+        obj << repository_info(name)
       end
 
       Terminal.message "found repositories (#{repositories.size}):"
@@ -108,10 +110,10 @@ module Hpr
     private def create_repository
       Terminal.user_error! "Missing url argument." if @repo_url.empty?
 
-      @repo_name = Utils.project_name(@repo_url) if @repo_name.empty?
+      @repo_name = project_name(@repo_url) if @repo_name.empty?
       if Git::Repo.repository_path?(@repo_name)
         Terminal.important "repository exists ... #{@repo_name}"
-        repo = Utils.repository_info(@repo_name)
+        repo = repository_info(@repo_name)
         dump_repository(repo)
 
         exit
@@ -123,7 +125,7 @@ module Hpr
 
       loop do
         sleep 1.seconds
-        if !repo.cloning? && (info = Utils.repository_info(@repo_name)) && !info["updated_at"].empty?
+        if !repo.cloning? && (info = repository_info(@repo_name)) && !info["updated_at"].empty?
           break
         end
       end
@@ -138,7 +140,7 @@ module Hpr
 
       loop do
         sleep 1.seconds
-        break unless Utils.repository_updating?(@repo_name)
+        break unless repository_updating?(@repo_name)
       end
       Terminal.success "update repository ... done"
     end
