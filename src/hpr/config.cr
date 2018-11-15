@@ -19,6 +19,7 @@ module Hpr
     setter schedule_in : String | Int32 | Int64
     property basic_auth : BasicAuth
     property gitlab : Gitlab
+    property sentry : Sentry
 
     def schedule_in
       unless @schedule_in.to_s.includes?(".")
@@ -99,6 +100,17 @@ module Hpr
       def endpoint : URI
         URI.parse @endpoint
       end
+
+      def gitlab_api_version
+        endpoint.path.to_s.split("/").last
+      end
+    end
+
+    struct Sentry
+      include JSON::Serializable
+
+      property report : Bool
+      property dns : String
     end
   end
 end

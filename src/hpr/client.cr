@@ -108,6 +108,7 @@ module Hpr
     private def current_group
       Hpr.gitlab.group Hpr.config.gitlab.group_name
     rescue Gitlab::Error::NotFound
+      raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
       Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
     end
 
@@ -121,7 +122,6 @@ module Hpr
     end
 
     def determine_gitlab_configure!
-      raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
       raise NotRoleError.new "Please enable create project role." unless @user["can_create_project"].as_bool
 
       ssh_keys = Hpr.gitlab.ssh_keys
@@ -130,9 +130,7 @@ module Hpr
 
     private def determine_repository_path!
       path = Hpr.config.repository_path
-      unless Dir.exists?(path)
-        FileUtils.mkdir_p path
-      end
+      FileUtils.mkdir_p(path) unless Dir.exists?(path)
     end
   end
 end
