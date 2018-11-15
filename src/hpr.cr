@@ -38,9 +38,17 @@ module Hpr
     @@debugging = value
   end
 
-  def crash_report!
+  def crash_report!(path = "logs")
     return unless config.sentry.report
+
+    logs_path = File.join(Hpr.config.hpr_path, path)
+    FileUtils.mkdir_p(logs_path)
+
+    file = File.join(logs_path, "sentry.log")
+    io = File.open(file, "a")
+
     Raven.configure do |c|
+      c.logger = Logger.new(io)
       c.dsn = config.sentry.dns
       c.environments = %w(development production)
       c.current_environment = ENV.fetch("HPR_ENV", "development")

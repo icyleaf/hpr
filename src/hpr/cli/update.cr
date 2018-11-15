@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Update < Command
     def run(**args)
+      determine_config!
+
       name = args[:name]
       progress = args[:progress]
 
@@ -8,12 +10,12 @@ class Hpr::Cli
       client.update_repository(name)
       wait_updating(name, progress)
       Terminal.success "update repository ... done"
-    rescue ex : Gitlab::Error::APIError
-      Terminal.error ex.message
-    rescue ex : Exception
-      Terminal.error "Unmatched error: #{ex.message}"
-      Terminal.error "  #{ex.backtrace.join("\n  ")}"
-      Reven.capture(e)
+    rescue e : Gitlab::Error::APIError
+      Terminal.error e.message
+    rescue e : Exception
+      Terminal.error "Unmatched error: #{e.message}"
+      Terminal.error "  #{e.backtrace.join("\n  ")}"
+      Raven.capture(e)
     end
   end
 end

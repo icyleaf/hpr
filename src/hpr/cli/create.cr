@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Create < Command
     def run(**args)
+      determine_config!
+
       url = args[:url]
       if url.empty?
         Terminal.error "Missing url, run `hpr create [-U url] <name>`"
@@ -37,12 +39,12 @@ class Hpr::Cli
       end
 
       Terminal.success "create repository ... done"
-    rescue ex : Gitlab::Error::APIError
-      Terminal.error ex.message
-    rescue ex : Exception
-      Terminal.error "Unmatched error: #{ex.message}"
-      Terminal.error "  #{ex.backtrace.join("\n  ")}"
-      Reven.capture(e)
+    rescue e : Gitlab::Error::APIError
+      Terminal.error e.message
+    rescue e : Exception
+      Terminal.error "Unmatched error: #{e.message}"
+      Terminal.error "  #{e.backtrace.join("\n  ")}"
+      Raven.capture(e)
     end
   end
 end

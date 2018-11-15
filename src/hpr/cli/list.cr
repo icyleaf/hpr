@@ -1,6 +1,8 @@
 class Hpr::Cli
   class List < Command
     def run(**args)
+      determine_config!
+
       repositories = client.list_repositories.each_with_object([] of Hash(String, String)) do |name, obj|
         obj << repository_info(name)
       end

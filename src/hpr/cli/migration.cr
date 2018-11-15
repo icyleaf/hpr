@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Migration < Command
     def run(**args)
+      determine_config!
+
       source = args[:source]
       source_path = args[:source_path]
       preview_mode = args[:preview_mode]
@@ -26,11 +28,11 @@ class Hpr::Cli
         begin
           copy_repository(old_path, new_path)
           configure_remote(name)
-        rescue ex : Exception
+        rescue e : Exception
           Terminal.error "Catched unkown exception, clean for processing sources"
-          Terminal.error ex.message
-          Terminal.error "  #{ex.backtrace.join("\n  ")}"
-          Reven.capture(e)
+          Terminal.error e.message
+          Terminal.error "  #{e.backtrace.join("\n  ")}"
+          Raven.capture(e)
 
           FileUtils.rm_rf new_path
           exit
