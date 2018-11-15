@@ -14,7 +14,11 @@ module Hpr
       @client : Hpr::Client?
 
       def self.run(**args)
-        new.run(**args)
+        path = args[:path]
+        new(path).run(**args)
+      end
+
+      def initialize(@path : String)
       end
 
       abstract def run(**args)
@@ -55,18 +59,31 @@ module Hpr
         sleep 100.milliseconds # waiting sidekiq is ready
       end
 
+      protected def determine_config!
+        path = File.expand_path(@path)
+        config_path = File.join("config", "hpr.json")
+        config_file = File.join(config_path, config_path)
+
+        unless File.file?(config_file)
+          Terminal.error "Can not location #{config_path} in #{@path}"
+          exit
+        end
+
+        Hpr.config(path)
+      end
+
       protected def determine_redis!
         if provider = ENV["REDIS_PROVIDER"]?
           Redis.new(url: ENV[provider])
         end
       rescue e : Exception
         Terminal.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
-        Reven.capture(e)
         exit
       end
     end
 
     enum Action
+      Check
       Server
       List
       Search
@@ -80,6 +97,7 @@ module Hpr
 
     def initialize(args = ARGV)
       @action = Action::ShowHelp
+      @hpr_path = "."
 
       # server opts
       @server_port = 8848
@@ -119,7 +137,7 @@ module Hpr
         op.on("--preview", "list repositories to see the actions") { @preview_mode = true }
 
         op.separator("\nGlobal options:\n")
-        op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| Hpr.config(path) }
+        op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| @hpr_path = path }
         op.on("--no-color", "disable colorize output") { Terminal.disable_color }
 
         op.separator examples
@@ -128,6 +146,8 @@ module Hpr
         op.unknown_args do |unknown_args|
           unless unknown_args.empty?
             @action = case unknown_args.first.downcase
+                      when "check"
+                        Action::Check
                       when "server"
                         Action::Server
                       when "list"
@@ -169,24 +189,26 @@ module Hpr
 
     private def run
       case @action
+      when Action::Check
+        Check.run(path: @hpr_path)
       when Action::Server
-        Server.run(server_port: @server_port)
+        Server.run(path: @hpr_path, server_port: @server_port)
       when Action::Create
-        Create.run(url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
+        Create.run(path: @hpr_path, url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
       when Action::Update
-        Update.run(name: @repo_name, progress: @progress)
+        Update.run(path: @hpr_path, name: @repo_name, progress: @progress)
       when Action::Delete
-        Delete.run(name: @repo_name, progress: @progress)
+        Delete.run(path: @hpr_path, name: @repo_name, progress: @progress)
       when Action::List
-        List.run
+        List.run(path: @hpr_path)
       when Action::Search
-        Search.run(name: @repo_name)
+        Search.run(path: @hpr_path, name: @repo_name)
       when Action::Migration
-        Migration.run(source: @source, source_path: @repo_name, preview_mode: @preview_mode)
+        Migration.run(path: @hpr_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-      puts @parser
+        puts @parser
       end
     end
 
@@ -209,6 +231,7 @@ Available Commands:
     create    Create a mirror repository
     update    Updated a mirrored repository
     delete    Delete a mirrored repository
+    check     Contains some verification checks
     version   Show version
     help      Show this help
 EOF
@@ -227,8 +250,8 @@ Examples:
     o List all mirrored repositories:
       $ hpr list
 
-    o Search all repositories include halite keywords:
-      $ hpr search halite
+    o Search all repositories include icyleaf keywords:
+      $ hpr search icyleaf
 
     o Create a new repository:
       $ hpr create --url https://github.com/icyleaf/hpr.git icyleaf-hpr

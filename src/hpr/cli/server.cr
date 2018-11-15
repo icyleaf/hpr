@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Server < Command
     def run(**args)
+      determine_config!
+
       server_port = args[:server_port]
 
       determine_redis!

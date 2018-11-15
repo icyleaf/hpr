@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Update < Command
     def run(**args)
+      determine_config!
+
       name = args[:name]
       progress = args[:progress]
 

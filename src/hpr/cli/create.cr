@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Create < Command
     def run(**args)
+      determine_config!
+
       url = args[:url]
       if url.empty?
         Terminal.error "Missing url, run `hpr create [-U url] <name>`"

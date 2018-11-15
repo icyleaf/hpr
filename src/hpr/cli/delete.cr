@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Delete < Command
     def run(**args)
+      determine_config!
+
       name = args[:name]
       progress = args[:progress]
 

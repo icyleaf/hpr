@@ -1,6 +1,8 @@
 class Hpr::Cli
   class Migration < Command
     def run(**args)
+      determine_config!
+
       source = args[:source]
       source_path = args[:source_path]
       preview_mode = args[:preview_mode]
