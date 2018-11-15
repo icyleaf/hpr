@@ -1,8 +1,6 @@
 class Hpr::Cli
   class Search < Command
     def run(**args)
-      determine_config!
-
       name = args[:name]
       Terminal.message "searching repositories ... #{name}"
       repositories = client.search_repositories(name).each_with_object([] of Hash(String, String)) do |n, obj|

@@ -1,8 +1,6 @@
 class Hpr::Cli
   class Migration < Command
     def run(**args)
-      determine_config!
-
       source = args[:source]
       source_path = args[:source_path]
       preview_mode = args[:preview_mode]
@@ -32,7 +30,7 @@ class Hpr::Cli
           Terminal.error "Catched unkown exception, clean for processing sources"
           Terminal.error e.message
           Terminal.error "  #{e.backtrace.join("\n  ")}"
-          Raven.capture(e)
+          Hpr.capture_exception(e, "cli")
 
           FileUtils.rm_rf new_path
           exit

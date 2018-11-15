@@ -1,8 +1,6 @@
 class Hpr::Cli
   class Delete < Command
     def run(**args)
-      determine_config!
-
       name = args[:name]
       progress = args[:progress]
 
@@ -16,7 +14,7 @@ class Hpr::Cli
     rescue e : Exception
       Terminal.error "Unmatched error: #{e.message}"
       Terminal.error "  #{e.backtrace.join("\n  ")}"
-      Raven.capture(e)
+      Hpr.capture_exception(e, "cli")
     end
   end
 end

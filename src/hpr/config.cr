@@ -100,10 +100,6 @@ module Hpr
       def endpoint : URI
         URI.parse @endpoint
       end
-
-      def gitlab_api_version
-        endpoint.path.to_s.split("/").last
-      end
     end
 
     struct Sentry

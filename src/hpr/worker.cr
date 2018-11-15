@@ -1,4 +1,5 @@
 require "sidekiq/cli"
+require "raven/integrations/sidekiq/exception_handler"
 
 module Hpr
   module Worker
@@ -44,6 +45,7 @@ module Hpr
           logger: server.logger
         )
 
+        server.error_handlers << Raven::Sidekiq::ExceptionHandler.new
         server.logger.info "Sidekiq v#{Sidekiq::VERSION} in Crystal #{Crystal::VERSION}"
         server.logger.info "Starting processing with #{server.concurrency} workers"
         server.start

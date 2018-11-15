@@ -1,8 +1,6 @@
 class Hpr::Cli
   class Create < Command
     def run(**args)
-      determine_config!
-
       url = args[:url]
       if url.empty?
         Terminal.error "Missing url, run `hpr create [-U url] <name>`"
@@ -44,7 +42,7 @@ class Hpr::Cli
     rescue e : Exception
       Terminal.error "Unmatched error: #{e.message}"
       Terminal.error "  #{e.backtrace.join("\n  ")}"
-      Raven.capture(e)
+      Hpr.capture_exception(e, "cli")
     end
   end
 end

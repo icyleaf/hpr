@@ -136,6 +136,7 @@ class Hpr::Cli
     end
 
     @user : Hash(String, JSON::Any)?
+
     private def gitlab_user
       @user ||= Hpr.gitlab.user.as_h
       @user.not_nil!

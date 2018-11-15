@@ -8,80 +8,6 @@ module Hpr
 
     class Error < Exception; end
 
-    abstract class Command
-      include Git::Helper
-
-      @client : Hpr::Client?
-
-      def self.run(**args)
-        path = args[:path]
-        new(path).run(**args)
-      end
-
-      def initialize(@path : String)
-      end
-
-      abstract def run(**args)
-
-      protected def client
-        @client ||= Client.new
-        @client.not_nil!
-      end
-
-      protected def dump_repository(repo)
-        puts
-        puts "=> Name: #{repo["name"]}"
-        puts "   Path: #{Git::Repo.repository_path(repo["name"])}"
-        puts "   OriginalUrl: #{repo["url"]}"
-        puts "   MirrorUrl: #{repo["mirror_url"]}"
-        puts "   Status: #{repo["status"]}"
-        puts "   CreatedAt: #{repo["created_at"]}"
-        puts "   UpdatedAt: #{repo["updated_at"]}"
-        puts "   ScheduledAt: #{repo["scheduled_at"]}"
-      end
-
-      protected def wait_updating(name, progress = false)
-        loop do
-          print "." if progress
-          sleep 1.seconds
-          unless repository_updating?(name)
-            puts if progress
-            break
-          end
-        end
-      end
-
-      protected def start_worker
-        spawn do
-          Hpr::Worker.run
-        end
-
-        sleep 100.milliseconds # waiting sidekiq is ready
-      end
-
-      protected def determine_config!
-        path = File.expand_path(@path)
-        config_path = File.join("config", "hpr.json")
-        config_file = File.join(config_path, config_path)
-
-        unless File.file?(config_file)
-          Terminal.error "Can not location #{config_path} in #{@path}"
-          exit
-        end
-
-        Hpr.config(path)
-      end
-
-      protected def determine_redis!
-        if provider = ENV["REDIS_PROVIDER"]?
-          Redis.new(url: ENV[provider])
-        end
-      rescue e : Exception
-        Terminal.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
-        exit
-      end
-    end
-
     enum Action
       Check
       Server
@@ -183,14 +109,13 @@ module Hpr
         end
       end
 
-      @client = Client.new
-      run
+      run!
     end
 
-    private def run
+    private def run!
       case @action
       when Action::Check
-        Check.run(path: @hpr_path)
+        Check.run(path: @hpr_path, slient: true)
       when Action::Server
         Server.run(path: @hpr_path, server_port: @server_port)
       when Action::Create
@@ -208,7 +133,7 @@ module Hpr
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-        puts @parser
+      puts @parser
       end
     end
 
@@ -271,6 +196,94 @@ EOF
 
     private def version
       "hpr v#{Hpr::VERSION} in Crystal v#{Crystal::VERSION}"
+    end
+
+    abstract class Command
+      include Git::Helper
+
+      @client : Hpr::Client?
+
+      def self.run(**args)
+        path = args[:path]
+        new(path).run(**args)
+      end
+
+      def initialize(@path : String, slient = false)
+        determine!(slient)
+
+        Raven.breadcrumbs.record do |crumb|
+          crumb.category = "cli"
+          crumb.timestamp = Time.now
+          crumb.message = "Perpare to run #{self.class} command"
+        end
+      end
+
+      abstract def run(**args)
+
+      protected def client
+        @client ||= Client.new
+        @client.not_nil!
+      end
+
+      protected def dump_repository(repo)
+        puts
+        puts "=> Name: #{repo["name"]}"
+        puts "   Path: #{Git::Repo.repository_path(repo["name"])}"
+        puts "   OriginalUrl: #{repo["url"]}"
+        puts "   MirrorUrl: #{repo["mirror_url"]}"
+        puts "   Status: #{repo["status"]}"
+        puts "   CreatedAt: #{repo["created_at"]}"
+        puts "   UpdatedAt: #{repo["updated_at"]}"
+        puts "   ScheduledAt: #{repo["scheduled_at"]}"
+      end
+
+      protected def wait_updating(name, progress = false)
+        loop do
+          print "." if progress
+          sleep 1.seconds
+          unless repository_updating?(name)
+            puts if progress
+            break
+          end
+        end
+      end
+
+      protected def start_worker
+        spawn do
+          Hpr::Worker.run
+        end
+
+        sleep 100.milliseconds # waiting sidekiq is ready
+      end
+
+      protected def determine!(slient = false)
+        return if slient
+        determine_config!
+        determine_redis!
+        Hpr.crash_report!
+      end
+
+      protected def determine_config!
+        path = File.expand_path(@path)
+        config_path = File.join("config", "hpr.json")
+        config_file = File.join(path, config_path)
+
+        unless File.file?(config_file)
+          Terminal.error "Can not location #{config_path} in #{@path}"
+          exit
+        end
+
+        Hpr.config(path)
+      end
+
+      protected def determine_redis!
+        if provider = ENV["REDIS_PROVIDER"]?
+          Redis.new(url: ENV[provider])
+        end
+      rescue e : Exception
+        Terminal.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
+        exit
+      end
     end
   end
 end

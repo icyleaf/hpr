@@ -41,22 +41,40 @@ module Hpr
   def crash_report!(path = "logs")
     return unless config.sentry.report
 
-    logs_path = File.join(Hpr.config.hpr_path, path)
-    FileUtils.mkdir_p(logs_path)
-
-    file = File.join(logs_path, "sentry.log")
+    FileUtils.mkdir_p(path)
+    file = File.join(path, "sentry.log")
     io = File.open(file, "a")
 
+    hpr_env = ENV.fetch("HPR_ENV", "development")
     Raven.configure do |c|
       c.logger = Logger.new(io)
       c.dsn = config.sentry.dns
       c.environments = %w(development production)
       c.current_environment = ENV.fetch("HPR_ENV", "development")
+      c.release = Hpr::VERSION if hpr_env == "production"
     end
 
-    Raven.user_context(
-      email: "icyleaf.cn@gmail.com" # '127.0.0.1'
-    )
+    # Raven.user_context(
+    #   email: "icyleaf.cn@gmail.com"
+    # )
+  end
+
+  def capture_exception(exception, category : String, file = __FILE__, **extra)
+    gitlab_version = "unkown"
+    begin
+      gitlab_version = Hpr.gitlab.version
+    rescue
+      # do nothing
+    end
+
+    Raven.capture(exception, tags: {
+      deploy:   ENV.fetch("HPR_DEPLOY", "binary"),
+      category: category,
+    }, extra: {
+      gitlab_version:  gitlab_version,
+      gitlab_endpoint: Hpr.config.gitlab.endpoint.to_s,
+      file:            file,
+    }.merge(extra))
   end
 
   private def hpr_logger_formatter
@@ -65,5 +83,3 @@ module Hpr
     end
   end
 end
-
-Hpr.crash_report!

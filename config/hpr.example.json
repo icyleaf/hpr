@@ -20,6 +20,6 @@
   },
   "sentry" : {
     "report": false,
-    "dns": "http://<key>@<host>:<port>/<project_id>"
+    "dns": "http://<key>@<host>:<port>/<project>"
   }
 }
