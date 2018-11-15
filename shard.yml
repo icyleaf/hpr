@@ -14,7 +14,7 @@ dependencies:
     branch: master
   gitlab:
     github: icyleaf/gitlab.cr
-    version: ~> 0.3.5
+    version: ~> 0.4.0
   salt:
     github: icyleaf/salt
     version: ~> 0.4.3
