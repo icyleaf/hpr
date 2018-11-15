@@ -6,7 +6,7 @@ shards:
 
   gitlab:
     github: icyleaf/gitlab.cr
-    version: 0.3.5
+    version: 0.4.0
 
   granite:
     github: amberframework/granite
@@ -42,7 +42,7 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: a9105456e557101f6c4535c839d488a20102e51a
+    commit: dfc11f6528b0fd62b68700a7f1d06a553d7b5917
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
