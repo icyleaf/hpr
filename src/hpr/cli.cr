@@ -61,6 +61,7 @@ module Hpr
         end
       rescue e : Exception
         Terminal.error "Can not connect redis server, set both REDIS_PROVIDER and REDIS_URL to environment."
+        Reven.capture(e)
         exit
       end
     end

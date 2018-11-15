@@ -30,6 +30,8 @@ class Hpr::Cli
           Terminal.error "Catched unkown exception, clean for processing sources"
           Terminal.error ex.message
           Terminal.error "  #{ex.backtrace.join("\n  ")}"
+          Reven.capture(e)
+
           FileUtils.rm_rf new_path
           exit
         end

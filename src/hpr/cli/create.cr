@@ -42,6 +42,7 @@ class Hpr::Cli
     rescue ex : Exception
       Terminal.error "Unmatched error: #{ex.message}"
       Terminal.error "  #{ex.backtrace.join("\n  ")}"
+      Reven.capture(e)
     end
   end
 end
