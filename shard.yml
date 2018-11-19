@@ -27,12 +27,12 @@ dependencies:
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master
-  granite:
-    github: amberframework/granite
-  sqlite3:
-    github: crystal-lang/crystal-sqlite3
   raven:
     github: Sija/raven.cr
+  # granite:
+  #   github: amberframework/granite
+  # sqlite3:
+  #   github: crystal-lang/crystal-sqlite3
 
 crystal: 0.27.0
 
