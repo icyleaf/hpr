@@ -61,48 +61,31 @@ module Hpr::API::Repositories
       end
 
       {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
     end
   end
 
   # Create new repository
   class Create < Salt::App
     def call(env)
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
+      url = env.params["url"]
+      name = env.params["name"]?
+      create = env.params["create"]? || "true"
+      clone = env.params["clone"]? || "true"
 
+      3 / 0
       client = Client.new
-      begin
-        url = env.params["url"]
-        name = env.params["name"]?
-        create = env.params["create"]? || "true"
-        clone = env.params["clone"]? || "true"
-
-        client.create_repository(
-          url, name,
-          create == "true",
-          clone == "true"
-        )
-        body = true
-        status_code = 201
-      rescue e : Gitlab::Error::APIError
-        body = {
-          message: e.message,
-        }
-        status_code = 400
-      end
-
-      {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
+      client.create_repository(
+        url, name,
+        create == "true",
+        clone == "true"
+      )
+      body = true
+      {201, {"Content-Type" => "application/json"}, [body.to_json]}
+    rescue e : Gitlab::Error::APIError
+      body = {
+        message: e.message,
+      }
+      {400, {"Content-Type" => "application/json"}, [body.to_json]}
     end
   end
 
@@ -110,12 +93,6 @@ module Hpr::API::Repositories
   class Update < Salt::App
     def call(env)
       # TODO: Use multiple if statements, must be extract to one.
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
-
       name = env.params["name"]
       repo = Git::Repo.repository(name)
       if repo.exists?
@@ -138,10 +115,6 @@ module Hpr::API::Repositories
       end
 
       {status_code, {"Content-Type" => "application/json"}, [body]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
     end
   end
 
@@ -149,12 +122,6 @@ module Hpr::API::Repositories
   class Delete < Salt::App
     def call(env)
       # TODO: Use multiple if statements, must be extract to one.
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
-
       name = env.params["name"]
       repo = Git::Repo.repository(name)
       if repo.exists?
@@ -177,10 +144,6 @@ module Hpr::API::Repositories
       end
 
       {status_code, {"Content-Type" => "application/json"}, [body]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
     end
   end
 

@@ -66,15 +66,19 @@ module Hpr
       # do nothing
     end
 
-    Raven.capture(exception, tags: {
-      deploy:   ENV.fetch("HPR_DEPLOY", "binary"),
-      category: category,
-    }, extra: {
-      git_version: `git version`.strip,
-      redis_version: `redis-server -v`.strip,
-      gitlab_version:  gitlab_version,
-      gitlab_endpoint: config.gitlab.endpoint.to_s,
-      file:            file,
-    }.merge(extra))
+    Raven.capture(exception) do |event|
+      event.logger ||= "hpr"
+      event.tags = {
+        deploy:   ENV.fetch("HPR_DEPLOY", "binary"),
+        category: category
+      }
+      event.extra = {
+        git_version: `git version`.strip,
+        redis_version: `redis-server -v`.strip,
+        gitlab_version:  gitlab_version,
+        gitlab_endpoint: config.gitlab.endpoint.to_s,
+        file:            file,
+      }.merge(extra)
+    end
   end
 end

@@ -27,6 +27,7 @@ module Hpr::API
       end
     end
 
+    Salt.use Hpr::API::ErrorHandler
     Salt.use Salt::CommonLogger
     Salt.run app, environment: environment, port: port
   end
