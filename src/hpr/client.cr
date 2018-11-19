@@ -55,7 +55,6 @@ module Hpr
 
     def delete_repository(name : String)
       if project = search_gitlab_repository(name)
-        Hpr.logger.info "destroying project ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
@@ -77,8 +76,6 @@ module Hpr
     end
 
     def create_gitlab_repository(name, url)
-      Hpr.logger.info "creating gitlab repository ... #{@group["name"]}/#{name}"
-
       loop do
         begin
           return Hpr.gitlab.create_project name, {

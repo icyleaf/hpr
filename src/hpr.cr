@@ -7,7 +7,6 @@ module Hpr
 
   @@config : Config?
   @@gitlab : Gitlab::Client?
-  @@logger : Logger?
   @@debugging = false
 
   def config
@@ -23,11 +22,6 @@ module Hpr
   def gitlab
     @@gitlab ||= Gitlab.client(config.gitlab.endpoint.to_s, config.gitlab.private_token)
     @@gitlab.not_nil!
-  end
-
-  def logger
-    @@logger ||= Logger.new(STDOUT, Logger::DEBUG, hpr_logger_formatter)
-    @@logger.not_nil!
   end
 
   def debugging
@@ -75,11 +69,5 @@ module Hpr
       gitlab_endpoint: Hpr.config.gitlab.endpoint.to_s,
       file:            file,
     }.merge(extra))
-  end
-
-  private def hpr_logger_formatter
-    Logger::Formatter.new do |severity, datetime, progname, message, io|
-      io << datetime << "   " << severity << "   " << message
-    end
   end
 end

@@ -4,4 +4,4 @@
 mkdir -p /data
 
 echo "** Starting Redis.."
-exec s6-setuidgid redis redis-server --dir /data --protected-mode no --bind 0.0.0.0
+exec s6-setuidgid redis redis-server --dir /data --bind 0.0.0.0

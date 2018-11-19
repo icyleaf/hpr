@@ -46,7 +46,7 @@ shards:
 
   salt:
     github: icyleaf/salt
-    version: 0.4.3
+    version: 0.4.4
 
   sidekiq:
     github: icyleaf/sidekiq.cr
