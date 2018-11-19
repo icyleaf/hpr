@@ -1,0 +1,25 @@
+FROM crystallang/crystal:0.27.0 as builder
+
+ADD . /app
+WORKDIR /app
+
+RUN set -ex && \
+    shards build --production && \
+    for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
+
+FROM icyleafcn/s6-overlay:ubuntu
+
+COPY --from=builder /app/deps /
+COPY --from=builder /app/bin/ /bin/
+COPY --from=builder /app/docker/root /
+
+WORKDIR /app
+
+RUN set -ex && \
+    apt-get update -qqy && \
+    apt-get install -qqy openssh-client git redis-server && \
+    rm -rf /var/lib/apt/lists/*
+
+VOLUME ["/app", "/data"]
+
+EXPOSE 8848 6379
