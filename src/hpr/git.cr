@@ -9,12 +9,12 @@ module Hpr::Git
     raise NotFoundGitError.new("Not found git in PATH, Set it into PATH or install it.") if @@binary.empty?
   end
 
-  def self.command(path, *args)
+  def self.command(*args, path = ".", throw_error = false)
     ensure!
 
     Dir.cd(path) do
       cmd = args.to_a.compact.join(" ")
-      Terminal.sh(binary, cmd, print_command: Hpr.debugging, print_command_output: Hpr.debugging).output
+      Terminal.sh(binary, cmd, print_command: Hpr.debugging, print_command_output: Hpr.debugging, throw_error: throw_error).output
     end
   end
 
@@ -117,6 +117,7 @@ module Hpr::Git
       exec("describe --tags --abbrev=0 2>/dev/null")
     end
 
+    # return default value is depend on git 2.18.0+
     def config(key : String, default_value : (String | Int32 | Float64 | Bool)? = nil)
       exec("config --get", default_value ? "--default #{quote_string(default_value)}" : nil, key)
     end
@@ -149,8 +150,8 @@ module Hpr::Git
       Dir.exists?(@path)
     end
 
-    def exec(*args)
-      Git.command(@path, *args)
+    def exec(*args, throw_error = false)
+      Git.command(*args, path: @path, throw_error: throw_error)
     end
 
     private def has_refs?(path : String? = nil)

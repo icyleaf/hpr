@@ -115,21 +115,21 @@ module Hpr
     private def run!
       case @action
       when Action::Check
-        Check.run(path: @hpr_path, slient: true)
+        Check.run!(path: @hpr_path, slient: true)
       when Action::Server
-        Server.run(path: @hpr_path, server_port: @server_port)
+        Server.run!(path: @hpr_path, server_port: @server_port)
       when Action::Create
-        Create.run(path: @hpr_path, url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
+        Create.run!(path: @hpr_path, url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
       when Action::Update
-        Update.run(path: @hpr_path, name: @repo_name, progress: @progress)
+        Update.run!(path: @hpr_path, name: @repo_name, progress: @progress)
       when Action::Delete
-        Delete.run(path: @hpr_path, name: @repo_name, progress: @progress)
+        Delete.run!(path: @hpr_path, name: @repo_name, progress: @progress)
       when Action::List
-        List.run(path: @hpr_path)
+        List.run!(path: @hpr_path)
       when Action::Search
-        Search.run(path: @hpr_path, name: @repo_name)
+        Search.run!(path: @hpr_path, name: @repo_name)
       when Action::Migration
-        Migration.run(path: @hpr_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
+        Migration.run!(path: @hpr_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
@@ -203,9 +203,9 @@ EOF
 
       @client : Hpr::Client?
 
-      def self.run(**args)
+      def self.run!(**args)
         path = args[:path]
-        new(path).run(**args)
+        new(path).run!(**args)
       end
 
       def initialize(@path : String, slient = false)
@@ -219,6 +219,12 @@ EOF
       end
 
       abstract def run(**args)
+
+      def run!(**args)
+        run(**args)
+      rescue ex : Exception
+        Hpr.capture_exception(ex, "cli", print_output_error: true)
+      end
 
       protected def client
         @client ||= Client.new

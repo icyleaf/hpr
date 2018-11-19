@@ -14,12 +14,8 @@ class Hpr::Cli
       repositories.each do |repo|
         dump_repository(repo)
       end
-    rescue e : Gitlab::Error::APIError
-      Terminal.error e.message
-    rescue e : Exception
-      Terminal.error "Unmatched error: #{e.message}"
-      Terminal.error "  #{e.backtrace.join("\n  ")}"
-      Hpr.capture_exception(e, "cli")
+    rescue ex : Gitlab::Error::APIError
+      Terminal.error ex.message
     end
   end
 end

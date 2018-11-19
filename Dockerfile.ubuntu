@@ -1,6 +1,6 @@
 FROM crystallang/crystal:0.27.0 as builder
 
-ADD . /app
+COPY . /app
 WORKDIR /app
 
 RUN set -ex && \
@@ -16,8 +16,12 @@ COPY --from=builder /app/docker/root /
 WORKDIR /app
 
 RUN set -ex && \
-    apt-get update -qqy && \
-    apt-get install -qqy openssh-client git redis-server && \
+    apt-get update -qq && \
+    apt-get install -qqy build-essential software-properties-common && \
+    apt-add-repository ppa:git-core/ppa -y && \
+    apt-get update -qq && \
+    apt-get install -qqy git openssh-client redis-server && \
+    apt-get remove build-essential software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
 VOLUME ["/app", "/data"]

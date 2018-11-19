@@ -6,6 +6,17 @@
 
 ## [Unreleased]
 
+## [0.9.0] (2018-11-?)
+
+### Changed
+
+- [CLI] 所有命令升级为子命令使用 `hpr [command] <options>` 的方式调用
+- [Docker] 同时支持基于 ubuntu/alpine 的镜像
+
+### Added
+
+- [Core] 增加 Sentry 异常上报的配置
+
 ## [0.8.0] (2018-11-06)
 
 ### Changed

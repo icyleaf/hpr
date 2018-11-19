@@ -26,11 +26,9 @@ class Hpr::Cli
         begin
           copy_repository(old_path, new_path)
           configure_remote(name)
-        rescue e : Exception
+        rescue ex : Exception
           Terminal.error "Catched unkown exception, clean for processing sources"
-          Terminal.error e.message
-          Terminal.error "  #{e.backtrace.join("\n  ")}"
-          Hpr.capture_exception(e, "cli")
+          Hpr.capture_exception(ex, "cli", print_output_error: true)
 
           FileUtils.rm_rf new_path
           exit
