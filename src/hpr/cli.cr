@@ -21,7 +21,7 @@ module Hpr
       ShowHelp
     end
 
-    def initialize(args = ARGV)
+    def initialize
       @action = Action::ShowHelp
       @hpr_path = "."
 
@@ -43,7 +43,7 @@ module Hpr
       @source = "gitlab-mirrors"
       @preview_mode = false
 
-      @parser = OptionParser.parse(args) do |op|
+      @parser = OptionParser.parse! do |op|
         op.banner = usage
         op.separator help
 
@@ -67,7 +67,6 @@ module Hpr
         op.on("--no-color", "disable colorize output") { Terminal.disable_color }
 
         op.separator examples
-        op.separator "\n#{version}"
 
         op.unknown_args do |unknown_args|
           unless unknown_args.empty?
@@ -133,7 +132,7 @@ module Hpr
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-      puts @parser
+        puts @parser
       end
     end
 
@@ -190,7 +189,7 @@ Examples:
     o Delete a repository:
       $ hpr delete icyleaf-hpr
 
-    More detail to check: https://icyleaf.github.io/hpr/
+More detail to check: https://icyleaf.github.io/hpr/
 EOF
     end
 

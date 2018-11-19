@@ -4,12 +4,6 @@ module Hpr::API::Repositories
     include Git::Helper
 
     def call(env)
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
-
       client = Client.new
       names = client.list_repositories
       repositories = names.each_with_object([] of Hash(String, String)) do |name, obj|
@@ -22,10 +16,6 @@ module Hpr::API::Repositories
       }.to_json
 
       {200, {"Content-Type" => "application/json"}, [body]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
     end
   end
 
@@ -35,12 +25,6 @@ module Hpr::API::Repositories
 
     def call(env)
       # TODO: Use multiple if statements, must be extract to one.
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
-
       name = env.params["name"]
       repo = Git::Repo.repository(name)
       if repo.exists?
@@ -72,7 +56,6 @@ module Hpr::API::Repositories
       create = env.params["create"]? || "true"
       clone = env.params["clone"]? || "true"
 
-      3 / 0
       client = Client.new
       client.create_repository(
         url, name,
@@ -152,12 +135,6 @@ module Hpr::API::Repositories
     include Git::Helper
 
     def call(env)
-      Raven.breadcrumbs.record do |crumb|
-        crumb.category = "api"
-        crumb.timestamp = Time.now
-        crumb.message = "Call #{self.class} API"
-      end
-
       client = Client.new
       keyword = env.params["name"]
       repositories = client.search_repositories(keyword).each_with_object([] of Hash(String, String)) do |name, obj|
@@ -171,10 +148,6 @@ module Hpr::API::Repositories
       }
 
       {status_code, {"Content-Type" => "application/json"}, [body.to_json]}
-    rescue e : Exception
-      Hpr.capture_exception(e, "api", params: env.params.to_h.to_s)
-      body = {message: e.message}.to_json
-      {400, {"Content-Type" => "application/json"}, [body]}
     end
   end
 end

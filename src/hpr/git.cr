@@ -117,9 +117,12 @@ module Hpr::Git
       exec("describe --tags --abbrev=0 2>/dev/null")
     end
 
-    # return default value is depend on git 2.18.0+
     def config(key : String, default_value : (String | Int32 | Float64 | Bool)? = nil)
-      exec("config --get", default_value ? "--default #{quote_string(default_value)}" : nil, key)
+      if (value = exec("config --get", key)) && !value.empty?
+        return value
+      end
+
+      default_value.to_s
     end
 
     def set_config(key : String, value)
