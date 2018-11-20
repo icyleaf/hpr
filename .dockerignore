@@ -24,7 +24,7 @@ LICENSE
 
 # docker
 docker-compose*.yml
-Dockerfile
+Dockerfile*
 .dockerignore
 
 # CI

@@ -1,0 +1,23 @@
+FROM crystallang/crystal:0.27.0 as builder
+
+COPY . /app
+WORKDIR /app
+
+RUN set -ex && \
+    shards build --production --release --static --no-debug
+
+FROM icyleafcn/s6-overlay:ubuntu
+
+COPY --from=builder /app/docker/root /
+COPY --from=builder /app/bin/ /bin/
+
+WORKDIR /app
+
+RUN set -ex && \
+    apt-get update -qqy && \
+    apt-get install -y --no-install-recommends openssh-client redis-server git && \
+    rm -rf /var/lib/apt/lists/*
+
+VOLUME ["/app", "/data"]
+
+EXPOSE 8848 6379

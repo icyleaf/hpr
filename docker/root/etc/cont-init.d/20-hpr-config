@@ -4,7 +4,9 @@ HPR_CONFIG_URL=https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.e
 
 mkdir -p /app/config
 
-if ! [ -f /app/config/hpr.json ]; then
+if ! [ -f "/app/config/hpr.json" ]; then
   echo "Downloading hpr example config file ..."
   wget -O /app/config/hpr.json ${HPR_CONFIG_URL}
+else
+  echo "Using /app/config/hpr.json"
 fi

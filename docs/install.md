@@ -1,37 +1,22 @@
 # 安装 hpr
 
-hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派等非 Windows 系统的机器。
-
-> 虽然使用 Crystal 编写但你可以不用安装依赖环境，可以直接下载编译好的二进制包，虽然目前还为准备好。
+hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派等非 Windows 系统的机器，
+同时提供 docker 作为最为方便的方式进行分发。
 
 ## Docker
 
-从 `0.8.0` 版本开始只需要拉取 hpr 这一个镜像即可。
+hpr 提供基于 alpine 和 ubuntu 镜像，镜像的 tag 遵循如下规则：
 
-获取指定版本的 hpr:
+- `latest` 指向基于 alpine 最新版本
+- `alpine` 指向基于 alpine 最新版本
+- `ubuntu` 指向基于 ubuntu 最新版本
+- `x.x.x-alpine` 指向基于 alpine 的指定版本
+- `x.x.x-ubuntu` 指向基于 ubuntu 的指定版本
 
-```bash
-$ docker pull icyleafcn/hpr:0.8.0
-```
-
-或者获取最新版本的 hpr:
+获取最新版本的 hpr:
 
 ```bash
 $ docker pull icyleafcn/hpr:latest
-```
-
-## Homebrew
-
-通过 brew 安装也是比较快捷的方式，但目前运行依赖配置文件：
-
-```
-$ brew tap icyleaf/core
-$ brew install hpr
-[have a cup of tea]
-$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
-$ mkdir config
-$ mv hpr.json.example.yml config/hpr.json
-$ hpr --help
 ```
 
 ## 源码安装
@@ -39,7 +24,7 @@ $ hpr --help
 ### 依赖环境
 
 - [Git](https://git-scm.com/)
-- [Crystal](https://github.com/crystal-lang/crystal) (下载最新版本)
+- [Crystal](https://github.com/crystal-lang/crystal)
 
 ### macOS 环境
 

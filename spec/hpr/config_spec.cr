@@ -3,9 +3,9 @@ require "../spec_helper.cr"
 describe Hpr::Config do
   describe ".load" do
     it "should load from a path" do
-      config = Hpr::Config.load("./examples/saas/config", 0)
+      config = Hpr::Config.load("examples/saas/config")
       config.should be_a Hpr::Config
-      config.repository_path.should eq File.expand_path(File.join("repositories", config.gitlab.group_name))
+      config.repository_path.should eq File.expand_path(File.join("examples/saas/repositories", config.gitlab.group_name))
 
       config.gitlab.should be_a Hpr::Config::Gitlab
       config.gitlab.ssh_port.should eq 22
@@ -24,7 +24,7 @@ describe Hpr::Config do
     end
 
     it "should load from a file" do
-      config = Hpr::Config.load("./config/hpr.example.json", 0)
+      config = Hpr::Config.load("config/hpr.example.json")
       config.should be_a Hpr::Config
       config.repository_path.should eq File.expand_path(File.join("repositories", config.gitlab.group_name))
 

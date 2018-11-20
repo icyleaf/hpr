@@ -1,7 +1,7 @@
 require "uri"
 
-module Hpr
-  struct Repository
+module Hpr::Git
+  struct URLParser
     property url : String
     property namespace : String | Nil
     property name : String

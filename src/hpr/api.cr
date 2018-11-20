@@ -1,6 +1,8 @@
 require "salt"
 require "salt/middlewares/basic_auth"
+require "salt/middlewares/logger"
 require "salt/middlewares/router"
+require "./git/*"
 require "./apis/*"
 
 module Hpr::API
@@ -25,6 +27,8 @@ module Hpr::API
       end
     end
 
+    Salt.use Hpr::API::ErrorHandler
+    Salt.use Salt::CommonLogger
     Salt.run app, environment: environment, port: port
   end
 end

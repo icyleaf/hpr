@@ -1,33 +1,22 @@
 # Install hpr
 
-Install hpr on macOS, Linux, FreeBSD, and on any machine where the Crystal compiler tool chain can run.
-
-> There is lots of talk about “hpr being written in Crystal”, but you don’t need to install Crystal to enjoy hpr. Just grab a precompiled binary! (Not ready for now, sadly)
+Install hpr on macOS, Linux, FreeBSD, and on any machine where the Crystal compiler tool chain can run,
+and use docker to deploy.
 
 ## Docker
 
-```bash
-$ docker pull icyleafcn/hpr:0.8.0
-```
+hpr based on both alpine and ubuntu image, tags following the rules:
 
-Or pull the latest version:
+- `latest` always the latest version based on alpine
+- `alpine` always the latest version based on alpine
+- `ubuntu` always the latest version based on ubuntu
+- `x.x.x-alpine` use x.x.x version based on alpine
+- `x.x.x-ubuntu` use x.x.x version based on ubuntu
+
+pull the latest version
 
 ```bash
 $ docker pull icyleafcn/hpr:latest
-```
-
-## Homebrew
-
-If you are on macOS and using Homebrew, you can install hpr with the following:
-
-```
-$ brew tap icyleaf/core
-$ brew install hpr
-[have a cup of tea]
-$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.json.example.yml
-$ mkdir config
-$ mv hpr.json.example.yml config/hpr.json
-$ hpr --help
 ```
 
 ## Source
@@ -35,7 +24,7 @@ $ hpr --help
 ### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Crystal](https://github.com/crystal-lang/crystal) (Always download the latest version)
+- [Crystal](https://github.com/crystal-lang/crystal)
 
 ### macOS
 

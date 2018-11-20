@@ -29,11 +29,11 @@ module Hpr::API
           },
         },
         jobs: {
-          total_scheduled: stats.scheduled_size,
-          total_enqueued:  stats.enqueued,
-          total_failures:  stats.failed,
           total_processed: stats.processed,
+          total_failures:  stats.failed,
           total_queues:    stats.queues,
+          total_enqueued:  stats.enqueued,
+          total_scheduled: stats.scheduled_size,
           scheduleds:      scheduleds,
         },
       }.to_json

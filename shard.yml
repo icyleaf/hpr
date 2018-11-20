@@ -1,5 +1,5 @@
 name: hpr
-version: 0.8.0
+version: 0.9.0
 
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
@@ -7,26 +7,33 @@ authors:
 targets:
   hpr:
     main: src/cli.cr
-  hpr-migration:
-    main: src/hpr/cli/migration.cr
 
 dependencies:
   totem:
     github: icyleaf/totem
-    version: ~> 0.5.0
+    branch: master
   gitlab:
     github: icyleaf/gitlab.cr
-    version: ~> 0.3.5
+    version: ~> 0.4.0
   salt:
     github: icyleaf/salt
-    version: ~> 0.4.2
+    version: ~> 0.4.4
+  terminal:
+    github: icyleaf/terminal
+    version: ~> 0.3.1
   radix:
     github: luislavena/radix
     version: ~> 0.3.8
   sidekiq:
     github: icyleaf/sidekiq.cr
     branch: master
+  raven:
+    github: Sija/raven.cr
+  # granite:
+  #   github: amberframework/granite
+  # sqlite3:
+  #   github: crystal-lang/crystal-sqlite3
 
-crystal: 0.26.1
+crystal: 0.27.0
 
 license: MIT

@@ -22,48 +22,55 @@ gitlab 分组名 | gitlab_namespace | gitlab.group_name | **必须**
 
 其他参数不需要迁移，对于 hpr 额外的参数定义参加[配置文件](configuration.md)。
 
-配置文件迁移完毕好之后，需要获取 gitlab-mirrors 的仓库路径。从 gitlab-mrrors 的 config.sh 拿到 $repo_dir 的路径，默认是 /home/gitmirror/repositories
+配置文件迁移完毕好之后，需要获取 gitlab-mirrors 的仓库路径。从 gitlab-mrrors 的 config.sh 拿到 **$repo_dir** 的路径，默认是 /home/gitmirror/repositories
 
-编辑 docker-compose.yml 并把刚才得到的仓库路径加到 volumes 里面。
-
-```yaml
-version: '2'
-
-services:
-  hpr:
-    image: icyleafcn/hpr
-    ports:
-      - 8848:8848
-    volumes:
-      - /my/own/hprdir:/app
-      - /home/gitmirror/repositories:/tmp/old-repositories
-    environment:
-      REDIS_URL: tcp://redis:6379
-      REDIS_PROVIDER: REDIS_URL
-
-      HPR_SSH_HOST: git.example.com
-      HPR_SSH_PORT: 22
-    depends_on:
-      - redis
-  redis:
-    image: redis:alpine
-```
-
-运行实例: `docker-compose up -d`
-
-目前只是把 hpr 运行起来了，但还没有真正迁移数据。Hpr 提供了一个迁移工具来帮助你轻松快速完全，确保还在刚才的目录下执行：
+我们先把 hpr 运行起来
 
 ```bash
-$ docker-compose exec hpr hpr-migration --endpoint "http://localhost:8848" /tmp/old-repositories
-* project1
- - Configuring git remote ...
- - Updating and pushing mirror
-* project2
- - Create gitlab repository
- - Configuring git remote ...
- - Updating and pushing mirror
-* project3
- - Existed, Skip
+$ docker run -d --restart=unless-stopped --name hpr \
+  -v /data/volumes/hpr-data:/app \
+  -v /data/volumes/hpr-redis-data:/data \
+  -v /home/gitmirror/repositories:/app/old-repositories \
+  -p 8848:8848 \
+  icyleafcn/hpr:ubuntu
+
+Generating public/private rsa key pair ...
+
+SSH PUBLIC KEY:
+##################################################################
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD1gmxn5Rk5N1mRGzynZgYyeKb4Q5OsoQ9erLZY1nP6i8ICL+Dn+b/6YoFUcdIBsE1sv9eu6fyP7TfdLD8FWV6qK9rJSwJFq3wTF6Liu+fOSHOpDffTcAQ5dciIzu/goheYwfKekcu6EiGTn9XdHtXwOgC0+T1OLu0dskUyMhyIsYxJiDlAJL6YFgMRXVE6HPZp3XfXP2BuVCo8WydfKgs8EyQ4pbQ3yGvvb2jUgeJX+Qb4OcbKyrO7i/L2KidE2Xzzxx6QBWNkPDvGnh0b12E6UApEq99cY5bURw7qSsOfY4ct1GgMHdsjeEN4olcIici+11+iQPR3VocePbFVxEt3 hpr@docker
+##################################################################
+...
+  _
+ | |__  _ __  _ __
+ | '_ \| '_ \| '__|
+ | | | | |_) | |
+ |_| |_| .__/|_|
+       |_|
+Using config: /app/config/hpr.json
+[224] Salt server starting ...
+[224] * Version 0.4.4 (Crystal 0.27.0)
+[224] * Environment: production
+[224] * Listening on http://0.0.0.0:8848/
+[224] Use Ctrl-C to stop
+```
+
+在把上面 ssh key 传到 gitlab 后我们需要执行迁移的命令：
+
+```bash
+$ docker exec hpr hpr migrate --source gitlab-mirrors /app/old-repositories/
++------------------------+
+|CyberAgent-iOS-NBUCore|
++------------------------+
+Coping repository directory
+Configuring remote of git
+Fetching origin and pushing gitlab
++----------------------------+
+|entotsu-TKSubmitTransition|
++----------------------------+
+Coping repository directory
+Configuring remote of git
+Fetching origin and pushing gitlab
 ```
 
 > 温馨提示：工具会把三种情况都会考虑在内，分别包括本地已存在项目但 gitlab 没有/没有的项目/存在的项目。

@@ -17,5 +17,9 @@
     "project_wiki": false,
     "project_merge_request": false,
     "project_snippet": false
+  },
+  "sentry" : {
+    "report": false,
+    "dns": "http://<key>@<host>:<port>/<project>"
   }
 }

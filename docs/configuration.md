@@ -21,7 +21,7 @@ hpr 默认提供了一个模板文件: `config/hpr.json.example`，根据自己�
 
 ## basic_auth - 接口认证
 
-由于默认提供 API 接口，如果需要暴露在外网访问为了安全起见目前支持了 basic auth 认证机制。
+hpr 默认提供 API 接口，如果需要暴露在外网访问为了安全起见目前支持了 basic auth 认证机制。
 
 | 名称 | 类型 | 说明 | 备注 |
 |---|---|---|---|
@@ -31,7 +31,7 @@ hpr 默认提供了一个模板文件: `config/hpr.json.example`，根据自己�
 
 ## gitlab
 
-这里主要是镜像服务 gitlab 的必备的配置参数。必须设置的主要是 `endpoint`、`prite_token` 和 `group_name`。
+镜像服务 gitlab 的必备的配置参数。必须设置的主要是 `endpoint`、`prite_token` 和 `group_name`。
 
 | 名称 | 类型 | 说明 | 备注 |
 |---|---|---|---|
@@ -44,3 +44,12 @@ hpr 默认提供了一个模板文件: `config/hpr.json.example`，根据自己�
 | project_wiki | boolean | 是否开启 Wiki | `true`/`false` |
 | project_merge_request | boolean | 是否开启 MR | `true`/`false` |
 | project_snippet | boolean | 是否开启 Snippet | `true`/`false` |
+
+## sentry
+
+错误上报服务，默认是关闭的，如果你需要跟踪 hpr 的异常情况可以自行开启，把解决不了的问题发 issue 给我也能更好的帮我定位问题。
+
+| 名称 | 类型 | 说明 | 备注 |
+|---|---|---|---|
+| report | boolean | 是否开启上报 | `true`/`false` |
+| dsn | string | DSN 地址 | 从 Sentry 获取 |

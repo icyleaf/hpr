@@ -1,8 +1,12 @@
 version: 1.0
 shards:
+  any_hash:
+    github: Sija/any_hash.cr
+    version: 0.2.2
+
   gitlab:
     github: icyleaf/gitlab.cr
-    version: 0.3.5
+    version: 0.4.0
 
   halite:
     github: icyleaf/halite
@@ -18,25 +22,33 @@ shards:
 
   popcorn:
     github: icyleaf/popcorn
-    version: 0.2.0
+    version: 0.2.1
 
   radix:
     github: luislavena/radix
     version: 0.3.8
 
+  raven:
+    github: Sija/raven.cr
+    version: 1.1.0
+
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 2.1.1
 
   salt:
     github: icyleaf/salt
-    version: 0.4.2
+    version: 0.4.4
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: 94f54def4324a9d9fd8f7e6659a99b2c115a64c9
+    commit: dfc11f6528b0fd62b68700a7f1d06a553d7b5917
+
+  terminal:
+    github: icyleaf/terminal
+    version: 0.3.1
 
   totem:
     github: icyleaf/totem
-    version: 0.5.0
+    commit: 8a8d83d2922ac7308f86c4780726dcd964e0298f
 

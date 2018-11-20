@@ -47,7 +47,7 @@ $ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.j
 最后执行如下命令即可运行 hpr：
 
 ```bash
-$ docker run icyleafcn/hpr:0.8.0 -v /my/hpr:/app -p 8848:8848 icyleafcn/hpr
+$ docker run icyleafcn/hpr:0.9.0 -v /my/hpr:/app -p 8848:8848 icyleafcn/hpr
 ...
 [cont-init.d] 10-configure-ssh: executing...
 Generating public/private rsa key pair ...
@@ -58,8 +58,6 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARm
 9WiyyWsUM4M9lEKHpZ486lDGk3IM2XQW+pxAoMKb0TYzqCsrduHUtjzy0M0BqgMPe9EtVQqCbnTMzDLXmRONoTYyTV51NQ12mMwEQcDaLQ28e5gqouQJKS81JaoRpQWa7pHsOCki6Fk9TB+EQFrGz5nOrmYYM+O1MKnFkzmVHv7Fh50Sz7d2nYzzOKAkR hpr@docker
 ##################################################################
 ...
-[services.d] starting services
-** Starting Hpr..
   _
  | |__  _ __  _ __
  | '_ \| '_ \| '__|

@@ -1,4 +1,5 @@
 require "file_utils"
+require "terminal"
 require "json"
 
 module Hpr
@@ -34,29 +35,26 @@ module Hpr
     end
 
     def create_repository(url : String, name : String? = nil, create = true, clone = true)
-      repo = Repository.new url
-      project_name = (name && !name.empty?) ? name : repo.mirror_name
-
+      url_parser = Git::URLParser.new(url)
+      project_name = (name && !name.empty?) ? name : url_parser.mirror_name
       project = if create
                   create_gitlab_repository(project_name, url)
                 else
                   search_gitlab_repository(project_name)
                 end
 
-      Utils.user_error! "Not found gitlab project: #{project_name}" unless project
-
-      Utils.user_error! "Exists Repository: #{project_name}" if clone && reopsitory_stored?(project_name)
-      CloneRepositoryWorker.async.perform repo.url, project_name, project["path"].as_s if clone
+      Terminal.crash! "Not found gitlab project: #{project_name}" unless project
+      Terminal.crash! "Exists Repository: #{project_name}" if clone && Git::Repo.repository_path?(project_name)
+      CloneRepositoryWorker.async.perform url_parser.url, project_name, project["path"].as_s if clone
     end
 
     def update_repository(name : String)
-      Utils.user_error! "repository not exists ... #{name}" unless reopsitory_stored?(name)
+      Terminal.crash! "repository not exists ... #{name}" unless Git::Repo.repository_path?(name)
       UpdateRepositoryWorker.async.perform name
     end
 
     def delete_repository(name : String)
       if project = search_gitlab_repository(name)
-        Hpr.logger.info "destroying project ... #{@group["name"]}/#{name}"
         r = Hpr.gitlab.delete_project project["id"].as_i
       end
 
@@ -78,8 +76,6 @@ module Hpr
     end
 
     def create_gitlab_repository(name, url)
-      Hpr.logger.info "creating gitlab repository ... #{@group["name"]}/#{name}"
-
       loop do
         begin
           return Hpr.gitlab.create_project name, {
@@ -102,10 +98,6 @@ module Hpr
       end
     end
 
-    private def reopsitory_stored?(name)
-      Dir.exists?(Utils.repository_path(name))
-    end
-
     private def current_user
       Hpr.gitlab.user
     end
@@ -113,6 +105,7 @@ module Hpr
     private def current_group
       Hpr.gitlab.group Hpr.config.gitlab.group_name
     rescue Gitlab::Error::NotFound
+      raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
       Hpr.gitlab.create_group Hpr.config.gitlab.group_name, Hpr.config.gitlab.group_name
     end
 
@@ -122,12 +115,10 @@ module Hpr
     end
 
     def determine_git!
-      _, _, success = Utils.run_cmd "which git"
-      raise NotFoundGitError.new "Please install git." unless success
+      Git.ensure!
     end
 
     def determine_gitlab_configure!
-      raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
       raise NotRoleError.new "Please enable create project role." unless @user["can_create_project"].as_bool
 
       ssh_keys = Hpr.gitlab.ssh_keys
@@ -136,9 +127,7 @@ module Hpr
 
     private def determine_repository_path!
       path = Hpr.config.repository_path
-      unless Dir.exists?(path)
-        FileUtils.mkdir_p path
-      end
+      FileUtils.mkdir_p(path) unless Dir.exists?(path)
     end
   end
 end

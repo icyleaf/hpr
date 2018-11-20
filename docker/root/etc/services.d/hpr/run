@@ -9,4 +9,4 @@ mkdir -p /app/logs
 
 echo "** Starting Hpr.."
 cd /app
-exec hpr --server 2>&1 | tee -a /app/logs/hpr.log
+exec hpr server 2>&1 | tee -a /app/logs/hpr.log

@@ -10,7 +10,7 @@ describe Hpr do
 
     it "should returns new config with path" do
       config = Hpr.config
-      new_config = Hpr.config("examples/sass/config/hpr.json", 0)
+      new_config = Hpr.config("examples/saas/config")
       config.object_id.should eq(new_config.object_id)
     end
   end
