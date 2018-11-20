@@ -5,17 +5,27 @@ all: build
 
 build: build-alpine build-ubuntu
 
+publish: publish-alpine publish-ubuntu
+
+alpine: build-alpine publish-alpine
+
+ubuntu: build-ubuntu publish-ubuntu
+
+build-alpine:
+	docker build -t $(hpr_image_name):$(hpr_version)-alpine .
+	docker tag $(hpr_image_name):$(hpr_version)-alpine $(hpr_image_name):alpine
+
+publish-alpine:
+	docker push $(hpr_image_name):ubuntu
+	docker push $(hpr_image_name):$(hpr_version)-ubuntu
+
 build-ubuntu:
 	docker build -t $(hpr_image_name):$(hpr_version)-ubuntu -f Dockerfile.ubuntu .
 	docker tag $(hpr_image_name):$(hpr_version)-ubuntu $(hpr_image_name):ubuntu
 
-build-alpine:
-	docker build -t $(hpr_image_name):$(hpr_version) .
-	docker tag $(hpr_image_name):$(hpr_version) $(hpr_image_name):latest
-
-publish:
-	docker push $(hpr_image_name):latest
-	docker push $(hpr_image_name):$(hpr_version)
+publish-ubuntu:
+	docker push $(hpr_image_name):ubuntu
+	docker push $(hpr_image_name):$(hpr_version)-ubuntu
 
 doc:
 	docsify serve docs -p 3001

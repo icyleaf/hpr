@@ -13,7 +13,7 @@
 - [CLI] 所有命令升级为子命令使用 `hpr [command] <options>` 的方式调用
 - [CLI] 全局参数 `--file` 修改为 `--path`，原为配置文件现在为 hpr 项目根目录
 - [Docker] 舍弃 docker-compose 并把依赖的服务打为一个镜像
-- [Docker] 同时支持基于 ubuntu/alpine 的镜像
+- [Docker] 同时支持基于 ubuntu/alpine 的镜像
 
 ### Added
 
