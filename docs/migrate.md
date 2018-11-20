@@ -27,7 +27,7 @@ gitlab 分组名 | gitlab_namespace | gitlab.group_name | **必须**
 我们先把 hpr 运行起来
 
 ```bash
-$ docker run -d --name hpr \
+$ docker run -d --restart=unless-stopped --name hpr \
   -v /data/volumes/hpr-data:/app \
   -v /data/volumes/hpr-redis-data:/data \
   -v /home/gitmirror/repositories:/app/old-repositories \

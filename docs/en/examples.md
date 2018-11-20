@@ -37,7 +37,7 @@ Prepare `config/hpr.json` file, this is a sample:
 Store config file to `/data/volumes/hpr-data/config/hpr.json`, Then create your own docker instance:
 
 ```bash
-$ docker run -d --name hpr \
+$ docker run -d --restart=unless-stopped --name hpr \
   -v /data/volumes/hpr-data:/app \
   -v /data/volumes/hpr-redis-data:/data \
   -p 8848:8848 \
@@ -103,7 +103,7 @@ Prepare `config/hpr.json` file, this is a sample:
 Store config file to `/data/volumes/hpr-data/config/hpr.json`, Then create your own docker instance:
 
 ```bash
-$ docker run --restart=unless-stopped --name hpr -d \
+$ docker run -d --restart=unless-stopped --name hpr \
   -v /data/volumes/hpr-data:/app \
   -v /data/volumes/hpr-redis-data:/data \
   -p 8848:8848 \

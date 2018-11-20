@@ -48,7 +48,7 @@
 假如这个文件存放在 `/data/volumes/hpr-data/config/hpr.json`，那么你可以这样创建你的 docker 实例：
 
 ```bash
-$ docker run -d --name hpr \
+$ docker run -d --restart=unless-stopped --name hpr \
   -v /data/volumes/hpr-data:/app \
   -v /data/volumes/hpr-redis-data:/data \
   -e HPR_SSH_HOST=10.10.10.221 \
