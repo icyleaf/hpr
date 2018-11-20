@@ -46,3 +46,12 @@ Config of gitlab, main key were `endpoint`, `prite_token` and `group_name`。
 | project_wiki | boolean | Enable Wiki | `true`/`false` |
 | project_merge_request | boolean | Enable MR | `true`/`false` |
 | project_snippet | boolean | Enable Snippet | `true`/`false` |
+
+## sentry
+
+Error tracking report. enable it to tracking any issue and report to hpr, thanks.
+
+| Key | Type | Description | Note |
+|---|---|---|---|
+| report | boolean | Enable report | `true`/`false` |
+| dsn | string | DSN Address | fetch from sentry |

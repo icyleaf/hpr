@@ -2,27 +2,44 @@
 
 hpr 本身是一个命令行工具，因此也提供了一个临时可用的辅助命令来管理镜像仓库。
 
+## 检测 hpr 运行环境
+
+便于自己检查配置是否有问题
+
+```bash
+$ hpr check
+Checking config ... [OK]
+Checking service status of gitlab ... [OK]
+Checking authorize of gitlab ... [OK]
+Checking group of gitlab ... [OK]
+Checking create project role of gitlab ... [OK]
+Checking ssh key of gitlab ... [OK]
+```
+
 ## 运行 Web API 服务器
 
 ```bash
-$ hpr -s
+$ hpr server
 # 或者更改端口号
-$ hpr -s --port 8848
+$ hpr server --port 8848
   _
  | |__  _ __  _ __
  | '_ \| '_ \| '__|
  | | | | |_) | |
  |_| |_| .__/|_|
        |_|
-2018-04-28 10:06:42 +08:00   INFO   API Server now listening at localhost:8848, press Ctrl-C to stop
+Using config: /app/config/hpr.json
+[219] Salt server starting ...
+[219] * Version 0.4.4 (Crystal 0.27.0)
+[219] * Environment: production
+[219] * Listening on http://0.0.0.0:8848/
+[219] Use Ctrl-C to stop
 ```
 
 ## 显示已镜像的仓库列表
 
 ```bash
-$ hpr -l
-# or
-$ hpr --list
+$ hpr list
 2018-04-28 18:01:32 +08:00   INFO   listing repositories (2):
 
 => Name: icyleaf-gitlab.cr
@@ -47,9 +64,7 @@ $ hpr --list
 ## 搜索镜像仓库
 
 ```bash
-$ hpr -S icyleaf
-# or
-$ hpr --search icyleaf
+$ hpr search icyleaf
 
 2018-04-28 18:07:34 +08:00   INFO   searching repositories ... icyleaf
 2018-04-28 18:07:34 +08:00   INFO   found repositories (2):
@@ -76,9 +91,7 @@ $ hpr --search icyleaf
 ## 创建镜像仓库
 
 ```bash
-$ hpr -c -U https://github.com/icyleaf/salt.git icyleaf-salt
-# or
-$ hpr --create --url https://github.com/icyleaf/salt.git
+$ hpr create --progress -U https://github.com/icyleaf/salt.git icyleaf-salt
 2018-04-26 17:04:39 +08:00   INFO   creating repository ... ews-team/icyleaf-salt
 2018-04-26 17:04:41 +08:00   INFO   cloning https://github.com/icyleaf/salt.cr ... icyleaf-salt
 2018-04-26 17:05:44 +08:00   INFO   pushing to mirror ... icyleaf-salt
@@ -88,9 +101,7 @@ $ hpr --create --url https://github.com/icyleaf/salt.git
 ## 更新镜像仓库
 
 ```bash
-$ hpr -u icyleaf-salt
-# or
-$ hpr --update icyleaf-salt
+$ hpr update --progress icyleaf-salt
 2018-04-26 17:04:01 +08:00   INFO   updating from origin ... icyleaf-salt
 2018-04-26 17:04:06 +08:00   INFO   pushing to mirror ... icyleaf-salt
 2018-04-26 17:04:07 +08:00   INFO   update repository ... done
@@ -99,10 +110,12 @@ $ hpr --update icyleaf-salt
 ## 删除镜像仓库
 
 ```bash
-$ hpr -d icyleaf-salt
-# or
-$ hpr --delete icyleaf-salt
+$ hpr delete --progress icyleaf-salt
 2018-04-26 17:04:25 +08:00   INFO   destroying project ... ews-team/icyleaf-salt
 2018-04-26 17:04:25 +08:00   INFO   deleting directory ... icyleaf-salt
 2018-04-26 17:04:26 +08:00   INFO   delete repository ... done
 ```
+
+## 迁移工具
+
+请看 [迁移文档](migrate.md)
