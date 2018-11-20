@@ -4,20 +4,18 @@ COPY . /app
 WORKDIR /app
 
 RUN set -ex && \
-    shards build --production && \
-    for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
+    shards build --production --release --static --no-debug
 
 FROM icyleafcn/s6-overlay:ubuntu
 
-COPY --from=builder /app/deps /
-COPY --from=builder /app/bin/ /bin/
 COPY --from=builder /app/docker/root /
+COPY --from=builder /app/bin/ /bin/
 
 WORKDIR /app
 
 RUN set -ex && \
     apt-get update -qqy && \
-    apt-get install -qqy git openssh-client redis-server git && \
+    apt-get install -y --no-install-recommends openssh-client redis-server git && \
     rm -rf /var/lib/apt/lists/*
 
 VOLUME ["/app", "/data"]
