@@ -9,34 +9,39 @@ class Hpr::Cli
       determine_path!(source_path)
 
       start_worker
+
+      has_exception = false
+      FileUtils.mkdir_p(repository_path)
       Terminal.message "migrating #{source} repositories ... #{source_path}"
       find_repositories(source_path) do |name, old_path, new_path|
         Terminal.header name
-        status, message = pass?(old_path, new_path)
-        if status
-          if preview_mode
-            Terminal.verbose "#{old_path} => #{new_path}"
-          else
-            begin
-              copy_repository(old_path, new_path)
-              configure_remote(name)
-            rescue ex : Exception
-              Terminal.error "Catched unkown exception, clean for processing sources"
-              Hpr.capture_exception(ex, "cli", print_output_error: true)
-
-              FileUtils.rm_rf new_path
-              exit
-            end
-          end
-        else
+        if message = fail?(old_path, new_path)
           Terminal.important message
+          next
+        end
+
+        if preview_mode
+          Terminal.verbose "#{old_path} => #{new_path}"
+          next
+        end
+
+        begin
+          copy_repository(old_path, new_path)
+          configure_remote(name)
+        rescue ex : Exception
+          has_exception = true
+          Terminal.error "Catched unkown exception, clean for processing sources"
+          Hpr.capture_exception(ex, "cli", print_output_error: true)
+
+          FileUtils.rm_rf new_path
+          exit
         end
       end
 
       if preview_mode
         Terminal.important "You are in preview mode, remove `--preview` and run again if check everything is all right."
       else
-        Terminal.success "All done, nice job!"
+        Terminal.success "All done, nice job!" unless has_exception
       end
     end
 
@@ -75,29 +80,24 @@ class Hpr::Cli
       client.search_gitlab_repository(name)
     end
 
+    private def find_repositories(path)
+      Dir.glob("#{path}/*") do |source_path|
+        name = File.basename(source_path)
+        yield name, source_path, repository_path(name)
+      end
+    end
+
+    private def fail?(old_path, new_path)
+      return "Not git repository, Skip" unless File.directory?(old_path) && git_repository?(old_path)
+      return "Existed, Skip" if mirrored?(new_path)
+    end
+
     private def mirrored?(path)
       Dir.exists?(path)
     end
 
     private def git_repository?(path)
       Git::Repo.new(path).repo?
-    end
-
-    private def pass?(old_path, new_path)
-      status = true
-      message = ""
-
-      unless File.directory?(old_path) && git_repository?(old_path)
-        status = false
-        message = "Not git repository, Skip"
-      end
-
-      if mirrored?(new_path)
-        status = false
-        message = "Existed, Skip"
-      end
-
-      {status, message}
     end
 
     private def determine_source!(source)
@@ -111,13 +111,6 @@ class Hpr::Cli
       unless Dir.exists?(source_path)
         Terminal.error "Source path was not exists in #{source_path}"
         exit
-      end
-    end
-
-    private def find_repositories(path)
-      Dir.glob(File.join(path, "*")) do |source_path|
-        name = File.basename(source_path)
-        yield name, source_path, repository_path(name)
       end
     end
 

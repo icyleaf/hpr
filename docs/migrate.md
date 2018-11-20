@@ -55,24 +55,22 @@ Using config: /app/config/hpr.json
 [224] Use Ctrl-C to stop
 ```
 
-hpr 运行起来之后我们需要执行迁移的命令：
+在把上面 ssh key 传到 gitlab 后我们需要执行迁移的命令：
 
 ```bash
-$ docker exec hpr hpr migrate --source gitlab-mirror
-```
-
-
-```bash
-$ docker-compose exec hpr hpr-migration --endpoint "http://localhost:8848" /tmp/old-repositories
-* project1
- - Configuring git remote ...
- - Updating and pushing mirror
-* project2
- - Create gitlab repository
- - Configuring git remote ...
- - Updating and pushing mirror
-* project3
- - Existed, Skip
+$ docker exec hpr hpr migrate --source gitlab-mirrors /app/old-repositories/
++------------------------+
+|CyberAgent-iOS-NBUCore|
++------------------------+
+Coping repository directory
+Configuring remote of git
+Fetching origin and pushing gitlab
++----------------------------+
+|entotsu-TKSubmitTransition|
++----------------------------+
+Coping repository directory
+Configuring remote of git
+Fetching origin and pushing gitlab
 ```
 
 > 温馨提示：工具会把三种情况都会考虑在内，分别包括本地已存在项目但 gitlab 没有/没有的项目/存在的项目。

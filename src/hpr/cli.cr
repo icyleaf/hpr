@@ -149,15 +149,16 @@ EOF
       <<-EOF
 
 Available Commands:
-    server    Run a web api server
-    list      List mirrored repositories
-    search    Search mirrored repositories
-    create    Create a mirror repository
-    update    Updated a mirrored repository
-    delete    Delete a mirrored repository
-    check     Contains some verification checks
-    version   Show version
-    help      Show this help
+    server      Run a web api server
+    list        List mirrored repositories
+    search      Search mirrored repositories
+    create      Create a mirror repository
+    update      Updated a mirrored repository
+    delete      Delete a mirrored repository
+    check       Contains some verification checks
+    migration   Migration tools
+    version     Show version
+    help        Show this help
 EOF
     end
 
@@ -188,6 +189,9 @@ Examples:
 
     o Delete a repository:
       $ hpr delete icyleaf-hpr
+
+    o Migrate from gitlab-mirrors with gitmirrors group name:
+      $ hpr migration --source gitlab-mirrors /home/gitmirror/repositories/gitmirrors/
 
 More detail to check: https://icyleaf.github.io/hpr/
 EOF

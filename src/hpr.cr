@@ -54,11 +54,6 @@ module Hpr
   end
 
   def capture_exception(exception, category : String, print_output_error = false, file = __FILE__, **extra)
-    if print_output_error
-      Terminal.error "[#{exception.class}] #{exception.message}"
-      Terminal.error "  #{exception.backtrace.join("\n  ")}"
-    end
-
     gitlab_version = "unkown"
     begin
       gitlab_version = gitlab.version
@@ -70,15 +65,20 @@ module Hpr
       event.logger ||= "hpr"
       event.tags = {
         deploy:   ENV.fetch("HPR_DEPLOY", "binary"),
-        category: category
+        category: category,
       }
       event.extra = {
-        git_version: `git version`.strip,
-        redis_version: `redis-server -v`.strip,
+        git_version:     `git version`.strip,
+        redis_version:   `redis-server -v`.strip,
         gitlab_version:  gitlab_version,
         gitlab_endpoint: config.gitlab.endpoint.to_s,
         file:            file,
       }.merge(extra)
+    end
+
+    if print_output_error
+      Terminal.error "[#{exception.class}] #{exception.message}"
+      Terminal.error "  #{exception.backtrace.join("\n  ")}"
     end
   end
 end

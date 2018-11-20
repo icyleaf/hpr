@@ -34,13 +34,13 @@ module Hpr
             method:       env.method,
             url:          env.url,
             query_string: env.query.to_s,
-            data:         form_data(env)
+            data:         form_data(env),
           }
         end
 
         body = {
-          message: ex.message,
-          backtrace: ex.backtrace
+          message:   ex.message,
+          backtrace: ex.backtrace,
         }.to_json
 
         {
