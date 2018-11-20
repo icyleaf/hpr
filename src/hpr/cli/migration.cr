@@ -14,14 +14,17 @@ class Hpr::Cli
       FileUtils.mkdir_p(repository_path)
       Terminal.message "migrating #{source} repositories ... #{source_path}"
       find_repositories(source_path) do |name, old_path, new_path|
-        Terminal.header name
-        if message = fail?(old_path, new_path)
-          Terminal.important message
+        message = fail?(old_path, new_path)
+
+        if preview_mode
+          status = message ? "[SKIP] #{message}".colorize(:yellow) : "[OK]".colorize(:green)
+          Terminal.verbose "#{name.colorize(:magenta)} #{status}"
           next
         end
 
-        if preview_mode
-          Terminal.verbose "#{old_path} => #{new_path}"
+        Terminal.header name
+        if message
+          Terminal.important message
           next
         end
 
@@ -39,7 +42,7 @@ class Hpr::Cli
       end
 
       if preview_mode
-        Terminal.important "You are in preview mode, remove `--preview` and run again if check everything is all right."
+        Terminal.message "You are in preview mode, remove `--preview` and run again if check everything is all right."
       else
         Terminal.success "All done, nice job!" unless has_exception
       end
@@ -81,15 +84,15 @@ class Hpr::Cli
     end
 
     private def find_repositories(path)
-      Dir.glob("#{path}/*") do |source_path|
+      Dir.glob(File.join(File.expand_path(path), "*")).sort.each do |source_path|
         name = File.basename(source_path)
         yield name, source_path, repository_path(name)
       end
     end
 
     private def fail?(old_path, new_path)
-      return "Not git repository, Skip" unless File.directory?(old_path) && git_repository?(old_path)
-      return "Existed, Skip" if mirrored?(new_path)
+      return "Not git repository" unless File.directory?(old_path) && git_repository?(old_path)
+      return "Repositroy existed" if mirrored?(new_path)
     end
 
     private def mirrored?(path)
@@ -123,99 +126,3 @@ class Hpr::Cli
     end
   end
 end
-
-# require "option_parser"
-# require "file_utils"
-# require "terminal"
-# require "halite"
-# require "uri"
-# require "../../hpr"
-
-# source = "gitlab-mirror"
-# source_path = ""
-# group_name = Hpr.config.gitlab.group_name
-# clean = false
-
-# hpr_endpoint = ""
-# hpr_username = ""
-# hpr_password = ""
-
-# OptionParser.parse! do |parser|
-#   parser.banner = "Usage: hpr-migration [options] path"
-
-#   parser.separator("\nOptions:\n")
-# parser.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| Hpr.config(path) }
-# parser.on("-s SOURCE", "--source=SOURCE", "The source of migration came from (avaiable gitlab-mirror only)") { |s| source = s }
-# parser.on("--group-name=NAME", "The group name from gitlab-mirror config") { |name| group_name = name }
-# parser.on("--clean", "The clean config in gitlab-mirror") { clean = true }
-# parser.on("--endpoint=ENDPOINT", "The endpoint of Hpr") { |endpoint| hpr_endpoint = endpoint }
-# parser.on("--username=USERNAME", "The endpoint of Hpr") { |username| hpr_username = username }
-# parser.on("--password=PASSWORD", "The endpoint of Hpr") { |password| hpr_password = password }
-# parser.on("-h", "--help", "Show help") { puts parser; exit }
-
-#   parser.unknown_args do |unknown_args|
-#     source_path = unknown_args.first if unknown_args.size > 0
-#   end
-# end
-
-# if source_path.empty?
-#   Terminal.error "Path is empty!"
-#   exit
-# end
-
-# source_path = File.join(source_path, group_name)
-# unless Dir.exists?(source_path)
-#   Terminal.error "Path must be directory which was copy from #{source}'s repositories."
-#   exit
-# end
-
-# repository_path = Hpr.config.repository_path
-# unless Dir.exists?(repository_path)
-#   FileUtils.mkdir(repository_path)
-# end
-
-# halite = Halite::Client.new do
-#   if !hpr_username.empty? || !hpr_password.empty?
-#     basic_auth hpr_username, hpr_password
-#   end
-# end
-
-# current_path = Dir.current
-# repo_uri = URI.parse(hpr_endpoint)
-# repo_uri.path = "/repositories"
-# repo_url = repo_uri.to_s
-
-# Dir.glob("#{source_path}/*") do |repo_path|
-#   Dir.cd current_path
-#   repo_name = File.basename(repo_path)
-#   desc_path = File.join(repository_path, repo_name)
-
-#   Terminal.header repo_name
-#   if File.directory?(repo_path) && !Dir.exists?(desc_path)
-#     Terminal.message " - Coping repository"
-#     FileUtils.cp_r(repo_path, desc_path)
-
-#     client = Hpr::Client.new
-#     gitlab_project = client.search_gitlab_repository(repo_name)
-
-#     unless gitlab_project
-#       Terminal.message " - Create gitlab repository"
-#       repo_info = Hpr::Git::Helper.repository_info(repo_name)
-#       halite.post repo_url, form: {url: repo_info["url"], name: repo_name, clone: "false"}
-#       gitlab_project = client.search_gitlab_repository(repo_name) unless gitlab_project
-#     end
-
-#     if gitlab_project
-#       Terminal.message " - Configuring git remote"
-#       repo = Hpr::Git::Repo.repository(repo_name)
-#       Hpr::Git::Helper.write_mirror_to_git_config(repo, repo_name, gitlab_project.as_h["path"].as_s)
-
-#       Terminal.message " - Updating and pushing mirror"
-#       halite.put "#{repo_url}/#{repo_name}"
-#     else
-#       Terminal.important " - Not exists project in gitlab"
-#     end
-#   else
-#     Terminal.important " - Existed, Skip"
-#   end
-# end
