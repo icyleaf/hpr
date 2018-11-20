@@ -5,7 +5,7 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 
 ## Docker
 
-hpr 提供基于 alpine 和 ubuntu 镜像，镜像的 tag 遵循如下规则：
+hpr 提供基于 alpine 和 ubuntu 镜像，镜像的 [tags](https://hub.docker.com/r/icyleafcn/hpr/tags) 遵循如下规则：
 
 - `latest` 指向基于 alpine 最新版本
 - `alpine` 指向基于 alpine 最新版本
@@ -13,10 +13,12 @@ hpr 提供基于 alpine 和 ubuntu 镜像，镜像的 tag 遵循如下规则：
 - `x.x.x-alpine` 指向基于 alpine 的指定版本
 - `x.x.x-ubuntu` 指向基于 ubuntu 的指定版本
 
+> 提醒: 鉴于 alpine 版本一直没有合并 Crystal v0.27.0 暂时无法更新 alpine，暂时直提供基于 ubuntu 的。
+
 获取最新版本的 hpr:
 
 ```bash
-$ docker pull icyleafcn/hpr:latest
+$ docker pull icyleafcn/hpr:ubuntu
 ```
 
 ## 源码安装
