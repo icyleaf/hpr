@@ -13,25 +13,23 @@ class Hpr::Cli
       find_repositories(source_path) do |name, old_path, new_path|
         Terminal.header name
         status, message = pass?(old_path, new_path)
-        unless status
+        if status
+          if preview_mode
+            Terminal.verbose "#{old_path} => #{new_path}"
+          else
+            begin
+              copy_repository(old_path, new_path)
+              configure_remote(name)
+            rescue ex : Exception
+              Terminal.error "Catched unkown exception, clean for processing sources"
+              Hpr.capture_exception(ex, "cli", print_output_error: true)
+
+              FileUtils.rm_rf new_path
+              exit
+            end
+          end
+        else
           Terminal.important message
-          next
-        end
-
-        if preview_mode
-          Terminal.verbose "#{old_path} => #{new_path}"
-          next
-        end
-
-        begin
-          copy_repository(old_path, new_path)
-          configure_remote(name)
-        rescue ex : Exception
-          Terminal.error "Catched unkown exception, clean for processing sources"
-          Hpr.capture_exception(ex, "cli", print_output_error: true)
-
-          FileUtils.rm_rf new_path
-          exit
         end
       end
 
