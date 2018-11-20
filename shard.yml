@@ -20,7 +20,7 @@ dependencies:
     version: ~> 0.4.4
   terminal:
     github: icyleaf/terminal
-    version: ~> 0.3.0
+    version: ~> 0.3.1
   radix:
     github: luislavena/radix
     version: ~> 0.3.8
