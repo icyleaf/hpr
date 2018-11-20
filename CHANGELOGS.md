@@ -11,26 +11,20 @@
 ### Changed
 
 - [CLI] 所有命令升级为子命令使用 `hpr [command] <options>` 的方式调用
+- [CLI] 全局参数 `--file` 修改为 `--path`，原为配置文件现在为 hpr 项目根目录
+- [Docker] 舍弃 docker-compose 并把依赖的服务打为一个镜像
 - [Docker] 同时支持基于 ubuntu/alpine 的镜像
 
 ### Added
 
-- [Core] 增加 Sentry 异常上报的配置
-
-## [0.8.0] (2018-11-06)
-
-### Changed
-
-- [Docker] 舍弃 docker-compose 并把依赖的服务打为一个镜像
-- [CLI] 全局参数 `--file` 修改为 `--path`，原为配置文件现在为 hpr 项目根目录
+- [Core] `hpr.json` 增加 Sentry 异常上报的配置
 
 ## [0.7.0] (2018-11-01)
-
-> TODO
 
 ### Changed
 
 - [API] `/repositories` 创建仓库 API 参数改名 `mirror_only` 为 `create` 并新增 `clone` 参数
+- [API] `/repositories/search` 搜索仓库 API 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
 - [CLI] 创建仓库传递参数保持上面一条的同步：参数改名 `--mirror_only` 改为 `--no-create` 并新增 `--no-clone` 参数
 - [CLI] 执行 `hpr` 命令没有带任何参数时默认显示帮助文档
 - [Core] 新版本 Gitlab 项目的 path 支持大小写区分，此版本将会尽量保证和原仓库大小写一致(**不再强制小写**)
@@ -49,10 +43,6 @@
 - [API] 修复删除仓库可能会出现随机删除的问题(gitlab 接口发生变化)
 - [Core] 修复在更新仓库过程中 gitlab 对于项目的描述没有更新或只保留了 `[Syncing]` 文案
 - [Core] 修复一些日志输出多处不一致的文案
-
-### Changed
-
-- [API] `/repositories/search` 搜索仓库 API 参数从 query 改为 uri path 方式，名称从 `q` 改为 `keyword`
 
 ## [0.6.2] (2018-06-20)
 
@@ -116,7 +106,8 @@
 
 - 第一个测试版本
 
-[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/icyleaf/hpr/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/icyleaf/hpr/compare/v0.7.0...v0.9.0
 [0.7.0]: https://github.com/icyleaf/hpr/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/icyleaf/hpr/compare/v0.6.0...v0.6.2
 [0.6.0]: https://github.com/icyleaf/hpr/compare/v0.5.0...v0.6.0
