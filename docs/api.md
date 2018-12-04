@@ -226,7 +226,7 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.9.0",
+        "version": "0.9.1",
         "repositroies": {
             "total": 2,
             "entry": [
