@@ -10,3 +10,10 @@ if ! [ -f "/app/config/hpr.json" ]; then
 else
   echo "Using /app/config/hpr.json"
 fi
+
+# Config redis server
+REDIS_URL=tcp://localhost:6379
+REDIS_PROVIDER=REDIS_URL
+
+# create logs directory
+mkdir -p /app/logs

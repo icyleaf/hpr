@@ -23,10 +23,7 @@ module Hpr::API
       body = {
         hpr: {
           version:      Hpr::VERSION.to_s,
-          repositroies: {
-            total: names.size,
-            entry: names,
-          },
+          repositroies: names.size,
         },
         jobs: {
           total_processed: stats.processed,

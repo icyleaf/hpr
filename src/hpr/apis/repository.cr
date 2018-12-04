@@ -90,6 +90,13 @@ module Hpr::API::Repositories
           client.update_repository(name)
           body = "true"
         end
+      elsif env.params["all"]?
+        status_code = 200
+        client = Client.new
+        client.list_repositories.each do |repo_name|
+          client.update_repository(repo_name)
+        end
+        body = "true"
       else
         status_code = 404
         body = {

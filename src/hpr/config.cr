@@ -11,7 +11,7 @@ module Hpr
     build do
       config_name CONFIG_NAME
       config_type CONFIG_TYPE
-      config_paths [CONFIG_PATH]
+      config_paths ["/etc/", CONFIG_PATH]
     end
 
     property hpr_path : String
@@ -51,7 +51,7 @@ module Hpr
       end
 
       def load(file : String)
-        file = File.join(file, "#{CONFIG_NAME}.#{CONFIG_TYPE}") if File.directory?(file)
+        file = File.join(file, "config", "#{CONFIG_NAME}.#{CONFIG_TYPE}") if File.directory?(file)
         Hpr::Config.configure(file, 0) do |config|
           default_config(config, file)
         end
