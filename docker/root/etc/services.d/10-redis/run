@@ -1,0 +1,3 @@
+#!/usr/bin/execlineb -P
+
+exec s6-setuidgid redis redis-server --bind 0.0.0.0 --logfile /var/log/redis/server.log

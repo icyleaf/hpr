@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+## [0.9.1] (2018-12-04)
+
+### Changed
+
+- [Docker] redis 数据采用默认的位置
+- [Docker] redis 的日志默认保存到文件不再输出到 STDOUT
+
 ## [0.9.0] (2018-11-20)
 
 ### Changed
