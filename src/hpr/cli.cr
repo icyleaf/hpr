@@ -64,6 +64,7 @@ module Hpr
 
         op.separator("\nGlobal options:\n")
         op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| @hpr_path = path }
+        op.on("--verbose", "Show debug information") { Hpr.debugging(true) }
         op.on("--no-color", "disable colorize output") { Terminal.disable_color }
 
         op.separator examples
@@ -112,6 +113,8 @@ module Hpr
     end
 
     private def run!
+      Hpr.debugging(true) if ENV.fetch("HPR_DEBUG", "false") == "true"
+
       case @action
       when Action::Check
         Check.run!(path: @hpr_path, slient: true)
@@ -276,7 +279,7 @@ EOF
         path = File.expand_path(@path)
         config_path = File.join("config", "hpr.json")
         config_file = File.join(path, config_path)
-
+        puts config_file
         unless File.file?(config_file)
           Terminal.error "Can not location #{config_path} in #{@path}"
           exit

@@ -73,10 +73,13 @@ module Hpr
       end
 
       private def file_logger(file = "logs/sidekiq.log")
-        FileUtils.mkdir_p(File.dirname(file))
+        file = File.join(Hpr.config.hpr_path, file)
+        Dir.mkdir_p(File.dirname(file))
         io = File.open(file, "a")
 
-        Sidekiq::Logger.build(io)
+        logger = Sidekiq::Logger.build(io)
+        logger.level = Logger::DEBUG if Hpr.debugging
+        logger
       end
     end
 

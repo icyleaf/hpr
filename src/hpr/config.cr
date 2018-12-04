@@ -12,6 +12,7 @@ module Hpr
       config_name CONFIG_NAME
       config_type CONFIG_TYPE
       config_paths ["/etc/", CONFIG_PATH]
+      debugging Hpr.debugging
     end
 
     property hpr_path : String

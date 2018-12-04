@@ -27,7 +27,7 @@ config_ssh_config() {
   HPR_SSH_HOST=${HPR_SSH_HOST:-*}
   HPR_SSH_PORT=${HPR_SSH_PORT:-22}
 
-  if ! [ grep -q "$HPR_SSH_HOST" "/app/.ssh/config" ]; then
+  if ! grep -q "$HPR_SSH_HOST" "/app/.ssh/config"; then
     echo "Configuring ssh config ..."
     echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
     echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config

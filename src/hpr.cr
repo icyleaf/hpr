@@ -32,11 +32,11 @@ module Hpr
     @@debugging = value
   end
 
-  def crash_report!(path = "logs")
+  def crash_report!(file = "logs/sentry.log")
     return unless config.sentry.report
 
-    FileUtils.mkdir_p(path)
-    file = File.join(path, "sentry.log")
+    Dir.mkdir_p(File.dirname(file))
+    file = File.join(Hpr.config.hpr_path, file)
     io = File.open(file, "a")
 
     hpr_env = ENV.fetch("HPR_ENV", "development")
@@ -47,10 +47,6 @@ module Hpr
       c.current_environment = ENV.fetch("HPR_ENV", "development")
       c.release = Hpr::VERSION if hpr_env == "production"
     end
-
-    # Raven.user_context(
-    #   email: "icyleaf.cn@gmail.com"
-    # )
   end
 
   def capture_exception(exception, category : String, print_output_error = false, file = __FILE__, **extra)
