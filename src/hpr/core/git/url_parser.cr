@@ -1,8 +1,7 @@
 require "uri"
 
-module Hpr::Git
+class Hpr::Git
   struct URLParser
-    property url : String
     property namespace : String | Nil
     property name : String
 
@@ -10,8 +9,8 @@ module Hpr::Git
       new(url)
     end
 
-    def initialize(@url : String)
-      paths = path(@url).split("/")
+    def initialize(url : String)
+      paths = path(url).split("/")
       @name = strip_tail paths.last
       @namespace = if paths.size >= 2
                      strip_tail paths[-2]

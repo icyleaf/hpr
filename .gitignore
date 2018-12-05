@@ -6,6 +6,7 @@
 /config/hpr.json
 /logs/
 /repositories/
+/data/
 
 # ide
 /.vscode/

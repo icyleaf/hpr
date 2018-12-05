@@ -11,70 +11,80 @@ module Hpr
     build do
       config_name CONFIG_NAME
       config_type CONFIG_TYPE
-      config_paths ["/etc/", CONFIG_PATH]
-      debugging Hpr.debugging
+      config_paths ["/etc/", "~/.config/hpr/", CONFIG_PATH]
+      debugging Hpr.verbose?
     end
 
-    property hpr_path : String
+    property root_path : String
     property repository_path : String
     setter schedule_in : String | Int32 | Int64
     property basic_auth : BasicAuth
     property gitlab : Gitlab
     property sentry : Sentry
 
-    def schedule_in
-      unless @schedule_in.to_s.includes?(".")
+    def schedule_in : Time::Span | Time::MonthSpan
+      schedule_in = @schedule_in.to_s
+      unless schedule_in.includes?(".")
         return Time::Span.new(0, @schedule_in.to_i, 0)
       end
 
-      value, unit = @schedule_in.to_s.split(".", 2)
+      value, unit = schedule_in.split(".", 2)
+      value = value.to_i
       case unit
       when "hour", "hours"
-        Time::Span.new(value.to_i, 0, 0)
+        Time::Span.new(value, 0, 0)
       when "day", "days"
-        Time::Span.new(value.to_i, 0, 0, 0)
+        Time::Span.new(value, 0, 0, 0)
       when "week", "weeks"
-        Time::Span.new(value.to_i * 7, 0, 0, 0)
+        Time::Span.new(value * 7, 0, 0, 0)
       when "month", "months"
-        Time::MonthSpan.new(value.to_i)
+        Time::MonthSpan.new(value)
       when "year", "years"
-        Time::MonthSpan.new(value.to_i * 12)
+        Time::MonthSpan.new(value * 12)
       else
-        Time::Span.new(0, value.to_i, 0) # convert to minutes
+        Time::Span.new(0, value, 0) # convert to minutes
       end
     end
 
     module LoadHelper
       def load
         Hpr::Config.configure do |config|
-          default_config(config)
+          default_config config
+          # init_db
         end
       end
 
-      def load(file : String)
-        file = File.join(file, "config", "#{CONFIG_NAME}.#{CONFIG_TYPE}") if File.directory?(file)
+      def load(config_path : String)
+        file = File.expand_path(File.join(config_path, "#{CONFIG_NAME}.#{CONFIG_TYPE}"))
         Hpr::Config.configure(file, 0) do |config|
-          default_config(config, file)
+          default_config config, file
+          # init_db
         end
       end
 
       private def default_config(config, path = CONFIG_PATH)
-        config.set_default "hpr_path", root_path(path)
+        config.set_default "root_path", root_path(path)
         config.set_default "repository_path", repository_path(config)
         config
       end
 
       private def root_path(path)
         path = File.dirname(path) if File.file?(path)
-        File.expand_path("../", path)
+        File.expand_path "../", path
       end
 
       private def repository_path(config)
-        File.join(config["hpr_path"].to_s, "repositories", config.get("gitlab.group_name").to_s)
+        File.join config["root_path"].to_s, "repositories", config.get("gitlab.group_name").to_s
+      end
+
+      private def init_db
+        Dir.mkdir_p File.dirname(db_path)
+      end
+
+      private def db_path
+        File.expand_path(File.join("data", "hpr-data.db"))
       end
     end
-
-    extend LoadHelper
 
     struct BasicAuth
       include JSON::Serializable
@@ -88,7 +98,7 @@ module Hpr
       include JSON::Serializable
 
       property ssh_port : Int32
-      setter endpoint : String
+      property endpoint : String
       property private_token : String
       property group_name : String
 
@@ -97,10 +107,6 @@ module Hpr
       property project_wiki : Bool
       property project_snippet : Bool
       property project_merge_request : Bool
-
-      def endpoint : URI
-        URI.parse @endpoint
-      end
     end
 
     struct Sentry
@@ -109,5 +115,7 @@ module Hpr
       property report : Bool
       property dns : String
     end
+
+    extend LoadHelper
   end
 end

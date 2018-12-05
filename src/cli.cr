@@ -1,3 +1,3 @@
-require "./hpr/cli"
+require "./hpr/cli/cli"
 
 Hpr::Cli.new

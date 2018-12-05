@@ -9,11 +9,13 @@ module Hpr
 
   class UnkownURIError < ClientError; end
 
+  class RepositoryExistsError < ClientError; end
+
+  class NotFoundRepositoryError < ClientError; end
+
   class APIError < Error; end
 
   class MissingSSHKeyError < APIError; end
 
-  class RepositoryExistsError < APIError; end
-
-  class NotFoundRepositoryError < APIError; end
+  class NotFoundGitlabProjectError < APIError; end
 end

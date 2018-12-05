@@ -4,13 +4,21 @@ shards:
     github: Sija/any_hash.cr
     version: 0.2.2
 
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.5.1
+
   gitlab:
     github: icyleaf/gitlab.cr
     version: 0.4.0
 
+  granite:
+    github: amberframework/granite
+    version: 0.15.0
+
   halite:
     github: icyleaf/halite
-    version: 0.7.5
+    version: 0.8.0
 
   mime:
     github: icyleaf/mime.cr
@@ -42,7 +50,11 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    commit: dfc11f6528b0fd62b68700a7f1d06a553d7b5917
+    version: 0.7.2
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: 0.10.0
 
   terminal:
     github: icyleaf/terminal

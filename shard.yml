@@ -12,6 +12,9 @@ dependencies:
   totem:
     github: icyleaf/totem
     branch: master
+  sidekiq:
+    github: icyleaf/sidekiq.cr
+    version: ~> 0.7.2
   gitlab:
     github: icyleaf/gitlab.cr
     version: ~> 0.4.0
@@ -24,15 +27,15 @@ dependencies:
   radix:
     github: luislavena/radix
     version: ~> 0.3.8
-  sidekiq:
-    github: icyleaf/sidekiq.cr
-    branch: master
   raven:
     github: Sija/raven.cr
-  # granite:
-  #   github: amberframework/granite
-  # sqlite3:
-  #   github: crystal-lang/crystal-sqlite3
+    version: ~> 1.1.0
+  granite:
+    github: amberframework/granite
+    version: ~> 0.15.0
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: ~> 0.10.0
 
 crystal: 0.27.0
 
