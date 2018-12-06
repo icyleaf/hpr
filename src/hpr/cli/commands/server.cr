@@ -1,3 +1,5 @@
+require "../../web/server"
+
 class Hpr::Cli
   class Server < Command
     def run(**args)
@@ -5,8 +7,8 @@ class Hpr::Cli
 
       start_worker
       print_banner
-      puts "Using config: #{Hpr.config.config_file}"
-      Hpr::API.run(server_port)
+      puts "Verbose mode" if Hpr.verbose?
+      Hpr::Server.run(@config, server_port)
     end
 
     private def print_banner

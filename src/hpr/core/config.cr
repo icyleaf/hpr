@@ -50,7 +50,6 @@ module Hpr
       def load
         Hpr::Config.configure do |config|
           default_config config
-          # init_db
         end
       end
 
@@ -58,7 +57,6 @@ module Hpr
         file = File.expand_path(File.join(config_path, "#{CONFIG_NAME}.#{CONFIG_TYPE}"))
         Hpr::Config.configure(file, 0) do |config|
           default_config config, file
-          # init_db
         end
       end
 
@@ -75,14 +73,6 @@ module Hpr
 
       private def repository_path(config)
         File.join config["root_path"].to_s, "repositories", config.get("gitlab.group_name").to_s
-      end
-
-      private def init_db
-        Dir.mkdir_p File.dirname(db_path)
-      end
-
-      private def db_path
-        File.expand_path(File.join("data", "hpr-data.db"))
       end
     end
 

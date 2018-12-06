@@ -24,16 +24,19 @@ module Hpr
         channel = Channel(Int32).new
 
         Signal::INT.trap do
+          puts "int"
           server.request_stop
           channel.send 0
         end
 
         Signal::TERM.trap do
+          puts "222"
           server.request_stop
           channel.send 0
         end
 
         Signal::USR1.trap do
+          puts "usr1"
           server.request_stop
           channel.send 0
         end

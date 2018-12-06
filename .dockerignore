@@ -1,12 +1,13 @@
 # crystal
 main.cr
-docs
-config
 bin
-logs
-spec
-repositories
+config
+data
+docs
 examples
+logs
+repositories
+spec
 Makefile
 README.md
 CHANGELOGS.md

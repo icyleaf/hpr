@@ -1,11 +1,12 @@
-require "../hpr"
 require "option_parser"
 require "terminal"
+require "redis"
+require "../core/core"
+require "../core/config"
+require "../core/client"
 
 module Hpr
   class Cli
-    include Git::Helper
-
     class Error < Exception; end
 
     enum Action
@@ -23,7 +24,7 @@ module Hpr
 
     def initialize
       @action = Action::ShowHelp
-      @hpr_path = "."
+      @config_path = "config"
 
       # server opts
       @server_port = 8848
@@ -63,8 +64,8 @@ module Hpr
         op.on("--preview", "list repositories to see the actions") { @preview_mode = true }
 
         op.separator("\nGlobal options:\n")
-        op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| @hpr_path = path }
-        op.on("--verbose", "Show debug information") { Hpr.debugging(true) }
+        op.on("-p PATH", "--path PATH", "the path of hpr root directory") { |path| @config_path = File.join(path, "config") }
+        op.on("--verbose", "Show debug information") { ENV["HPR_VERBOSE"] = "true" }
         op.on("--no-color", "disable colorize output") { Terminal.disable_color }
 
         op.separator examples
@@ -113,29 +114,27 @@ module Hpr
     end
 
     private def run!
-      Hpr.debugging(true) if ENV.fetch("HPR_DEBUG", "false") == "true"
-
       case @action
       when Action::Check
-        Check.run!(path: @hpr_path, slient: true)
+        Check.run!(path: @config_path)
       when Action::Server
-        Server.run!(path: @hpr_path, server_port: @server_port)
+        Server.run!(path: @config_path, server_port: @server_port)
       when Action::Create
-        Create.run!(path: @hpr_path, url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
+        Create.run!(path: @config_path, url: @repo_url, name: @repo_name, create: @create, clone: @clone, progress: @progress)
       when Action::Update
-        Update.run!(path: @hpr_path, name: @repo_name, progress: @progress)
+        Update.run!(path: @config_path, name: @repo_name, progress: @progress)
       when Action::Delete
-        Delete.run!(path: @hpr_path, name: @repo_name, progress: @progress)
+        Delete.run!(path: @config_path, name: @repo_name, progress: @progress)
       when Action::List
-        List.run!(path: @hpr_path)
+        List.run!(path: @config_path)
       when Action::Search
-        Search.run!(path: @hpr_path, name: @repo_name)
+        Search.run!(path: @config_path, name: @repo_name)
       when Action::Migration
-        Migration.run!(path: @hpr_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
+        Migration.run!(path: @config_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
-        puts @parser
+      puts @parser
       end
     end
 
@@ -205,17 +204,19 @@ EOF
     end
 
     abstract class Command
-      include Git::Helper
-
-      @client : Hpr::Client?
-
       def self.run!(**args)
         path = args[:path]
         new(path).run!(**args)
       end
 
-      def initialize(@path : String, slient = false)
-        determine!(slient)
+      @client : Hpr::Client?
+      @config : Hpr::Config
+
+      def initialize(@path : String)
+        determine!
+        @config = Hpr::Config.load(@path)
+
+        Hpr.init(@config)
 
         Raven.breadcrumbs.record do |crumb|
           crumb.category = "cli"
@@ -262,30 +263,28 @@ EOF
 
       protected def start_worker
         spawn do
-          Hpr::Worker.run
+          Hpr::Worker.run(@config)
         end
 
         sleep 100.milliseconds # waiting sidekiq is ready
       end
 
-      protected def determine!(slient = false)
-        return if slient
+      protected def determine!
         determine_config!
         determine_redis!
-        Hpr.crash_report!
       end
 
       protected def determine_config!
-        path = File.expand_path(@path)
-        config_path = File.join("config", "hpr.json")
-        config_file = File.join(path, config_path)
-        puts config_file
-        unless File.file?(config_file)
-          Terminal.error "Can not location #{config_path} in #{@path}"
+        unless has_config?
+          Terminal.error "Can not location hpr.json in #{@path}"
           exit
         end
+      end
 
-        Hpr.config(path)
+      protected def has_config?
+        path = File.expand_path(@path)
+        config_file = File.join(path, "hpr.json")
+        File.file?(config_file)
       end
 
       protected def determine_redis!
@@ -300,4 +299,4 @@ EOF
   end
 end
 
-require "./cli/*"
+require "./commands/*"

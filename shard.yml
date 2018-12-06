@@ -1,5 +1,5 @@
 name: hpr
-version: 0.9.1
+version: 0.9.0
 
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
@@ -18,18 +18,18 @@ dependencies:
   gitlab:
     github: icyleaf/gitlab.cr
     version: ~> 0.4.0
-  salt:
-    github: icyleaf/salt
-    version: ~> 0.4.4
   terminal:
     github: icyleaf/terminal
     version: ~> 0.3.1
-  radix:
-    github: luislavena/radix
-    version: ~> 0.3.8
   raven:
     github: Sija/raven.cr
     version: ~> 1.1.0
+  kemal:
+    github: kemalcr/kemal
+    version: ~> 0.25.0
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
+    branch: master
   granite:
     github: amberframework/granite
     version: ~> 0.15.0

@@ -1,34 +1,123 @@
-require "salt"
-require "salt/middlewares/basic_auth"
-require "salt/middlewares/logger"
-require "salt/middlewares/router"
-require "./git/*"
-require "./apis/*"
-
-module Hpr::API
-  def self.run(port = 8848, environment = "production")
-    if Hpr.config.basic_auth.enable
-      user = Hpr.config.basic_auth.user
-      password = Hpr.config.basic_auth.password
-      Salt.use Salt::BasicAuth, user: user, password: password
+class Hpr::Server
+  module API
+    get "/" do |env|
+      render_json env, {
+        message: "welcome to hpr api layer",
+      }
     end
 
-    app = Salt::Router.new do |r|
-      r.get "/", to: Entrance.new
-      r.get "/info", to: Info.new
-      r.get "/repositories", to: Repositories::List.new
-      r.get "/repositories/search/:name", to: Repositories::Search.new
-      r.get "/repositories/:name", to: Repositories::Show.new
-      r.post "/repositories", to: Repositories::Create.new
-      r.put "/repositories/:name", to: Repositories::Update.new
-      r.delete "/repositories/:name", to: Repositories::Delete.new
-      r.not_found do |env|
-        {404, {"Content-Type" => "application/json"}, [{messaeg: "Not found api"}.to_json]}
+    get "/info" do |env|
+      render_json env, {
+        hpr: {
+          version:      Hpr::VERSION.to_s,
+          repositroies: client.total_repositories,
+        },
+        jobs: jobs,
+      }
+    end
+
+    get "/repositories/search" do |env|
+      name = env.params.query["name"]
+      repos = client.search_repositories(name)
+      render_json env, {
+        entry: repos,
+      }
+    end
+
+    get "/repositories" do |env|
+      total = client.total_repositories
+      page = env.params.query.fetch("page", "1").to_i
+      per_page = env.params.query.fetch("per_page", "1").to_i
+
+      render_json env, {
+        total: total,
+        entry: client.list_repositories(page, per_page),
+      }
+    end
+
+    get "/repositories/:name" do |env|
+      name = env.params.url["name"]
+      repo = client.repository(name)
+      render_json env, repo
+    end
+
+    put "/repositories/:name" do |env|
+      name = env.params.url["name"]
+      job_id = client.update_repository(name)
+      render_json env, {job_id: job_id}
+    end
+
+    post "/repositories" do |env|
+      url = env.params.body["url"]
+      name = env.params.body["name"]?
+      create = env.params.body["create"]? || "true"
+      clone = env.params.body["clone"]? || "true"
+
+      job_id = client.create_repository(
+        url, name,
+        create == "true",
+        clone == "true"
+      )
+
+      render_json env, {job_id: job_id}, 201
+    end
+
+    delete "/repositories/:name" do |env|
+      name = env.params.url["name"]
+      job_id = client.delete_repository(name)
+
+      render_json env, {job_id: job_id}
+    end
+
+    # get "/job/:id" do |env|
+    #   job_id = env.params.url["id"]
+    # end
+
+    error 404 do
+      {message: "404 Not found"}.to_json
+    end
+
+    #################################
+
+    @@client : Hpr::Client?
+
+    # :nodoc:
+    def self.client(config : Hpr::Config)
+      @@client = Hpr::Client.new(config)
+    end
+
+    private def self.client
+      @@client.not_nil!
+    end
+
+    private def self.jobs
+      stats = Sidekiq::Stats.new
+      {
+        total_processed: stats.processed,
+        total_failures:  stats.failed,
+        total_queues:    stats.queues,
+        total_enqueued:  stats.enqueued,
+        total_scheduled: stats.scheduled_size,
+        scheduleds:      scheduled_jobs,
+      }
+    end
+
+    private def self.scheduled_jobs
+      scheduled_set = Sidekiq::ScheduledSet.new
+      scheduled_set.each_with_object([] of Hash(String, String)) do |retri, obj|
+        obj << {
+          "name"         => retri.args[0].to_s,
+          "scheduled_at" => retri.at.to_s,
+        }
       end
     end
 
-    Salt.use Hpr::API::ErrorHandler
-    Salt.use Salt::CommonLogger
-    Salt.run app, environment: environment, port: port
+    private def self.render_json(env, body, status_code = 200)
+      env.response.status_code = status_code
+      env.response.headers["Content-Type"] = "application/json"
+
+      body = body.to_json unless body.is_a?(String)
+      body
+    end
   end
 end

@@ -3,22 +3,20 @@ require "colorize"
 class Hpr::Cli
   class Check < Command
     def run(**args)
+      gitlab = Gitlab.client(@config.gitlab.endpoint, @config.gitlab.private_token)
+
       stats = Stats.new
       stats.report do
-        testing "Checking config" do
-          has_config?
-        end
-
         testing "Checking service status of gitlab" do
-          gitlab_available?
+          gitlab_available?(gitlab)
         end
 
         testing "Checking authorize of gitlab" do
-          gitlab_authorized?
+          gitlab_authorized?(gitlab)
         end
 
         testing "Checking group of gitlab" do
-          gitlab_has_group?
+          gitlab_has_group?(gitlab)
         end
 
         testing "Checking create project role of gitlab" do
@@ -26,36 +24,23 @@ class Hpr::Cli
         end
 
         testing "Checking ssh key of gitlab" do
-          gitlab_has_ssh_key?
+          gitlab_has_ssh_key?(gitlab)
         end
       end
 
       stats.passed?
     end
 
-    private def has_config?
-      path = File.expand_path(@path)
-      config_path = File.join("config", "hpr.json")
-      config_file = File.join(path, config_path)
-
-      return {false, "Can not location #{config_path} in #{@path}"} unless File.file?(config_file)
-      Hpr.config(config_file)
-
-      {true, nil}
-    rescue e : Totem::Exception::NotFoundConfigFileError
-      {false, e.message}
-    end
-
-    private def gitlab_available?
-      Hpr.gitlab.available? ? {true, nil} : {false, "Gitlab connection failed, Check your gitlab settings"}
+    private def gitlab_available?(gitlab)
+      gitlab.available? ? {true, nil} : {false, "Gitlab connection failed, Check your gitlab settings"}
     rescue Gitlab::Error::InternalServerError
       {false, "Gitlab connection failed, check your gitlab settings"}
     rescue Gitlab::Error::Unauthorized
       {false, "Gitlab unauthorized, check your private token of gitlab"}
     end
 
-    private def gitlab_authorized?
-      gitlab_user
+    private def gitlab_authorized?(gitlab)
+      gitlab_user(gitlab)
       {true, nil}
     rescue Gitlab::Error::InternalServerError
       {false, "Gitlab connection failed, Check your gitlab settings"}
@@ -63,9 +48,8 @@ class Hpr::Cli
       {false, "Gitlab unauthorized, check your private token of gitlab"}
     end
 
-    private def gitlab_has_group?
-      group_name = Hpr.config.gitlab.group_name
-      Hpr.gitlab.group group_name
+    private def gitlab_has_group?(gitlab)
+      gitlab.group @config.gitlab.group_name
       {true, nil}
     rescue Gitlab::Error::NotFound
       gitlab_user_can_create_group?
@@ -75,12 +59,12 @@ class Hpr::Cli
       {false, "Gitlab unauthorized, check your private token of gitlab"}
     end
 
-    private def gitlab_has_ssh_key?
-      ssh_keys = Hpr.gitlab.ssh_keys.as_a
+    private def gitlab_has_ssh_key?(gitlab)
+      ssh_keys = gitlab.ssh_keys.as_a
       if ssh_keys.empty?
         {false, "Please add ssh key for '#{gitlab_user["name"]}' user."}
       else
-        gitlab_has_ssh_key?(ssh_keys)
+        has_ssh_key?(ssh_keys)
       end
     rescue Gitlab::Error::InternalServerError
       {false, "Gitlab connection failed, Check your gitlab settings"}
@@ -92,7 +76,7 @@ class Hpr::Cli
       if gitlab_user["can_create_project"].as_bool
         {true, nil}
       else
-        {false, "Not found `#{Hpr.config.gitlab.group_name}` and you had no create group role, create it or enable role"}
+        {false, "Not found `#{@config.gitlab.group_name}` and you had no create group role, create it or enable role"}
       end
     rescue Gitlab::Error::InternalServerError
       {false, "Gitlab connection failed, Check your gitlab settings"}
@@ -112,7 +96,7 @@ class Hpr::Cli
       {false, "Gitlab unauthorized, check your private token of gitlab"}
     end
 
-    private def gitlab_has_ssh_key?(ssh_keys)
+    private def has_ssh_key?(ssh_keys)
       ssh_keys.each do |ssh_key|
         return {true, nil} if local_ssh_public_keys.values.includes?(ssh_key.as_h["key"])
       end
@@ -137,8 +121,12 @@ class Hpr::Cli
 
     @user : Hash(String, JSON::Any)?
 
+    private def gitlab_user(gitlab)
+      @user ||= gitlab.user.as_h
+      @user.not_nil!
+    end
+
     private def gitlab_user
-      @user ||= Hpr.gitlab.user.as_h
       @user.not_nil!
     end
 

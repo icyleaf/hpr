@@ -1,3 +1,3 @@
 #!/usr/bin/execlineb -P
 
-exec redis-server --dir /app/data --bind 0.0.0.0 --logfile /app/logs/redis.log
+exec redis-server /etc/redis/redis.conf

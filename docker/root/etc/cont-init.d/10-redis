@@ -1,3 +1,8 @@
 #!/usr/bin/with-contenv sh
 
-mkdir -p /app/data
+update-rc.d -f redis-server disable
+
+sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf
+sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf
+sed -i 's/^\(logfile\) \(.*\)$/\1 \/app\/logs\/redis-server.log/' /etc/redis/redis.conf
+sed -i 's/^\(dir\) \(.*\)$/\1 \/app\/data/' /etc/redis/redis.conf

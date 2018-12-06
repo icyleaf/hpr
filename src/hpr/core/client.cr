@@ -18,9 +18,17 @@ module Hpr
       determine_gitlab_configure!
     end
 
+    def total_repositories
+      Model::Repository.count
+    end
+
     def list_repositories(current_page = 1, per_page = 50)
       offset = (current_page - 1) * per_page
       Model::Repository.offset(offset).limit(per_page).select
+    end
+
+    def repository(name)
+      Model::Repository.find_by!(name: name)
     end
 
     def search_repositories(query : String)
@@ -31,22 +39,22 @@ module Hpr
       url_parser = Git::URLParser.new url
       name = (name && !name.empty?) ? name : url_parser.mirror_name
 
-      raise RepositoryExistsError.new "Exists Repository: #{name}" if Model::Repository.find_by url: url
+      raise RepositoryExistsError.new "Exists Repository #{name}" if Model::Repository.find_by url: url
 
       project = find_or_create_gitlab_repo name, url, create
-      raise NotFoundGitlabProjectError.new("Not found gitlab project: #{name}") unless project
+      raise NotFoundGitlabProjectError.new("Not found gitlab project #{name}") unless project
 
       mirror_url = project["ssh_url_to_repo"].as_s
       CloneRepositoryWorker.async.perform name, url, mirror_url, @config.repository_path, @config.schedule_in.from_now if clone
     end
 
     def update_repository(name : String)
-      raise NotFoundRepositoryError.new("repository not exists ... #{name}") unless repo = Model::Repository.find_by(name: name)
+      raise NotFoundRepositoryError.new("Repository not exists #{name}") unless repo = Model::Repository.find_by(name: name)
       UpdateRepositoryWorker.async.perform name, @config.repository_path, @config.schedule_in.from_now
     end
 
     def delete_repository(name : String)
-      raise NotFoundRepositoryError.new("repository not exists ... #{name}") unless repo = Model::Repository.find_by(name: name)
+      raise NotFoundRepositoryError.new("Repository not exists #{name}") unless repo = Model::Repository.find_by(name: name)
 
       repo.destroy
       if project = search_gitlab_repository(name)

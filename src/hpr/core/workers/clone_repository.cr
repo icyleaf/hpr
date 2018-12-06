@@ -28,6 +28,3 @@ module Hpr
     end
   end
 end
-
-
-

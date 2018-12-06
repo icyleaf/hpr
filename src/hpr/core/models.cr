@@ -1,11 +1,7 @@
-require "granite/adapter/sqlite"
-
-Granite::Adapters << Granite::Adapter::Sqlite.new({name: "hpr", url: "sqlite3://#{Hpr.db_path}"})
+require "./models/*"
 
 module Hpr::Model
-  def self.init
+  def self.create_tables
     Repository.migrator.create
   end
 end
-
-require "./models/*"
