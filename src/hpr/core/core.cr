@@ -3,7 +3,7 @@ require "granite/adapter/sqlite"
 require "raven"
 
 module Hpr
-  VERSION = "0.9.0"
+  VERSION = "0.10.0"
 
   macro init(config)
     sqlite_path = Hpr.db_path({{ config.id }}.root_path)
