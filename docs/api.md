@@ -161,8 +161,10 @@ POST /repositores
 
 鉴于镜像的过程比较长，耗时操作将会丢入任务队列异步完成，这里只会返回操作是否提交成功。
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ### 更新镜像仓库
@@ -183,8 +185,10 @@ PUT /repositores/:name
 
 鉴于镜像的过程比较长，耗时操作将会丢入任务队列异步完成，这里只会返回操作是否提交成功。
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ### 删除镜像仓库
@@ -205,8 +209,10 @@ DELETE /repositores/:name
 
 鉴于镜像的过程比较长，耗时操作将会丢入任务队列异步完成，这里只会返回操作是否提交成功。
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ## 统计信息
@@ -226,14 +232,8 @@ GET /info
 ```json
 {
     "hpr": {
-        "version": "0.9.1",
-        "repositroies": {
-            "total": 2,
-            "entry": [
-                "project1",
-                "project2"
-            ]
-        }
+        "version": "0.10.0",
+        "repositroies": 2,
     },
     "jobs": {
         "total_scheduled": 2,

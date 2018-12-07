@@ -7,9 +7,9 @@ and use docker to deploy.
 
 hpr based on both alpine and ubuntu image, tags following the rules:
 
-- `latest` always the latest version based on alpine
-- `alpine` always the latest version based on alpine
+- `latest` always the latest version based on ubuntu
 - `ubuntu` always the latest version based on ubuntu
+- `alpine` always the latest version based on alpine
 - `x.x.x-alpine` use x.x.x version based on alpine
 - `x.x.x-ubuntu` use x.x.x version based on ubuntu
 

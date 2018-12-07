@@ -158,8 +158,10 @@ POST /repositores
 
 It always return `true` or `false`, because the task cost too much time, the response is result of request.
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ### Update a repository
@@ -180,8 +182,10 @@ PUT /repositores/:name
 
 It always return `true` or `false`, because the task cost too much time, the response is result of request.
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ### Delete a repository
@@ -200,8 +204,10 @@ DELETE /repositores/:name
 
 It always return `true` or `false`, because the task cost too much time, the response is result of request.
 
-```text
-true
+```json
+{
+  "job_id": "fee876a506255c701d06d5b7"
+}
 ```
 
 ## Stats
@@ -222,13 +228,7 @@ GET /info
 {
     "hpr": {
         "version": "0.2.0",
-        "repositroies": {
-            "total": 2,
-            "entry": [
-                "project1",
-                "project2"
-            ]
-        }
+        "repositroies": 2
     },
     "jobs": {
         "total_scheduled": 7,

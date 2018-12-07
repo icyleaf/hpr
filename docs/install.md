@@ -7,9 +7,9 @@ hpr 使用 Crystal 编写的工具可以被安装在 macOS、Linux、树莓派�
 
 hpr 提供基于 alpine 和 ubuntu 镜像，镜像的 [tags](https://hub.docker.com/r/icyleafcn/hpr/tags) 遵循如下规则：
 
-- `latest` 指向基于 alpine 最新版本
-- `alpine` 指向基于 alpine 最新版本
+- `latest` 指向基于 ubuntu 最新版本
 - `ubuntu` 指向基于 ubuntu 最新版本
+- `alpine` 指向基于 alpine 最新版本
 - `x.x.x-alpine` 指向基于 alpine 的指定版本
 - `x.x.x-ubuntu` 指向基于 ubuntu 的指定版本
 
