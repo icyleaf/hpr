@@ -1,2 +1,2 @@
 require "spec"
-require "../src/hpr"
+require "../src/hpr/core/*"

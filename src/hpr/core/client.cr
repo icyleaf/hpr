@@ -27,8 +27,17 @@ module Hpr
       Model::Repository.offset(offset).limit(per_page).select
     end
 
+    def repository_updating?(name)
+      repo = repository(name)
+      %(fetching pushing).includes?(repo.status)
+    end
+
     def repository(name)
       Model::Repository.find_by!(name: name)
+    end
+
+    def has_repository?(name)
+      !Model::Repository.find_by(name: name).nil?
     end
 
     def search_repositories(query : String)

@@ -234,7 +234,7 @@ EOF
       end
 
       protected def client
-        @client ||= Client.new
+        @client ||= Hpr::Client.new(@config)
         @client.not_nil!
       end
 
@@ -254,7 +254,7 @@ EOF
         loop do
           print "." if progress
           sleep 1.seconds
-          unless repository_updating?(name)
+          unless client.repository_updating?(name)
             puts if progress
             break
           end
