@@ -18,7 +18,7 @@ class Hpr::Cli
  | '_ \\| '_ \\| '__|
  | | | | |_) | |
  |_| |_| .__/|_|
-       |_|
+       |_|         v#{Hpr::VERSION}
 EOF
     end
   end
