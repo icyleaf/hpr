@@ -20,3 +20,7 @@ RUN set -ex && \
 
 COPY --from=builder /app/bin/ /bin/
 COPY docker/root /
+
+VOLUME ["/app"]
+
+EXPOSE 8848 6379
