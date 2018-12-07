@@ -37,9 +37,10 @@ module Hpr
     end
 
     def has_repository?(name)
-      !Model::Repository.find_by(name: name).nil?
+      Model::Repository.find_by(name: name)
     end
 
+    # FIXME: 应改为模糊搜索
     def search_repositories(query : String)
       Model::Repository.where(name: query.downcase).select
     end

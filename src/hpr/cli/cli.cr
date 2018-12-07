@@ -17,6 +17,7 @@ module Hpr
       Create
       Update
       Delete
+      Upgrade
       Migration
       ShowVersion
       ShowHelp
@@ -85,8 +86,12 @@ module Hpr
                         Action::Update
                       when "delete"
                         Action::Delete
+                      when "search"
+                        Action::Search
                       when "migration"
                         Action::Migration
+                      when "upgrade"
+                        Action::Upgrade
                       when "version"
                         Action::ShowVersion
                       else
@@ -131,6 +136,8 @@ module Hpr
         Search.run!(path: @config_path, name: @repo_name)
       when Action::Migration
         Migration.run!(path: @config_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
+      when Action::Upgrade
+        Upgrade.run!(path: @config_path)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
@@ -238,16 +245,16 @@ EOF
         @client.not_nil!
       end
 
-      protected def dump_repository(repo)
+      protected def dump_repository(model, path)
         puts
-        puts "=> Name: #{repo["name"]}"
-        puts "   Path: #{Git::Repo.repository_path(repo["name"])}"
-        puts "   OriginalUrl: #{repo["url"]}"
-        puts "   MirrorUrl: #{repo["mirror_url"]}"
-        puts "   Status: #{repo["status"]}"
-        puts "   CreatedAt: #{repo["created_at"]}"
-        puts "   UpdatedAt: #{repo["updated_at"]}"
-        puts "   ScheduledAt: #{repo["scheduled_at"]}"
+        puts "=> Name: #{model.name}"
+        puts "   Path: #{path}"
+        puts "   OriginalUrl: #{model.url}"
+        puts "   MirrorUrl: #{model.mirror_url}"
+        puts "   Status: #{model.status}"
+        puts "   CreatedAt: #{model.created_at}"
+        puts "   UpdatedAt: #{model.updated_at}"
+        puts "   ScheduledAt: #{model.scheduled_at}"
       end
 
       protected def wait_updating(name, progress = false)
