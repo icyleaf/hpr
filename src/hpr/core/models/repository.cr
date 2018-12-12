@@ -9,7 +9,7 @@ module Hpr::Model
     field! url : String
     field! mirror_url : String
     field! status : String
-    field scheduled_at : Time
+    field  scheduled_at : Time
     timestamps
 
     before_create :set_default_status

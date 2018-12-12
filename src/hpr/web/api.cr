@@ -69,6 +69,26 @@ class Hpr::Server
       render_json env, {job_id: job_id}
     end
 
+    get "/repositories/:name/status" do |env|
+      name = env.params.url["name"]
+      env.response.status_code = 200
+      env.response.headers["Content-Type"] = "application/json"
+      loop do
+        repo = client.repository(name)
+        if repo.status != "idle"
+          status = {
+            "status" => repo.status.as(String)
+          }
+          env.response.puts status.to_json
+          env.response.flush
+        end
+
+        sleep 1.seconds
+      end
+
+      env
+    end
+
     error 404 do
       {message: "404 Not found"}.to_json
     end
@@ -103,7 +123,7 @@ class Hpr::Server
       scheduled_set.each_with_object([] of Hash(String, String|Time)) do |retri, obj|
         obj << {
           "name"         => retri.args[0].to_s,
-          "scheduled_at" => retri.at.as(Time).in(Time::Location.load("Asia/Shanghai")).to_s,
+          "scheduled_at" => retri.at.as(Time).in(Time::Location.load(ENV.fetch("TZ", ""))).to_s,
         }
       end
     end

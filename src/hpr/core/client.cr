@@ -49,7 +49,7 @@ module Hpr
       url_parser = Git::URLParser.new url
       name = (name && !name.empty?) ? name : url_parser.mirror_name
 
-      raise RepositoryExistsError.new "Exists Repository #{name}" if Model::Repository.find_by url: url
+      raise RepositoryExistsError.new "Exists Repository #{name} with url: #{url}" if Model::Repository.find_by url: url
 
       project = find_or_create_gitlab_repo name, url, create
       raise NotFoundGitlabProjectError.new("Not found gitlab project #{name}") unless project

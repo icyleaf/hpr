@@ -8,6 +8,8 @@ module Hpr
   macro init(config)
     sqlite_path = Hpr.db_path({{ config.id }}.root_path)
     adapter = Granite::Adapter::Sqlite.new({name: "hpr", url: "sqlite3://#{sqlite_path}"})
+    Granite.settings.logger = Logger.new STDOUT
+    Granite.settings.default_timezone = "Asia/Shanghai"
     Granite::Adapters << adapter
     Model::Repository.adapter = adapter
 
