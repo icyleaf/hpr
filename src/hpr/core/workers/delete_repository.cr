@@ -5,9 +5,9 @@ module Hpr
     include Worker::Base
 
     def perform(name : String, repository_path : String)
-      info "deleting directory ... #{name}"
-      if job = has_scheduled? name
-        job.delete
+      debug "deleting directory ... #{name}"
+      if jobs = has_scheduled? name
+        jobs.each &.delete
       end
 
       path = File.join(repository_path, name)

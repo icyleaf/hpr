@@ -6,7 +6,7 @@ module Hpr
       path = File.join(repository_path, name)
       # Skip when repository id not exists (may be deleted).
       unless Dir.exists? path
-        error "repository folder not exists ... #{name}"
+        error "repository folder not exists ... #{name}, exit"
         return
       end
 

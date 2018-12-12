@@ -8,7 +8,7 @@ module Hpr
       path = File.join repository_path, name
       repo = Hpr::Git.new path
       if repo.exists?
-        error "Repository directory #{name} was exists"
+        error "Repository directory #{name} was exists, exit"
         return
       end
 

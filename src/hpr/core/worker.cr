@@ -69,15 +69,16 @@ module Hpr
       {% end %}
 
       private def set_schedule_time(name, repository_path, schedule_time)
-        return if has_scheduled? name
+        return if (jobs = has_scheduled?(name)) && jobs.size > 1 # May be the current worker is still in schedule list.
+
         debug "scheduling next update at #{schedule_time} ... #{name}"
         UpdateRepositoryWorker.async.perform_at schedule_time, name, repository_path, schedule_time
       end
 
-      private def has_scheduled?(name)
+      private def has_scheduled?(name) :
         scheduled = Sidekiq::ScheduledSet.new
         rs = scheduled.select { |s| s.args[0].to_s == name }
-        rs.empty? ? nil : rs.first
+        return rs unless rs.empty?
       end
     end
 
