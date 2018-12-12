@@ -69,10 +69,6 @@ class Hpr::Server
       render_json env, {job_id: job_id}
     end
 
-    # get "/job/:id" do |env|
-    #   job_id = env.params.url["id"]
-    # end
-
     error 404 do
       {message: "404 Not found"}.to_json
     end
@@ -104,10 +100,10 @@ class Hpr::Server
 
     private def self.scheduled_jobs
       scheduled_set = Sidekiq::ScheduledSet.new
-      scheduled_set.each_with_object([] of Hash(String, String)) do |retri, obj|
+      scheduled_set.each_with_object([] of Hash(String, String|Time)) do |retri, obj|
         obj << {
           "name"         => retri.args[0].to_s,
-          "scheduled_at" => retri.at.to_s,
+          "scheduled_at" => retri.at.as(Time).in(Time::Location.load("Asia/Shanghai")).to_s,
         }
       end
     end
