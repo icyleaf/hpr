@@ -58,7 +58,7 @@ shards:
 
   sidekiq:
     github: icyleaf/sidekiq.cr
-    version: 0.7.2
+    commit: a74ec5a824a767039cde946f86575a4c44f8f98b
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
@@ -70,5 +70,5 @@ shards:
 
   totem:
     github: icyleaf/totem
-    commit: 2ca501ae817b0a1ed1114f071b7613dbcd93f614
+    commit: 1cac54921714e245e300e4e061a5744c40647b5c
 

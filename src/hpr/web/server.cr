@@ -44,6 +44,7 @@ module Hpr
       set_basic_auth if basic_auth?
 
       Kemal.config.env = "production"
+      Kemal.config.powered_by_header = false
       Kemal.config.add_handler Raven::Kemal::ExceptionHandler.new
       Kemal.config.add_handler HprExceptionHandler.new
       Kemal.run(port)

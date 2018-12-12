@@ -50,7 +50,7 @@ module Hpr
         file = File.join path, file
         Dir.mkdir_p File.dirname(file)
 
-        logger = Sidekiq::Logger.build File.open(file, "a")
+        logger = Sidekiq::Logger.build File.open(file, "a"), "Asia/Shanghai"
         logger.level = Logger::DEBUG if Hpr.verbose?
         logger
       end
@@ -75,7 +75,7 @@ module Hpr
         UpdateRepositoryWorker.async.perform_at schedule_time, name, repository_path, schedule_time
       end
 
-      private def has_scheduled?(name) :
+      private def has_scheduled?(name)
         scheduled = Sidekiq::ScheduledSet.new
         rs = scheduled.select { |s| s.args[0].to_s == name }
         return rs unless rs.empty?
