@@ -8,6 +8,7 @@ module Hpr
       def run(config)
         server = Sidekiq::Server.new(
           environment: "production",
+          queues: ["hpr"],
           logger: file_logger(config.root_path)
         )
 
@@ -21,28 +22,25 @@ module Hpr
         server.logger.info "Starting processing with #{server.concurrency} workers"
         server.start
 
-        channel = Channel(Int32).new
+        channel = Channel(String).new
 
         Signal::INT.trap do
-          puts "int"
           server.request_stop
-          channel.send 0
+          channel.send "INT"
         end
 
         Signal::TERM.trap do
-          puts "222"
           server.request_stop
-          channel.send 0
+          channel.send "Quiet (TERM)"
         end
 
         Signal::USR1.trap do
-          puts "usr1"
           server.request_stop
-          channel.send 0
+          channel.send "Stop (USR1)"
         end
 
-        channel.receive
-        server.logger.info "Done, bye with INT signal"
+        sigal = channel.receive
+        server.logger.info "Done, bye with #{sigal} signal"
         exit
       end
 
