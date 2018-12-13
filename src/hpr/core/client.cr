@@ -129,7 +129,9 @@ module Hpr
       @gitlab.group @config.gitlab.group_name
     rescue Gitlab::Error::NotFound
       raise NotRoleError.new "Please enable create group role." unless @user["can_create_group"].as_bool
-      @gitlab.create_group @config.gitlab.group_name, @config.gitlab.group_name
+      @gitlab.create_group @config.gitlab.group_name, @config.gitlab.group_name, {
+        "visibility"=> (@config.gitlab.project_public ? "public" : "private")
+      }
     end
 
     private def group_namespace
