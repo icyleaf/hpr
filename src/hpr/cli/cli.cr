@@ -137,7 +137,7 @@ module Hpr
       when Action::Migration
         Migration.run!(path: @config_path, source: @source, source_path: @repo_name, preview_mode: @preview_mode)
       when Action::Upgrade
-        Upgrade.run!(path: @config_path)
+        Upgrade.run!(path: @config_path, progress: @progress)
       when Action::ShowVersion
         puts version
       else Action::ShowHelp
@@ -257,12 +257,12 @@ EOF
         puts "   ScheduledAt: #{model.scheduled_at}"
       end
 
-      protected def wait_updating(name, progress = false)
+      protected def wait_updating(name, progress = false, closure = "")
         loop do
           print "." if progress
           sleep 1.seconds
           unless client.repository_updating?(name)
-            puts if progress
+            puts closure if progress
             break
           end
         end
