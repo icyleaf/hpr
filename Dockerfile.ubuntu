@@ -7,7 +7,8 @@ RUN set -ex && \
 COPY . /app
 WORKDIR /app
 
-RUN shards build --release --static
+RUN shards build --release && \
+    for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
 
 FROM icyleafcn/s6-overlay:ubuntu
 
@@ -19,6 +20,7 @@ RUN set -ex && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/bin/ /bin/
+COPY --from=builder /app/deps /
 COPY docker/root /
 
 VOLUME ["/app"]

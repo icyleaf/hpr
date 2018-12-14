@@ -30,7 +30,12 @@
 
 ## 快速上手
 
-文档在逐步整理中，请先看[这篇教程](https://hpr.ews.im/#/quickstart)。
+```bash
+$ docker pull icyleafcn/hpr
+$ docker run -p 8848:884 icyleafcn/hpr
+```
+
+具体配置和说明请移步[本教程](https://hpr.ews.im/#/quickstart)
 
 如果还有哪里遗漏或不足的请[提交申请](https://github.com/icyleaf/hpr/issues/new)。
 
