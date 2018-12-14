@@ -2,7 +2,7 @@ module Hpr
   struct UpdateRepositoryWorker
     include Worker::Base
 
-    def perform(name : String, repository_path : String, schedule_time : Time)
+    def perform(name : String, repository_path : String, schedule_in : Int64)
       path = File.join(repository_path, name)
       # Skip when repository id not exists (may be deleted).
       unless Dir.exists? path
@@ -26,8 +26,8 @@ module Hpr
       model.update! status: "pushing"
       repo.push_remote("hpr")
 
-      model.update! status: "idle", scheduled_at: schedule_time
-      set_schedule_time name, repository_path, schedule_time
+      model.update! status: "idle", scheduled_at: Time::Span.new(0, 0, schedule_in).from_now
+      set_schedule_time name, repository_path, schedule_in
 
       # with_syncing project, name do
       #   repo = Git.new File.join(repository_path, name)

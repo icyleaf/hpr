@@ -2,7 +2,7 @@ module Hpr
   struct CloneRepositoryWorker
     include Worker::Base
 
-    def perform(name : String, url : String, mirror_url : String, repository_path : String, schedule_time : Time)
+    def perform(name : String, url : String, mirror_url : String, repository_path : String, schedule_in : Int64)
       model = Model::Repository.create name: name, url: url, mirror_url: mirror_url
 
       path = File.join repository_path, name
@@ -23,8 +23,8 @@ module Hpr
       model.update! status: "pushing"
       repo.push_remote "hpr"
 
-      model.update! status: "idle", scheduled_at: schedule_time
-      set_schedule_time name, repository_path, schedule_time
+      model.update! status: "idle", scheduled_at: Time::Span.new(0, 0, schedule_in).from_now
+      set_schedule_time name, repository_path, schedule_in
     end
   end
 end

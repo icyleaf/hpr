@@ -14,7 +14,7 @@ dependencies:
     branch: master
   sidekiq:
     github: icyleaf/sidekiq.cr
-    branch: master
+    branch: feature-timezone-support
   gitlab:
     github: icyleaf/gitlab.cr
     version: ~> 0.4.0

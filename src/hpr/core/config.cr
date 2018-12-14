@@ -46,6 +46,19 @@ module Hpr
       end
     end
 
+    def schedule_at : Time
+      schedule_in.from_now
+    end
+
+    def schedule_in_seconds : Int64
+      case value = schedule_in
+      when Time::Span
+        value.to_i
+      else
+        value.value.to_i64 * 30 * 24 * 60 * 60
+      end
+    end
+
     module LoadHelper
       def load
         Hpr::Config.configure do |config|

@@ -6,9 +6,10 @@ module Hpr
   module Worker
     module Cli
       def run(config)
+        Sidekiq.default_timezone = "Asia/Shanghai"
         server = Sidekiq::Server.new(
           environment: "production",
-          queues: ["hpr"],
+          queues: ["default", "hpr"],
           logger: file_logger(config.root_path)
         )
 
@@ -19,7 +20,7 @@ module Hpr
 
         server.error_handlers << Raven::Sidekiq::ExceptionHandler.new
         server.logger.info "Sidekiq v#{Sidekiq::VERSION} in Crystal #{Crystal::VERSION}"
-        server.logger.info "Starting processing with #{server.concurrency} workers"
+        server.logger.info "[#{server.environment}] Starting processing with #{server.concurrency} workers, #{server.queues.join('/')} queues"
         server.start
 
         channel = Channel(String).new
@@ -41,14 +42,14 @@ module Hpr
 
         sigal = channel.receive
         server.logger.info "Done, bye with #{sigal} signal"
-        exit
+        exit 0
       end
 
       private def file_logger(path : String, file = "logs/sidekiq.log")
         file = File.join path, file
         Dir.mkdir_p File.dirname(file)
 
-        logger = Sidekiq::Logger.build File.open(file, "a"), "Asia/Shanghai"
+        logger = Sidekiq::Logger.build File.open(file, "a")
         logger.level = Logger::DEBUG if Hpr.verbose?
         logger
       end
@@ -58,6 +59,11 @@ module Hpr
       macro included
         include Sidekiq::Worker
         include Git::Helper
+
+        # sidekiq_options do |job|
+        #   job.queue = "hpr"
+        #   job.retry = true
+        # end
       end
 
       {% for ivar in %w(info debug error warn fatal) %}
@@ -66,11 +72,12 @@ module Hpr
         end
       {% end %}
 
-      private def set_schedule_time(name, repository_path, schedule_time)
+      private def set_schedule_time(name, repository_path, schedule_in)
         return if (jobs = has_scheduled?(name)) && jobs.size > 1 # May be the current worker is still in schedule list.
 
-        debug "scheduling next update at #{schedule_time} ... #{name}"
-        UpdateRepositoryWorker.async.perform_at schedule_time, name, repository_path, schedule_time
+        interval = Time::Span.new(0, 0, schedule_in)
+        debug "scheduling next update at #{interval.from_now} ... #{name}"
+        UpdateRepositoryWorker.async.perform_in interval, name, repository_path, schedule_in
       end
 
       private def has_scheduled?(name)

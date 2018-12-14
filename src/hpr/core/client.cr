@@ -55,12 +55,12 @@ module Hpr
       raise NotFoundGitlabProjectError.new("Not found gitlab project #{name}") unless project
 
       mirror_url = project["ssh_url_to_repo"].as_s
-      CloneRepositoryWorker.async.perform name, url, mirror_url, @config.repository_path, @config.schedule_in.from_now if clone
+      CloneRepositoryWorker.async.perform name, url, mirror_url, @config.repository_path, @config.schedule_in_seconds if clone
     end
 
     def update_repository(name : String)
       raise NotFoundRepositoryError.new("Repository not exists #{name}") unless repo = Model::Repository.find_by(name: name)
-      UpdateRepositoryWorker.async.perform name, @config.repository_path, @config.schedule_in.from_now
+      UpdateRepositoryWorker.async.perform name, @config.repository_path, @config.schedule_in_seconds
     end
 
     def delete_repository(name : String)
