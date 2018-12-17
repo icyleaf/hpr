@@ -7,7 +7,7 @@ RUN set -ex && \
 COPY . /app
 WORKDIR /app
 
-RUN shards build --release && \
+RUN shards build && \
     for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
 
 FROM icyleafcn/s6-overlay:ubuntu
