@@ -20,7 +20,7 @@
   <a href="https://icyleaf.github.io/hpr/#/en/">English Documents</a>
 </p>
 
-> `master` 分支因采用正在快速发展中的 Crystal 语言编写目前在 Crystal 0.29.0+ 版本无法编译和一些[特殊原因](https://github.com/icyleaf/hpr/issues/11)暂停修复，目前正在使用 ruby 重写中，切换 [ruby-version](https://github.com/icyleaf/hpr/tree/ruby-version) 分支查看进度。
+> `master` 分支因采用正在快速发展中的 Crystal 语言编写目前在 Crystal 0.29.0+ 版本无法编译和一些[特殊原因](https://github.com/icyleaf/hpr/issues/10)暂停修复，目前正在使用 ruby 重写中，切换 [ruby-version](https://github.com/icyleaf/hpr/tree/ruby-version) 分支查看，进度查询可以看[这里](https://github.com/icyleaf/hpr/issues/11)。
 
 ## 独特优势
 
