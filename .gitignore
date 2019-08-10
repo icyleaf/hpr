@@ -1,15 +1,4 @@
-# crystal
-/lib/
-/bin/
+repositories/
+logs/
 
-# hpr
-/config/hpr.json
-/logs/
-/repositories/
-/data/
-
-# ide
-/.vscode/
-
-# docker
-docker-compose*.yml
+config/hpr.yml

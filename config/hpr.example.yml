@@ -1,0 +1,19 @@
+---
+schedule_in: 1.minute
+basic_auth:
+  enable: false
+  user: hpr
+  password: p@ssw0rd
+gitlab:
+  endpoint: http://gitlab.example.com/api/v4
+  private_token: <private_token-or-access_token>
+  group_name: mirrors
+
+  project_public: false
+  project_issue: false
+  project_wiki: false
+  project_merge_request: false
+  project_snippet: false
+sentry:
+  report: true
+  dns: https://cd580221c955434b84d8c7fce2e9ed8d:0df7f10ecc864d8b9e77fbaf8f448fe8@sentry.io/1525034

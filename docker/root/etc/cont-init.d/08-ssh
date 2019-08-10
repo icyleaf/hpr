@@ -3,13 +3,12 @@
 HPR_SSH_PATH=/app/.ssh
 
 cleanup_workspace() {
-  mkdir -p /app/repositories
-  mkdir -p /app/.ssh
+  mkdir -p $HPR_SSH_PATH
 }
 
 generate_ssh_key() {
   if ! [ -f "${HPR_SSH_PATH}/id_rsa" ]; then
-    echo "Generating public/private rsa key pair ..."
+    echo "Generating public/private rsa key pair ... ${HPR_SSH_PATH}/id_rsa{.pub}"
     ssh-keygen -q -t rsa -N "" -f "${HPR_SSH_PATH}/id_rsa" -C "hpr@docker"
   fi
 
@@ -26,16 +25,22 @@ generate_ssh_key() {
 config_ssh_config() {
   HPR_SSH_HOST=${HPR_SSH_HOST:-*}
   HPR_SSH_PORT=${HPR_SSH_PORT:-22}
+  HPR_SSH_CONFIG_PATH="${HPR_SSH_PATH}/config"
 
-  if ! [ -f "/app/.ssh/config" ] || ! grep -q "$HPR_SSH_HOST" "/app/.ssh/config"; then
-    echo "Configuring ssh config ... ${HPR_SSH_HOST} (${HPR_SSH_PORT})"
+  if ! [ -f "$HPR_SSH_CONFIG_PATH" ] || ! grep -q "$HPR_SSH_HOST" "$HPR_SSH_CONFIG_PATH"; then
+    echo "Configuring ssh config ... ${HPR_SSH_CONFIG_PATH}"
     echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
     echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
     echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
     echo "    StrictHostKeyChecking no" >> ${HPR_SSH_PATH}/config
+    echo
+    echo "##################################################################"
+    cat $HPR_SSH_CONFIG_PATH
+    echo "##################################################################"
+    echo
   fi
 }
 
 cleanup_workspace
-generate_ssh_key
 config_ssh_config
+generate_ssh_key

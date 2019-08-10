@@ -5,52 +5,26 @@
 首先需要获取配置模板：
 
 ```bash
-$ mkdir -p /my/hpr/config && cd /my/hpr/config
-$ wget https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.json -o hpr.json
+$ docker pull icyleafcn/hpr
+$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/ruby-version/config/hpr.example.yml
 ```
 
-根据自己的情况修改 `hpr.json` 文件
+根据自己的情况修改 `hpr.yml` 文件，核心需要修改的参数有如下两项：
 
-```json
-{
-  "schedule_in": "1.day",
-  "basic_auth": {
-    "enable": false,
-    "user": "hpr",
-    "password": "p@ssw0rd"
-  },
-  "gitlab": {
-    "ssh_port": 22,
-    "endpoint": "http://gitlab.example.com/api/v3",
-    "private_token": "abc",
-
-    "group_name": "mirrors",
-
-    "project_public": true,
-    "project_issue": false,
-    "project_wiki": false,
-    "project_merge_request": false,
-    "project_snippet": false
-  }
-}
-```
-
-核心需要修改的参数有如下四项：
-
-- `endpoint`: Gitlab API 的地址，**无需修改后面部分**
-- `private_token`: 在个人设置的 Account 页面获得
-- `group_name`: 项目镜像的项目都会归属到这个组内，**务必确保你的账户拥有创建组的权限** (如果是管理员请忽略加粗字样)
-- `ssh_port`: 如果 SSH 不是 22 端口的话需要根据你的实际情况修改
+- `endpoint`: Gitlab API 的地址，老版本是 v3，新版本是 v4
+- `private_token`: 在个人设置的 Account 页面获得 private_token，新版本叫 access_token
 
 > 更多参数详情参见[配置文件](configuration?id=basic_auth-接口认证)。
 
 最后执行如下命令即可运行 hpr：
 
 ```bash
-$ docker run icyleafcn/hpr:0.10.0 -v /my/hpr:/app -p 8848:8848 icyleafcn/hpr
+$ docker run --name hpr --restart=unless-stopped \
+             -p 8848:8848 \
+             -v `pwd`/hpr.yml:/app/config/hpr.yml \
+             icyleafcn/hpr
 ...
-[cont-init.d] 10-configure-ssh: executing...
-Generating public/private rsa key pair ...
+Generating public/private rsa key pair ... /app/.ssh/id_rsa{.pub}
 
 SSH PUBLIC KEY:
 ##################################################################
@@ -58,28 +32,21 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq8O3HbLn9x8Uy8RUotlpOnxdakrmCyDpZrGBeLARm
 9WiyyWsUM4M9lEKHpZ486lDGk3IM2XQW+pxAoMKb0TYzqCsrduHUtjzy0M0BqgMPe9EtVQqCbnTMzDLXmRONoTYyTV51NQ12mMwEQcDaLQ28e5gqouQJKS81JaoRpQWa7pHsOCki6Fk9TB+EQFrGz5nOrmYYM+O1MKnFkzmVHv7Fh50Sz7d2nYzzOKAkR hpr@docker
 ##################################################################
 ...
-  _
- | |__  _ __  _ __
- | '_ \| '_ \| '__|
- | | | | |_) | |
- |_| |_| .__/|_|
-       |_|
-Using config: /app/config/hpr.json
-[205] Salt server starting ...
-[205] * Version 0.4.2 (Crystal 0.26.1)
-[205] * Environment: production
-[205] * Listening on http://0.0.0.0:8848/
-[205] Use Ctrl-C to stop
+   _
+  | |__  _ __  _ __
+  | '_ \| '_ \| '__|
+  | | | | |_) | |
+  |_| |_| .__/|_|
+      |_|         v0.12.0
+* Listening on tcp://0.0.0.0:8848
+Use Ctrl-C to stop
 ```
 
-最后从执行命令的输出找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），
-复制添加到 gitlab 的账户 SSH Keys 页面中。
+等到看到如上输出的状态就说明系统已经准备完毕，我们还需从实例化 Docker 容器输出日志找到生成的 SSH PUBLIC KEY（两个井号中间的部分，以 `ssh-rsa` 开头，`hpr@docker` 结尾），
+复制添加到 Gitlab 对应账户 SSH Keys 页面后就已经准备完毕了。
 
 部署的部分介绍完毕，下面是具体使用方法。
 
-# 用法
+## 用法
 
-hpr 提供两者方法来管理 git 仓库:
-
-- [Web API](api.md) (推荐)
-- [命令行工具](cli.md)
+hpr 提供 [HTTP APIs](api.md) 方法来管理 git 镜像仓库。
