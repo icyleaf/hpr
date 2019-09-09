@@ -6,7 +6,7 @@
 
 ```bash
 $ docker pull icyleafcn/hpr
-$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/ruby-version/config/hpr.example.yml
+$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.yml
 ```
 
 根据自己的情况修改 `hpr.yml` 文件，核心需要修改的参数有如下两项：

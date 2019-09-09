@@ -16,7 +16,7 @@
 
 ```
 $ docker pull icyleafcn/hpr
-$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/ruby-version/config/hpr.example.yml
+$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.yml
 $ docker run --name hpr --restart=unless-stopped -d \
              -p 8848:8848 \
              -v `pwd`/hpr.yml:/app/config/hpr.yml \
