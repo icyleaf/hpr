@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec /app/bin/sidekiq -r /app/lib/hpr.rb -c `cat /proc/cpuinfo | grep -c "cpu cores"`

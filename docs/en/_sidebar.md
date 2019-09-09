@@ -1,9 +1,0 @@
-- Getting started
-  - [Quick start](/en/quickstart.md)
-  - [Install](/en/install.md)
-- Guide
-  - [Configuration](/en/configuration.md)
-  - [API](/en/api.md)
-  - [CLI](/en/cli.md)
-- [Examples](/en/examples.md)
-- [Migrations](/en/migrate.md)

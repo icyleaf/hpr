@@ -1,23 +1,25 @@
 #!/usr/bin/with-contenv sh
 
-# create config directory
-mkdir -p /app/config
+# remove unused docker rootfs
+rm -rf /app/docker
+
+# create repositores directory
+mkdir -p /app/repositories
 
 # create logs directory
 mkdir -p /app/logs
 
-# create redis data directory
-mkdir -p /app/data
+# create database directory
+mkdir -p /app/database
 
-# Config redis server
-REDIS_URL=tcp://localhost:6379
-REDIS_PROVIDER=REDIS_URL
-
-HPR_CONFIG_URL=${HPR_CONFIG_URL:-"https://raw.githubusercontent.com/icyleaf/hpr/master/config/hpr.example.json"}
-
-if ! [ -f "/app/config/hpr.json" ]; then
-  echo "Downloading hpr example config file ..."
-  wget -O /app/config/hpr.json ${HPR_CONFIG_URL}
+# load config file
+echo "Load config file"
+if ! [ -f "/app/config/hpr.yml" ]; then
+  echo "-- no found hpr.yml config file, copy from template."
+  cp /app/config/hpr.example.yml /app/config/hpr.yml
 else
-  echo "Using /app/config/hpr.json"
+  echo "-- using exists /app/config/hpr.yml"
 fi
+# init database
+echo "Load databae file"
+/app/bin/rake -f /app/Rakefile db:setup

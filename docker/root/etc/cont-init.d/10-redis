@@ -1,8 +1,10 @@
 #!/usr/bin/with-contenv sh
 
-update-rc.d -f redis-server disable
+CORES=$(cat /proc/cpuinfo | grep -c "cpu cores")
 
-sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf
-sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf
-sed -i 's/^\(logfile\) \(.*\)$/\1 \/app\/logs\/redis-server.log/' /etc/redis/redis.conf
-sed -i 's/^\(dir\) \(.*\)$/\1 \/app\/data/' /etc/redis/redis.conf
+REDIS_CONFIG='/etc/redis.conf'
+
+sed -i 's/^\(bind .*\)$/# \1/' $REDIS_CONFIG
+sed -i 's/^\(daemonize .*\)$/# \1/' $REDIS_CONFIG
+# sed -i 's/^\(logfile\) \(.*\)$/\1 \/app\/logs\/redis-server.log/' $REDIS_CONFIG
+# sed -i 's/^\(dir\) \(.*\)$/\1 \/app\/data/redis/' $REDIS_CONFIG

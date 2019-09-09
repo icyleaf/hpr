@@ -1,26 +1,6 @@
-<p align="center">
-  <a href="https://github.com/icyleaf/hpr">
-    <img alt="docsify" src="./docs/_media/icon.png">
-  </a>
-</p>
+# ḫpr
 
-<p align="center">
-  ḫpr
-  <br />
-  镜像任意 git 仓库到 gitlab 的同步工具，具有定时更新的功能。
-</p>
-
-<p align="center">
-  <a href="https://github.com/icyleaf/hpr/releases"><img alt="Tag" src="https://img.shields.io/github/tag/icyleaf/hpr.svg" /></a>
-  <a href="https://crystal-lang.org/"><img alt="Langugea" src="https://img.shields.io/badge/language-crystal-776791.svg"></a>
-  <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/hpr.svg"></a>
-</p>
-
-<p align="center">
-  <a href="https://icyleaf.github.io/hpr/#/en/">English Documents</a>
-</p>
-
-> `master` 分支因采用正在快速发展中的 Crystal 语言编写目前在 Crystal 0.29.0+ 版本无法编译和一些[特殊原因](https://github.com/icyleaf/hpr/issues/10)暂停修复，目前正在使用 ruby 重写中，切换 [ruby-version](https://github.com/icyleaf/hpr/tree/ruby-version) 分支查看，进度查询可以看[这里](https://github.com/icyleaf/hpr/issues/11)。
+镜像任意 git 仓库到 Gitlab 的同步工具，具有定时更新的功能。
 
 ## 独特优势
 
@@ -30,11 +10,26 @@
 * 几乎支持所有的 git 托管的仓库
 * 使用可独立部署的 Gitlab 作为镜像平台。
 
-## 快速上手
+## 开始使用
+
+## Docker
+
+```
+$ docker pull icyleafcn/hpr
+$ curl -fsSL -o hpr.yml https://raw.githubusercontent.com/icyleaf/hpr/ruby-version/config/hpr.example.yml
+$ docker run --name hpr --restart=unless-stopped -d \
+             -p 8848:8848 \
+             -v `pwd`/hpr.yml:/app/config/hpr.yml \
+             icyleafcn/hpr
+```
+
+### 本地部署
+
+先安装依赖 ruby 2.3+、redis 和 sqlite-lib（如果是 Linux 环境），后复制 `config/hpr.example.yml` 为 `config/hpr.yml` 修改对应的参数。
 
 ```bash
-$ docker pull icyleafcn/hpr
-$ docker run -p 8848:884 icyleafcn/hpr
+$ bundle install
+$ bundle exec guard start
 ```
 
 具体配置和说明请移步[本教程](https://hpr.ews.im/#/quickstart)
@@ -43,7 +38,7 @@ $ docker run -p 8848:884 icyleafcn/hpr
 
 ## 贡献你的力量
 
-可能你对本项目是由 Crystal 编写的很陌生，不需要担心如果你熟悉 Ruby 就没有障碍了。
+本项目由 Ruby 语言编写而成，欢迎贡献你的力量！
 
 1. [Fork 本项目](https://github.com/icyleaf/hpr/fork)
 2. 创建你的新特性/修复分支 (`git checkout -b my-new-feature`)

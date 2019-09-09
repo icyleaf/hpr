@@ -1,0 +1,212 @@
+# frozen_string_literal: tru
+
+require 'sinatra'
+require 'sinatra/json'
+require 'sinatra/required_params'
+require 'sinatra/streaming'
+require 'sidekiq/api'
+
+module Hpr
+  # Web API Application
+  class Web < Sinatra::Base
+    helpers Sinatra::RequiredParams
+    helpers Sinatra::Streaming
+
+    configure do
+      use Rack::CommonLogger, Logger.new(STDOUT)
+      use Raven::Rack
+
+      set :show_exceptions, :after_handler
+    end
+
+    get '/' do
+      json message: 'Welcome to hpr api layer'
+    end
+
+    get '/info' do
+      json hpr: { version: Hpr::VERSION },
+           jobs: jobs
+    end
+
+    get '/info/scheduled' do
+      json scheduled_jobs
+    end
+
+    get '/info/busy' do
+      json busy_jobs
+    end
+
+    get '/config' do
+      json Hpr::Configuration.to_h
+    end
+
+    get '/repositories' do
+      total = client.total_repositories
+      page = params.fetch('page', '1').to_i
+      per_page = params.fetch('per_page', '50').to_i
+
+      json total: total, entry: client.list_repositories(page, per_page)
+    end
+
+    get '/repositories/search' do
+      required_params :q
+      repositories = client.search_repositories(params['q'])
+
+      json entry: repositories
+    end
+
+    get '/repositories/:name' do
+      name = params['name']
+      repository = repository_or_404(name)
+      json repository
+    end
+
+    get '/repositories/:name/status' do
+      name = params['name']
+      repository = repository_or_404(name)
+
+      job = (jobs = busy_jobs(name)) && jobs.size == 1 ? jobs.first : nil
+      stream do |out|
+        loop do
+          body = { status: repository.status }
+          if job
+            body[:started_at] = job[:started_at]
+            body[:job] = job[:job]
+          end
+
+          out.puts JSON.dump(body)
+          out.flush
+
+          break if repository.status == 'idle'
+
+          sleep 1
+        end
+      end
+    end
+
+    post '/repositories' do
+      required_params :url
+
+      url = params['url']
+      name = params['name']
+      create = params['create'] || 'true'
+      clone = params['clone'] || 'true'
+
+      job_id = client.create_repository(
+        url, name,
+        create == 'true',
+        clone == 'true'
+      )
+
+      status 201
+      json job_id: job_id
+    end
+
+    put '/repositories/:name' do
+      name = params['name']
+      job_id = client.update_repository(name)
+
+      json job_id: job_id
+    end
+
+    delete '/repositories/:name' do
+      job_id = client.destory_repository(params['name'])
+
+      json job_id: job_id
+    end
+
+    error do
+      json message: 'Sorry there was a nasty error - ' + env['sinatra.error'].message
+    end
+
+    error 400 do
+      json message: '缺少必要的参数，请仔细检查后重试。'
+    end
+
+    error Hpr::NotFoundError do
+      status 404
+      json message: env['sinatra.error'].message
+    end
+
+    error Hpr::MissingSSHKeyError, Hpr::NotRoleError do
+      status 403
+      json message: env['sinatra.error'].message
+    end
+
+    error 500 do
+      json message: env['sinatra.error'].message
+    end
+
+    helpers do
+      def repository_or_404(name)
+        repository = client.repository(name)
+        halt 404, json(message: "Not found repository #{name}") unless repository
+
+        repository
+      end
+    end
+
+    if Configuration.basic_auth?
+      use Rack::Auth::Basic, 'HPR Auth' do |username, password|
+        username == Configuration.basic_auth.user &&
+          password == Configuration.basic_auth.password
+      end
+    end
+
+    private
+
+    def client
+      @client ||= Hpr::Client.new
+    end
+
+    def jobs
+      sidekiq_stats = Sidekiq::Stats.new
+      {
+        processed: sidekiq_stats.processed,
+        failed: sidekiq_stats.failed,
+        busy: sidekiq_stats.workers_size,
+        processes: sidekiq_stats.processes_size,
+        enqueued: sidekiq_stats.enqueued,
+        scheduled: sidekiq_stats.scheduled_size,
+        retries: sidekiq_stats.retry_size,
+        dead: sidekiq_stats.dead_size,
+        default_latency: sidekiq_stats.default_queue_latency
+      }
+    end
+
+    def busy_jobs(name = nil)
+      workers = Sidekiq::Workers.new
+      entry = []
+      workers.each do |process, thread, msg|
+        job = Sidekiq::Job.new(msg['payload'])
+        worker_type = job.display_class[5..-7].downcase
+        repository = job.display_args[0]
+
+        stats = {
+          jid: job.jid,
+          job: worker_type,
+          repository: repository,
+          process: process,
+          thread: thread,
+          started_at: Time.at(msg['run_at'])
+        }
+
+        return [stats] if name && repository == name
+
+        entry << stats
+      end
+
+      entry
+    end
+
+    def scheduled_jobs
+      scheduled_set = Sidekiq::ScheduledSet.new
+      scheduled_set.each_with_object([]) do |retri, obj|
+        obj << {
+          name: JSON.parse(retri.value)['args'].first,
+          scheduled_at: retri.at
+        }
+      end
+    end
+  end
+end

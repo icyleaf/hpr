@@ -1,23 +1,28 @@
-FROM icyleafcn/crystal:0.26.1 as builder
+FROM ruby:2.6-alpine
+LABEL maintainer="icyleaf <icyleaf.cn@gmail.com>"
 
-ADD . /app
-WORKDIR /app
+ENV S6_OVERLAY_VERSION=1.22.1.0
 
 RUN set -ex && \
-    apk add --update --no-cache build-base openssl-dev yaml-dev && \
-    shards build --production && \
-    for f in `ls bin`; do ldd bin/$f | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%'; done
-
-FROM icyleafcn/s6-overlay
-
-COPY --from=builder /app/deps /
-COPY --from=builder /app/bin/ /bin/
-COPY --from=builder /app/docker/root /
+    apk add --update --no-cache curl && \
+    curl -sSL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz | tar xfz - -C / && \
+    apk del --no-cache curl && \
+    apk add --no-cache build-base sqlite-dev openssh-client openssh-keygen git bash redis
 
 WORKDIR /app
 
-RUN apk add --update --no-cache openssh-client openssh-keygen git bash redis
+COPY Gemfile* /app/
 
-VOLUME ["/app", "/data"]
+RUN bundle install --binstubs --jobs `expr $(cat /proc/cpuinfo | grep -c "cpu cores") - 1` --retry 3 --without development test
+
+ENV HPR_ENV=production \
+    HPR_RUNNING=docker
+
+COPY . /app
+COPY docker/root /
+
+VOLUME /app
 
 EXPOSE 8848 6379
+
+ENTRYPOINT [ "/init" ]

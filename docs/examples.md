@@ -17,34 +17,6 @@
 
 由于目前使用的是管理账户，**group_name** 默认没有的话会尝试进行创建。没有创建组权限的需要提前让管理员帮忙创建好。
 
-```json
-{
-  "schedule_in": "1.day",
-  "basic_auth": {
-    "enable": false,
-    "user": "hpr",
-    "password": "p@ssw0rd"
-  },
-  "gitlab": {
-    "ssh_port": 22,
-    "endpoint": "http://10.10.10.221:9000/api/v4",
-    "private_token": "<private-token>",
-
-    "group_name": "hpr-mirrors",
-
-    "project_public": true,
-    "project_issue": false,
-    "project_wiki": false,
-    "project_merge_request": false,
-    "project_snippet": false
-  },
-  "sentry" : {
-    "report": false,
-    "dns": "http://<key>@<host>:<port>/<project>"
-  }
-}
-```
-
 假如这个文件存放在 `/data/volumes/hpr-data/config/hpr.json`，那么你可以这样创建你的 docker 实例：
 
 ```bash
@@ -103,7 +75,6 @@ Using config: /app/config/hpr.json
     "password": "p@ssw0rd"
   },
   "gitlab": {
-    "ssh_port": 22,
     "endpoint": "http://gitlab.com/api/v4",
     "private_token": "<private-token>",
 

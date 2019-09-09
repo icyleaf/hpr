@@ -1,18 +1,12 @@
-# crystal
-main.cr
+# ruby
 bin
-config
-data
-docs
-examples
 logs
-repositories
 spec
-Makefile
-README.md
-CHANGELOGS.md
-LICENSE
-.*env
+repositories
+config/hpr.yml
+Guardfile
+.rspec
+.rubocop.yml
 
 # git
 .git

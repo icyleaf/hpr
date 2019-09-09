@@ -1,0 +1,23 @@
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 160
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/GlobalVars:
+  Enabled: false
+
+Style/RescueStandardError:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Enabled: false
