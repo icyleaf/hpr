@@ -1,32 +1,15 @@
 ---
-name: Bug report
-about: 请提供 bug 的背景信息
+name: Bug 反馈模板
+about: 提交一个 Bug 
 title: ''
 labels: bug
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**问题描述**
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+> 填写完整问题的描述和复现的步骤
 
 **使用环境:**
  - 系统: [比如. Docker]
