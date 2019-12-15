@@ -6,7 +6,7 @@ source 'https://gems.ruby-china.com'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
-gem 'puma', '~> 4.0.1'
+gem 'puma', '~> 4.3.1'
 gem 'sidekiq', '~> 5.2.7'
 gem 'sinatra', '~> 2.0.5'
 gem 'sinatra-contrib', '~> 2.0.5'
