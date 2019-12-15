@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('./lib', __dir__)
-
-require 'fileutils'
-
 # 初始化一些文件和目录，否则无法 docker 构建，构建的内容不会引入 docker
 FileUtils.cp('config/hpr.example.yml', 'config/hpr.yml') unless File.file?('config/hpr.yml')
 FileUtils.mkdir('logs') unless Dir.exist?('logs')
 
+require 'fileutils'
 require 'hpr'
 
 namespace :db do

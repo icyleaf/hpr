@@ -31,8 +31,8 @@ module Hpr
       Sidekiq.default_worker_options = { 'backtrace' => true }
 
       sidekiq_log_path = create_log_file('sidekiq.log')
-      Sidekiq::Logging.logger = Logger.new(sidekiq_log_path)
-      Sidekiq::Logging.logger.level = Logger::DEBUG unless producton?
+      Sidekiq.logger = Logger.new(sidekiq_log_path)
+      Sidekiq.logger.level = Logger::DEBUG unless producton?
     end
 
     def connect_database
