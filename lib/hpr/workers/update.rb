@@ -28,7 +28,7 @@ module Hpr
 
       logger.debug "pushing to gitlab ... #{name}"
       repository.update! status: :pushing
-      git.push 'hpr', mirror: true
+      git.push 'hpr', '', mirror: true
     end
   end
 end
