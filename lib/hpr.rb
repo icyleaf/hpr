@@ -5,6 +5,7 @@ $LOAD_PATH.unshift File.expand_path(__dir__)
 require 'chronic_duration'
 require 'active_record'
 require 'settingslogic'
+require 'fileutils'
 require 'sidekiq'
 require 'raven'
 
@@ -29,8 +30,9 @@ module Hpr
 
       Sidekiq.default_worker_options = { 'backtrace' => true }
 
-      Sidekiq::Logging.logger = Logger.new(File.join(Hpr.root, 'logs/sidekiq.log'))
-      Sidekiq::Logging.logger.level = Logger::DEBUG unless producton?
+      sidekiq_log_path = create_log_file('sidekiq.log')
+      Sidekiq.logger = Logger.new(sidekiq_log_path)
+      Sidekiq.logger.level = Logger::DEBUG unless producton?
     end
 
     def connect_database
@@ -43,12 +45,13 @@ module Hpr
     def init_sentry
       return unless Hpr::Configuration.sentry_enable?
 
+      sentry_log_path = create_log_file('sentry.log')
       Raven.configure do |config|
         config.dsn = Hpr::Configuration.sentry.dns
         config.async = lambda { |event| Hpr::SentryWorker.perform_async(event) }
         config.environments = %w[development production]
         config.current_environment = ENV['HPR_ENV'] || 'development'
-        config.logger = Logger.new(File.join(Hpr.root, 'logs/sentry.log'))
+        config.logger = Logger.new(sentry_log_path)
         config.release = Hpr::VERSION
         config.tags = { running_env: running_env }
         config.tags[:git_commit] = git_rev if git_rev
@@ -83,6 +86,15 @@ module Hpr
 
     def db_file
       File.join(root, 'repositories', 'hpr.sqlite')
+    end
+
+    private
+
+    def create_log_file(filename)
+      path = File.join(Hpr.root, 'logs')
+      FileUtils.mkdir_p(path) unless Dir.exist?(path)
+
+      File.join(path, filename)
     end
   end
 
