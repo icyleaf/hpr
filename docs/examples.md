@@ -4,7 +4,7 @@
 
 ## 自建 Gitlab 服务
 
-本范例主要演示使用自建 Gitlab 且 Web 服务提供 9000 端口和 SSH 提供 22 端口的状况（但 gitlab 中设置的 ssh 端口号是 22）。首先需要把 Gitlab 服务在一台机器或服务器上跑起来
+本范例主要演示使用自建 Gitlab 且 Web 服务提供 9000 端口和 SSH 提供 2233 端口的状况（但 gitlab 中设置的 ssh 端口号是 22）。首先需要把 Gitlab 服务在一台机器或服务器上跑起来
 
 首先需要登录你的自建 gilab 服务，从个人设置 Access Tokens 页面生成自己的 Access Token：
 
