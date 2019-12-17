@@ -1,14 +1,13 @@
 # 安装 hpr
 
-hpr 使用 Ruby 编写的工具可以被安装在 macOS、Linux、树莓派等系统和硬件设备，
-同时提供 docker 作为最为方便的方式进行分发。
+hpr 使用 Ruby 编写的工具可以被安装在 macOS、Linux、树莓派等系统和硬件设备，同时提供 docker 作为最为方便的方式进行分发。
 
 ## Docker
 
 hpr 提供基于 alpine 镜像，镜像的 [tags](https://hub.docker.com/r/icyleafcn/hpr/tags) 遵循如下规则：
 
 - `latest` 指向基于 alpine 最新版本
-- `x.x.x-alpine` 指向基于 alpine 的指定版本
+- `x.x.x` 指向基于 alpine 的指定版本
 
 对于通常的情况直接运行如下命令即可安装运行：
 
@@ -65,6 +64,12 @@ $ cd hpr
 
 ```bash
 $ bundle install
+```
+
+### 初始化数据库
+
+```bash
+$ bundle exec rake db:setup
 ```
 
 ### 运行 redis
