@@ -51,7 +51,7 @@ module Hpr
       logger.debug "pushing to gitlab ... #{@name}"
 
       @repository.update! status: :pushing
-      @git.push 'hpr', mirror: true
+      @git.push 'hpr', '', mirror: true
     end
 
     def clean_clone_artifacts

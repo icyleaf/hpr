@@ -30,8 +30,12 @@ config_ssh_config() {
   if ! [ -f "$HPR_SSH_CONFIG_PATH" ] || ! grep -q "$HPR_SSH_HOST" "$HPR_SSH_CONFIG_PATH"; then
     echo "Configuring ssh config ... ${HPR_SSH_CONFIG_PATH}"
     echo "Host ${HPR_SSH_HOST}" > ${HPR_SSH_PATH}/config
-    echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
-    echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
+    if [ "$HPR_SSH_HOST" != "*" ]; then
+      echo "    HostName ${HPR_SSH_HOST}" >> ${HPR_SSH_PATH}/config
+    fi
+    if [ "$HPR_SSH_PORT" != "22" ]; then
+      echo "    Port ${HPR_SSH_PORT}" >> ${HPR_SSH_PATH}/config
+    fi
     echo "    StrictHostKeyChecking no" >> ${HPR_SSH_PATH}/config
     echo
     echo "##################################################################"

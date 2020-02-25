@@ -1,3 +1,4 @@
+# 配置说明： https://hpr.ews.im/#/configuration
 ---
 schedule_in: 1.minute
 basic_auth:
