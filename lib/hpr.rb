@@ -119,6 +119,15 @@ module Hpr
     def self.sentry_enable?
       sentry.report
     end
+
+    def to_safe_h
+      data = to_h.dup
+      data['gitlab']['endpoint'] =
+      data['basic_auth']['user'] = '*' * 16 unless data['basic_auth']['password'].empty?
+      data['basic_auth']['password'] = '*' * 16 unless data['basic_auth']['password'].empty?
+      data['gitlab']['private_token'] = '*' * 16
+      data
+    end
   end
 end
 

@@ -37,7 +37,7 @@ module Hpr
     end
 
     get '/config' do
-      json Hpr::Configuration.to_h
+      json Hpr::Configuration.to_safe_h
     end
 
     get '/repositories' do
