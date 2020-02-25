@@ -17,7 +17,7 @@ $ curl http://hpr-ip:8848/info
 获取已镜像仓库信息列表，支持分页
 
 ```
-GET /repositores
+GET /repositories
 ```
 
 #### 参数
@@ -61,7 +61,7 @@ GET /repositores
 根据关键词搜索镜像仓库，只要关键词匹配到任意镜像仓库名的字符串均会命中。
 
 ```
-GET /repositores/search?q={:name}
+GET /repositories/search?q={:name}
 ```
 
 #### 参数
@@ -105,7 +105,7 @@ GET /repositores/search?q={:name}
 获取已镜像仓库的基本信息
 
 ```
-GET /repositores/:name
+GET /repositories/:name
 ```
 
 #### 参数
@@ -148,7 +148,7 @@ GET /repositores/:name
 
 
 ```
-POST /repositores
+POST /repositories
 ```
 
 #### 参数
@@ -175,7 +175,7 @@ POST /repositores
 强制同步更新镜像仓库
 
 ```
-PUT /repositores/:name
+PUT /repositories/:name
 ```
 
 #### 参数
@@ -199,7 +199,7 @@ PUT /repositores/:name
 删除镜像仓库，包括数据库记录、本地 git 镜像文件和 Gitlab 创建的项目。
 
 ```
-DELETE /repositores/:name
+DELETE /repositories/:name
 ```
 
 #### 参数

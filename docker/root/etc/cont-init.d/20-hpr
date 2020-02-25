@@ -3,7 +3,7 @@
 # remove unused docker rootfs
 rm -rf /app/docker
 
-# create repositores directory
+# create repositories directory
 mkdir -p /app/repositories
 
 # create logs directory
