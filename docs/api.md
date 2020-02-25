@@ -311,7 +311,7 @@ GET /info/busy
 
 ## 查看配置
 
-显示 hpr 配置信息。
+显示 hpr 配置信息，可通过配置文件开启或关闭，认证信息及 Gitlab private token 会加密显示。
 
 ```
 GET /config
@@ -328,12 +328,12 @@ GET /config
   "schedule_in": "1.minute",
   "basic_auth": {
     "enable": false,
-    "user": "hpr",
-    "password": "p@ssw0rd"
+    "user": "******",
+    "password": "******"
   },
   "gitlab": {
     "endpoint": "http://gitlab.example.com/api/v4",
-    "private_token": "<private_token-or-access_token>",
+    "private_token": "<encoded-private_token-or-access_token>",
     "group_name": "mirrors",
     "project_public": false,
     "project_issue": false,

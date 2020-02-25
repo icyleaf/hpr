@@ -16,6 +16,13 @@ module Hpr
       use Rack::CommonLogger, Logger.new(STDOUT)
       use Raven::Rack
 
+      if Configuration.basic_auth?
+        use Rack::Auth::Basic, 'HPR Auth' do |username, password|
+          username == Configuration.basic_auth.user &&
+            password == Configuration.basic_auth.password
+        end
+      end
+
       set :show_exceptions, :after_handler
     end
 
@@ -36,8 +43,10 @@ module Hpr
       json busy_jobs
     end
 
-    get '/config' do
-      json Hpr::Configuration.to_safe_h
+    unless Hpr::Configuration.api.disable_config
+      get '/config' do
+        json Hpr::Configuration.to_safe_h
+      end
     end
 
     get '/repositories' do
@@ -143,13 +152,6 @@ module Hpr
         halt 404, json(message: "Not found repository #{name}") unless repository
 
         repository
-      end
-    end
-
-    if Configuration.basic_auth?
-      use Rack::Auth::Basic, 'HPR Auth' do |username, password|
-        username == Configuration.basic_auth.user &&
-          password == Configuration.basic_auth.password
       end
     end
 
