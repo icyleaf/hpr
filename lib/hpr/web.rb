@@ -18,8 +18,8 @@ module Hpr
 
       if Configuration.basic_auth?
         use Rack::Auth::Basic, 'HPR Auth' do |username, password|
-          username == Configuration.basic_auth.user &&
-            password == Configuration.basic_auth.password
+          username == Configuration.basic_auth.user.to_s &&
+            password == Configuration.basic_auth.password.to_s
         end
       end
 

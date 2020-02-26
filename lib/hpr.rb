@@ -123,8 +123,8 @@ module Hpr
     def to_safe_h
       data = to_h.dup
       data['gitlab']['endpoint'] =
-      data['basic_auth']['user'] = '*' * 16 unless data['basic_auth']['password'].empty?
-      data['basic_auth']['password'] = '*' * 16 unless data['basic_auth']['password'].empty?
+      data['basic_auth']['user'] = '*' * 16 unless data['basic_auth']['password'].to_s.empty?
+      data['basic_auth']['password'] = '*' * 16 unless data['basic_auth']['password'].to_s.empty?
       data['gitlab']['private_token'] = '*' * 16
       data
     end
