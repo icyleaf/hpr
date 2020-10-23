@@ -210,15 +210,3 @@ tag 'hpr'
 # activate_control_app 'unix:///var/run/pumactl.sock'
 # activate_control_app 'unix:///var/run/pumactl.sock', { auth_token: '12345' }
 # activate_control_app 'unix:///var/run/pumactl.sock', { no_token: true }
-
-lowlevel_error_handler do |ex, env|
-  Raven.capture_exception(
-    ex,
-    message: ex.message,
-    extra: { puma: env },
-    transaction: 'Puma'
-  )
-
-  # note the below is just a Rack response
-  [500, { 'Content-Type' => 'application/json' }, ['{"message":"An error has occurred, and engineers have been informed. Please reload the page. If you continue to have problems, contact icyleaf.cn@gmail.com"}']]
-end
