@@ -1,0 +1,63 @@
+name: Publish Release Version
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: v${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+
+  build:
+    name: Publish Docker Image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Get build date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M:%S %z')"
+    - name: Get version
+      id: version
+      run: echo "::set-output name=version::$(echo ${{ github.ref }} | sed 's/v//')"
+    - name: Echo the version
+      run: echo ${{ steps.date.outputs.version }}
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      env:
+        VCS_REF: ${{ github.sha }}
+        VERSION: ${{ github.ref }}
+        BUILD_DATE: ${{ steps.date.outputs.date }}
+      with:
+        name: icyleafcn/zealot:${{ steps.date.outputs.version }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        buildargs: BUILD_DATE,VCS_REF,VERSION
+    - name: Docker Hub Description
+      uses: peter-evans/dockerhub-description@v2.1.0
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKERHUB_REPOSITORY: icyleafcn/hpr
+    - name: Trigger Microbadger update
+      uses: wei/curl@master
+      with:
+        args: -X POST ${{ secrets.MICROBADGER_WEBHOOK_URL }}

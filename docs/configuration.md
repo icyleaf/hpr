@@ -44,6 +44,14 @@ HTTP APIs 认证机制，如果需要暴露在外网访问为了安全起见目�
 | project_merge_request | boolean | 是否开启 MR | `true`/`false` |
 | project_snippet | boolean | 是否开启 Snippet | `true`/`false` |
 
+## api
+
+和 API 相关的配置
+
+| 名称 | 类型 | 说明 | 备注 |
+|---|---|---|---|
+| disable_config | boolean | 开关 [/config](api#查看配置) 接口 | /config 会加密显示隐私字段，敏感的可以开启线上环境禁用此接口 |
+
 ## sentry
 
 匿名错误上报，建议在 hpr 还未稳定之前保持开启状态，hpr 使用过程中遇到的各种问题上报对于尽快修复有很大的帮助作用，同时也减少了您提 issue 的环节和填写补充信息。如果你强烈不想错误上报也可以关闭它。
