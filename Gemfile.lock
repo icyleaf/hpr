@@ -80,7 +80,7 @@ GEM
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    puma (5.5.1)
+    puma (5.6.1)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-protection (2.1.0)
@@ -107,8 +107,8 @@ GEM
       rspec-support (~> 3.10.0)
     rspec-mocks (3.10.3)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.9.0)
-    rspec-support (3.9.3)
+      rspec-support (~> 3.10.0)
+    rspec-support (3.10.3)
     rubocop (1.25.1)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
@@ -163,7 +163,7 @@ DEPENDENCIES
   guard
   guard-puma
   guard-sidekiq
-  puma (~> 5.5)
+  puma (~> 5.6)
   rack-test
   rake
   rspec
