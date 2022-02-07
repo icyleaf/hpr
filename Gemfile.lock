@@ -165,7 +165,7 @@ DEPENDENCIES
   guard
   guard-puma
   guard-sidekiq
-  puma (~> 5.5)
+  puma (~> 5.6.1)
   rack-test
   rake
   redis (~> 4.5.1)

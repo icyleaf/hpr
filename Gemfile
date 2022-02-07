@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
-gem 'puma', '~> 5.5'
+gem 'puma', '~> 5.6.1'
 gem 'sidekiq', '~> 6.4.0'
 gem 'redis', '~> 4.5.1' # remove when sidekiq will release 6.4.1 https://github.com/mperham/sidekiq/issues/5178
 gem 'sinatra', '~> 2.1.0'
