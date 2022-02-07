@@ -45,15 +45,11 @@ unless Hpr.producton?
 
   namespace :test do
     task :release_version do
-      puts Hpr.hostname
-      puts Hpr.running_env
-
-      Raven.capture do
-        1 / 0
-      end
+      puts Hpr.release_info
     end
 
     task :create do
+      puts "create test repo"
       Hpr::Repository.create name: 'icyleaf-halite', url: 'git@github.com:icyleaf/halite.git'
     end
   end

@@ -2,3 +2,4 @@ repositories/
 logs/
 
 config/hpr.yml
+config/.*.key

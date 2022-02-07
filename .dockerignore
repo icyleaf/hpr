@@ -4,6 +4,7 @@ logs
 spec
 repositories
 config/hpr.yml
+config/.*.key
 Guardfile
 .rspec
 .rubocop.yml

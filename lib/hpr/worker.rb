@@ -59,4 +59,3 @@ end
 require 'hpr/workers/update'
 require 'hpr/workers/clone'
 require 'hpr/workers/destroy'
-require 'hpr/workers/sentry'
