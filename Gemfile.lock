@@ -89,7 +89,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rchardet (1.8.0)
-    redis (4.5.1)
+    redis (4.6.0)
     regexp_parser (2.2.0)
     rexml (3.2.5)
     rspec (3.10.0)
@@ -128,7 +128,7 @@ GEM
       sidekiq (>= 3.0)
     settingslogic (2.0.9)
     shellany (0.0.1)
-    sidekiq (6.4.0)
+    sidekiq (6.4.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -168,13 +168,12 @@ DEPENDENCIES
   puma (~> 5.6.1)
   rack-test
   rake
-  redis (~> 4.5.1)
   rspec
   rubocop
   sentry-ruby
   sentry-sidekiq
   settingslogic (~> 2.0.9)
-  sidekiq (~> 6.4.0)
+  sidekiq (~> 6.4.1)
   sinatra (~> 2.1.0)
   sinatra-contrib (~> 2.1.0)
   sqlite3 (~> 1.4.2)
