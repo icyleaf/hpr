@@ -17,7 +17,7 @@ gem 'sqlite3', '~> 1.4.2'
 
 # Tools
 gem 'chronic_duration', '~> 0.10.6'
-gem 'commander', '~> 4.5.2'
+gem 'commander', '~> 4.6.0'
 gem 'git', '~> 1.7.0'
 gem 'gitlab', '~> 4.16.1'
 gem 'rake'
