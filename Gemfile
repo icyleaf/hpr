@@ -6,8 +6,8 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
-gem 'puma', '~> 5.5'
-gem 'sidekiq', '~> 6.4.0'
+gem 'puma', '~> 5.6.1'
+gem 'sidekiq', '~> 6.4.1'
 gem 'sinatra', '~> 2.1.0'
 gem 'sinatra-contrib', '~> 2.1.0'
 
@@ -21,7 +21,8 @@ gem 'commander', '~> 4.5.2'
 gem 'git', '~> 1.7.0'
 gem 'gitlab', '~> 4.16.1'
 gem 'rake'
-gem 'sentry-raven'
+gem 'sentry-ruby'
+gem 'sentry-sidekiq'
 gem 'settingslogic', '~> 2.0.9'
 
 group :development, :test do

@@ -7,7 +7,7 @@ require 'active_record'
 require 'settingslogic'
 require 'fileutils'
 require 'sidekiq'
-require 'raven'
+require 'sentry-ruby'
 
 module Hpr
   class << self
@@ -29,9 +29,7 @@ module Hpr
       end
 
       Sidekiq.default_worker_options = { 'backtrace' => true }
-
-      sidekiq_log_path = create_log_file('sidekiq.log')
-      Sidekiq.logger = Logger.new(sidekiq_log_path)
+      Sidekiq.logger = Logger.new(STDOUT)
       Sidekiq.logger.level = Logger::DEBUG unless producton?
     end
 
@@ -46,18 +44,28 @@ module Hpr
       return unless Hpr::Configuration.sentry_enable?
 
       sentry_log_path = create_log_file('sentry.log')
-      Raven.configure do |config|
+      Sentry.init do |config|
         config.dsn = Hpr::Configuration.sentry.dns
-        config.async = lambda { |event| Hpr::SentryWorker.perform_async(event) }
-        config.environments = %w[development production]
-        config.current_environment = ENV['HPR_ENV'] || 'development'
-        config.logger = Logger.new(sentry_log_path)
-        config.release = Hpr::VERSION
-        config.tags = { running_env: running_env }
-        config.tags[:git_commit] = git_rev if git_rev
+        config.breadcrumbs_logger = %i[sentry_logger http_logger]
+        config.capture_exception_frame_locals = true
+        config.send_default_pii = true
+        config.release = release_info
+        config.enabled_environments = %w[development production]
+        config.environment = ENV['HPR_ENV'] || 'development'
+        config.background_worker_threads = 5
+        config.debug = true  unless producton?
+        config.logger = Sentry::Logger.new(sentry_log_path)
       end
 
-      Raven.user_context username: hostname
+      Sentry.set_user(username: hostname)
+    end
+
+    def release_info
+      [
+        Hpr::VERSION,
+        running_env,
+        git_rev
+      ].compact.join('-')
     end
 
     def running_env

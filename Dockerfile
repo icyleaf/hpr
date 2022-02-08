@@ -1,7 +1,7 @@
-FROM ruby:2.7-alpine
+FROM ruby:3.0-alpine
 LABEL maintainer="icyleaf <icyleaf.cn@gmail.com>"
 
-ENV S6_OVERLAY_VERSION=2.1.0.2
+ENV S6_OVERLAY_VERSION=2.2.0.3
 
 RUN set -ex && \
     apk add --update --no-cache curl && \
