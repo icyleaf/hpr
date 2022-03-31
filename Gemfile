@@ -8,8 +8,8 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 # Web Services
 gem 'puma', '~> 5.6.4'
 gem 'sidekiq', '~> 6.4.1'
-gem 'sinatra', '~> 2.1.0'
-gem 'sinatra-contrib', '~> 2.1.0'
+gem 'sinatra', '~> 2.2.0'
+gem 'sinatra-contrib', '~> 2.2.0'
 
 # Database
 gem 'activerecord', '~> 7.0.2'
