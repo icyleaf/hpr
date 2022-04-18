@@ -23,7 +23,7 @@ GEM
     diff-lcs (1.5.0)
     ffi (1.15.5)
     formatador (1.1.0)
-    git (1.10.2)
+    git (1.11.0)
       rchardet (~> 1.8)
     gitlab (4.18.0)
       httparty (~> 0.18)
@@ -160,7 +160,7 @@ DEPENDENCIES
   awesome_print
   chronic_duration (~> 0.10.6)
   commander (~> 4.6.0)
-  git (~> 1.10.2)
+  git (~> 1.11.0)
   gitlab (~> 4.18.0)
   guard
   guard-puma
