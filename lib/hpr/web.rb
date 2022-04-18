@@ -14,7 +14,7 @@ module Hpr
 
     configure do
       use Rack::CommonLogger, Logger.new(STDOUT)
-      use Raven::Rack
+      use Sentry::Rack::CaptureExceptions
 
       if Configuration.basic_auth?
         use Rack::Auth::Basic, 'HPR Auth' do |username, password|
