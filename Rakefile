@@ -74,7 +74,7 @@ unless Hpr.producton?
 
     desc 'Run a new hpr container'
     task :run do
-      system %(docker run --rm -v `pwd`/config/hpr.example.yml:/app/config/hpr.yml -p 18848:8848 -p 16379:6379 #{IMAGE_WITH_VERSION})
+      system %(docker run --rm --name hpr-dev -v `pwd`/config/hpr.example.yml:/app/config/hpr.yml -p 8848:8848 -p 16379:6379 #{IMAGE_WITH_VERSION})
     end
 
     desc 'Run a new hpr console'

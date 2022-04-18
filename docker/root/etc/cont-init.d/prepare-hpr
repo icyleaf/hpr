@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv sh
+#!/command/with-contenv sh
 
 # remove unused docker rootfs
 rm -rf /app/docker
