@@ -128,7 +128,7 @@ GEM
       sidekiq (>= 3.0)
     settingslogic (2.0.9)
     shellany (0.0.1)
-    sidekiq (6.4.1)
+    sidekiq (6.4.2)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -173,7 +173,7 @@ DEPENDENCIES
   sentry-ruby
   sentry-sidekiq
   settingslogic (~> 2.0.9)
-  sidekiq (~> 6.4.1)
+  sidekiq (~> 6.4.2)
   sinatra (~> 2.2.0)
   sinatra-contrib (~> 2.2.0)
   sqlite3 (~> 1.4.2)
