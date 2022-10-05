@@ -12,7 +12,7 @@ gem 'sinatra', '~> 2.2.2'
 gem 'sinatra-contrib', '~> 2.2.2'
 
 # Database
-gem 'activerecord', '~> 7.0.3'
+gem 'activerecord', '~> 7.0.4'
 gem 'sqlite3', '~> 1.5.2'
 
 # Tools
