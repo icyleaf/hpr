@@ -21,7 +21,7 @@ GEM
     commander (4.6.0)
       highline (~> 2.0.0)
     concurrent-ruby (1.1.10)
-    connection_pool (2.2.5)
+    connection_pool (2.3.0)
     diff-lcs (1.5.0)
     ffi (1.15.5)
     formatador (1.1.0)
@@ -132,7 +132,7 @@ GEM
       sidekiq (>= 3.0)
     settingslogic (2.0.9)
     shellany (0.0.1)
-    sidekiq (6.5.6)
+    sidekiq (6.5.7)
       connection_pool (>= 2.2.5)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
@@ -178,7 +178,7 @@ DEPENDENCIES
   sentry-ruby
   sentry-sidekiq
   settingslogic (~> 2.0.9)
-  sidekiq (~> 6.5.6)
+  sidekiq (~> 6.5.7)
   sinatra (~> 2.2.2)
   sinatra-contrib (~> 2.2.2)
   sqlite3 (~> 1.5.2)
