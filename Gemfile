@@ -7,7 +7,7 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
 gem 'puma', '~> 5.6.5'
-gem 'sidekiq', '~> 6.5.7'
+gem 'sidekiq', '~> 7.0.0'
 gem 'sinatra', '~> 3.0.2'
 gem 'sinatra-contrib', '~> 3.0.2'
 
