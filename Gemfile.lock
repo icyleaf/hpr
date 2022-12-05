@@ -41,10 +41,10 @@ GEM
       shellany (~> 0.0)
       thor (>= 0.18.1)
     guard-compat (1.2.1)
-    guard-puma (0.7.0)
+    guard-puma (0.8.0)
       guard (~> 2.14)
       guard-compat (~> 1.2)
-      puma (>= 4.0, < 6)
+      puma (>= 4.0, < 7)
     guard-sidekiq (0.1.0)
       guard (>= 2)
       sidekiq
@@ -82,7 +82,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.0)
-    puma (5.6.5)
+    puma (6.0.0)
       nio4r (~> 2.0)
     rack (2.2.4)
     rack-protection (3.0.4)
@@ -170,7 +170,7 @@ DEPENDENCIES
   guard
   guard-puma
   guard-sidekiq
-  puma (~> 5.6.5)
+  puma (~> 6.0.0)
   rack-test
   rake
   rspec
