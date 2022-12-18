@@ -13,7 +13,7 @@ gem 'sinatra-contrib', '~> 3.0.4'
 
 # Database
 gem 'activerecord', '~> 7.0.4'
-gem 'sqlite3', '~> 1.5.3'
+gem 'sqlite3', '~> 1.5.4'
 
 # Tools
 gem 'chronic_duration', '~> 0.10.6'
