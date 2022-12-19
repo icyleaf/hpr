@@ -180,7 +180,7 @@ DEPENDENCIES
   settingslogic (~> 2.0.9)
   sidekiq (~> 6.5.7)
   sinatra (~> 3.0.5)
-  sinatra-contrib (~> 3.0.4)
+  sinatra-contrib (~> 3.0.5)
   sqlite3 (~> 1.5.4)
 
 BUNDLED WITH

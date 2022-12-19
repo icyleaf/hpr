@@ -9,7 +9,7 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gem 'puma', '~> 6.0.0'
 gem 'sidekiq', '~> 6.5.7'
 gem 'sinatra', '~> 3.0.5'
-gem 'sinatra-contrib', '~> 3.0.4'
+gem 'sinatra-contrib', '~> 3.0.5'
 
 # Database
 gem 'activerecord', '~> 7.0.4'
