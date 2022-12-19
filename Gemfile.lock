@@ -179,7 +179,7 @@ DEPENDENCIES
   sentry-sidekiq
   settingslogic (~> 2.0.9)
   sidekiq (~> 6.5.7)
-  sinatra (~> 3.0.2)
+  sinatra (~> 3.0.5)
   sinatra-contrib (~> 3.0.5)
   sqlite3 (~> 1.5.4)
 
