@@ -11,7 +11,7 @@ gem 'sinatra', '~> 3.0.5'
 gem 'sinatra-contrib', '~> 3.0.5'
 
 # Background Job Service
-gem 'sidekiq', '~> 6.5.7'
+gem 'sidekiq', '~> 7.0.2'
 gem 'sidekiq-failures', '~> 1.0.4'
 
 # Database
