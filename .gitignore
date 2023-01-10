@@ -1,5 +1,5 @@
 repositories/
 logs/
-
+.bundle/
 config/hpr.yml
 config/.*.key
