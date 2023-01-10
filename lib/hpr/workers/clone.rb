@@ -35,7 +35,8 @@ module Hpr
 
     def clone
       logger.debug "cloning #{@url} ... #{@name}"
-      @git = ::Git.clone @url, @name, path: repository_path, mirror: true
+      @git = ::Git.clone @url, @name, path: repository_path, mirror: true, log: nil,
+        config: 'core.sshCommand=ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
     end
 
     def configure

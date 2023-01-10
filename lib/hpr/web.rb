@@ -31,8 +31,7 @@ module Hpr
     end
 
     get '/info' do
-      json hpr: { version: Hpr::VERSION },
-           jobs: jobs
+      json hpr: { version: Hpr::VERSION }, jobs: jobs
     end
 
     get '/info/scheduled' do
@@ -166,13 +165,14 @@ module Hpr
       {
         processed: sidekiq_stats.processed,
         failed: sidekiq_stats.failed,
+        failures: Sidekiq::Failures.count,
         busy: sidekiq_stats.workers_size,
         processes: sidekiq_stats.processes_size,
         enqueued: sidekiq_stats.enqueued,
         scheduled: sidekiq_stats.scheduled_size,
         retries: sidekiq_stats.retry_size,
         dead: sidekiq_stats.dead_size,
-        default_latency: sidekiq_stats.default_queue_latency
+        default_latency: sidekiq_stats.default_queue_latency,
       }
     end
 

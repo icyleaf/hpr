@@ -5,15 +5,17 @@ $LOAD_PATH.unshift File.expand_path(__dir__)
 require 'chronic_duration'
 require 'active_record'
 require 'settingslogic'
+require 'sentry-ruby'
 require 'fileutils'
 require 'sidekiq'
-require 'sentry-ruby'
+require 'sidekiq/failures'
 
 module Hpr
   class << self
     def init
       init_sentry
       init_sidekiq
+      # configure_git_config
       connect_database
     end
 
@@ -58,6 +60,11 @@ module Hpr
       end
 
       Sentry.set_user(username: hostname)
+    end
+
+    def configure_git_config
+      # Git 2.10+ required, not big issue.
+      ::Git.global_config('core.sshCommand', 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no')
     end
 
     def release_info
@@ -139,14 +146,14 @@ module Hpr
   end
 end
 
-require 'hpr/version'
 require 'hpr/ext/git_mixin'
-require 'hpr/error'
-require 'hpr/helper'
 require 'hpr/repository'
+require 'hpr/version'
+require 'hpr/helper'
 require 'hpr/client'
-require 'hpr/web'
 require 'hpr/worker'
+require 'hpr/error'
+require 'hpr/web'
 
 # init
 Hpr.init

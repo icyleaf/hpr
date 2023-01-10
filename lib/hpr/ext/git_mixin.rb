@@ -4,11 +4,6 @@ require 'git'
 
 module Git
   class Base
-    def self.clone(repository, name, opts = {})
-      logger = opts.delete :logger
-      new(Git::Lib.new(nil, logger).clone(repository, name, opts))
-    end
-
     def config(name = nil, *values, append: false)
       if name && values.size.positive?
         lib.config_set(name, *values, append: append)

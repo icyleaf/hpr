@@ -7,13 +7,16 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
 gem 'puma', '~> 6.0.2'
-gem 'sidekiq', '~> 6.5.7'
 gem 'sinatra', '~> 3.0.5'
 gem 'sinatra-contrib', '~> 3.0.5'
 
+# Background Job Service
+gem 'sidekiq', '~> 6.5.7'
+gem 'sidekiq-failures', '~> 1.0.4'
+
 # Database
 gem 'activerecord', '~> 7.0.4'
-gem 'sqlite3', '~> 1.5.4'
+gem 'sqlite3', '~> 1.6.0.rc2'
 
 # Tools
 gem 'chronic_duration', '~> 0.10.6'
