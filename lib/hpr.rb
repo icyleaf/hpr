@@ -22,17 +22,16 @@ module Hpr
     def init_sidekiq
       redis_url = { url: ENV['HPR_REDIS_URL'] || 'redis://localhost:6379/2' }
 
+      Sidekiq.default_job_options = { 'backtrace' => true }
       Sidekiq.configure_server do |config|
         config.redis = redis_url
+        config.logger = Sidekiq::Logger.new(STDOUT)
+        config.logger.level = Logger::DEBUG unless producton?
       end
 
       Sidekiq.configure_client do |config|
         config.redis = redis_url
       end
-
-      Sidekiq.default_worker_options = { 'backtrace' => true }
-      Sidekiq.logger = Logger.new(STDOUT)
-      Sidekiq.logger.level = Logger::DEBUG unless producton?
     end
 
     def connect_database
