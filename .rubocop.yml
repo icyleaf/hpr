@@ -1,3 +1,7 @@
+AllCops:
+  SuggestExtensions: false
+  NewCops: disable
+
 Metrics/LineLength:
   Max: 120
 
@@ -19,5 +23,5 @@ Style/RescueStandardError:
 Lint/AssignmentInCondition:
   Enabled: false
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
