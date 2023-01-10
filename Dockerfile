@@ -1,4 +1,4 @@
-FROM ruby:3.0-alpine
+FROM ruby:3.2-alpine
 LABEL maintainer="icyleaf <icyleaf.cn@gmail.com>"
 
 ENV S6_OVERLAY_VERSION=2.2.0.3
