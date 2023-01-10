@@ -19,4 +19,4 @@ api:
   disable_config: false
 sentry:
   report: true
-  dns: https://cd580221c955434b84d8c7fce2e9ed8d:0df7f10ecc864d8b9e77fbaf8f448fe8@sentry.io/1525034
+  dns: https://cd580221c955434b84d8c7fce2e9ed8d@o333914.ingest.sentry.io/1525034
