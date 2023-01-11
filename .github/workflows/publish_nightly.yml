@@ -13,13 +13,13 @@ jobs:
     - uses: actions/checkout@master
     - name: Get build date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M:%S %z')"
+      run: echo "BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S %z')" >> $GITHUB_OUTPUT
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         VCS_REF: ${{ github.sha }}
         VERSION: nightly
-        BUILD_DATE: ${{ steps.date.outputs.date }}
+        BUILD_DATE: ${{ steps.date.outputs.BUILD_DATE }}
       with:
         name: icyleafcn/hpr:nightly
         username: ${{ secrets.DOCKER_USERNAME }}
