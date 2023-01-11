@@ -56,6 +56,12 @@ module Hpr
         config.background_worker_threads = 5
         config.debug = true  unless producton?
         config.logger = Sentry::Logger.new(sentry_log_path)
+
+        config.excluded_exceptions += [
+          'Hpr::RepositoryExistsError',
+          'Interrupt',
+          'SystemExit',
+        ]
       end
 
       Sentry.set_user(username: hostname)

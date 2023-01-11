@@ -42,6 +42,10 @@ module Hpr
       json busy_jobs
     end
 
+    get '/info/retry_failtures' do
+      json retry_failures_jobs
+    end
+
     unless Hpr::Configuration.api.disable_config
       get '/config' do
         json Hpr::Configuration.to_safe_h
@@ -165,7 +169,7 @@ module Hpr
       {
         processed: sidekiq_stats.processed,
         failed: sidekiq_stats.failed,
-        failures: Sidekiq::Failures.count,
+        retry_failures: Sidekiq::Failures.count,
         busy: sidekiq_stats.workers_size,
         processes: sidekiq_stats.processes_size,
         enqueued: sidekiq_stats.enqueued,
@@ -177,16 +181,16 @@ module Hpr
     end
 
     def busy_jobs(name = nil)
-      workers = Sidekiq::Workers.new
+      workers = Sidekiq::WorkSet.new
       entry = []
       workers.each do |process, thread, msg|
-        job = Sidekiq::Job.new(msg['payload'])
-        worker_type = job.display_class[5..-7].downcase
+        job = Sidekiq::JobRecord.new(msg['payload'])
+        worker_type = job.display_class[5..-1].downcase
         repository = job.display_args[0]
 
         stats = {
           jid: job.jid,
-          job: worker_type,
+          worker: worker_type,
           repository: repository,
           process: process,
           thread: thread,
@@ -205,8 +209,23 @@ module Hpr
       scheduled_set = Sidekiq::ScheduledSet.new
       scheduled_set.each_with_object([]) do |retri, obj|
         obj << {
-          name: JSON.parse(retri.value)['args'].first,
+          name: retri.item['args'].first,
           scheduled_at: retri.at
+        }
+      end
+    end
+
+    def retry_failures_jobs
+      failure_set = Sidekiq::Failures::FailureSet.new
+      failure_set.each_with_object([]) do |set, obj|
+        data = set.item
+        obj << {
+          name: data['args'].first,
+          worker: data['class'][5..-1].downcase,
+          error_class: data['error_class'],
+          error_message: data['error_message'],
+          failed_at: data['failed_at'],
+          aaa: set
         }
       end
     end

@@ -3,7 +3,7 @@
 module Hpr
   # Destroy git repository worker
   class DestroyWorker
-    include Sidekiq::Worker
+    include Sidekiq::Job
     include Hpr::Worker
 
     def perform(name)
@@ -13,6 +13,9 @@ module Hpr
       delete_retries_jobs
       delete_scheduled_jobs
       delete_git_files
+    rescue => e
+      Sentry.capture_exception(e)
+      raise e
     end
 
     def delete_scheduled_jobs
@@ -27,7 +30,7 @@ module Hpr
     end
 
     def delete_busy_jobs
-      workers = Sidekiq::Workers.new
+      workers = Sidekiq::WorkSet.new
       workers.each do |_, _, msg|
         job, repository_name = get_job(msg)
         job.delete if repository_name == @name

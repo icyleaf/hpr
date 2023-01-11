@@ -14,7 +14,7 @@ module Hpr
       logger.debug "scheduling next update at #{start_time} ... #{name}"
 
       repository.update status: 'idle', scheduled_at: start_time
-      UpdateWorker.perform_at(start_time, name)
+      UpdateWorker.perform_at start_time, name
     end
 
     def scheduled?(name)

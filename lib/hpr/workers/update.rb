@@ -3,7 +3,7 @@
 module Hpr
   # Update git repository worker
   class UpdateWorker
-    include Sidekiq::Worker
+    include Sidekiq::Job
     include Hpr::Worker
 
     def perform(name)
@@ -17,7 +17,19 @@ module Hpr
       end
 
       update_repository name, repository
+    rescue => e
+      return logger.error e.message if timeout_error?(e)
+
+      Sentry.capture_exception(e)
+      raise e
+    ensure
       schedule_update_job name, repository
+    end
+
+    private
+
+    def timeout_error?(exception)
+      exception.message.include?('timeout')
     end
 
     def update_repository(name, repository)
