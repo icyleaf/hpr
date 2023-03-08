@@ -21,7 +21,7 @@ gem 'sqlite3', '~> 1.6.0'
 # Tools
 gem 'chronic_duration', '~> 0.10.6'
 gem 'commander', '~> 4.6.0'
-gem 'git', '~> 1.15.0'
+gem 'git', '~> 1.17.2'
 gem 'gitlab', '~> 4.19.0'
 gem 'rake'
 gem 'sentry-ruby'
