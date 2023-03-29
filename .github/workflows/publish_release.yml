@@ -18,7 +18,7 @@ jobs:
       id: version
       run: echo "::set-output name=version::$(echo ${{ github.ref }} | sed 's/refs\/tags\///' | sed 's/v//')"
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       env:
         VCS_REF: ${{ github.sha }}
         VERSION: ${{ github.ref }}

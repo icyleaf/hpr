@@ -15,7 +15,7 @@ jobs:
       id: date
       run: echo "BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S %z')" >> $GITHUB_OUTPUT
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       env:
         VCS_REF: ${{ github.sha }}
         VERSION: nightly
