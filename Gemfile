@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Web Services
-gem 'puma', '~> 6.1.1'
+gem 'puma', '~> 6.2.0'
 gem 'sinatra', '~> 3.0.5'
 gem 'sinatra-contrib', '~> 3.0.5'
 
