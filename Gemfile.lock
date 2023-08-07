@@ -1,12 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activerecord (7.0.4.3)
-      activemodel (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activesupport (7.0.4.3)
+    activemodel (7.0.6)
+      activesupport (= 7.0.6)
+    activerecord (7.0.6)
+      activemodel (= 7.0.6)
+      activesupport (= 7.0.6)
+    activesupport (7.0.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -52,7 +52,7 @@ GEM
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
-    i18n (1.12.0)
+    i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
@@ -63,7 +63,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
-    minitest (5.18.0)
+    minitest (5.19.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustermann (3.0.0)
@@ -169,7 +169,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 7.0.4)
+  activerecord (~> 7.0.6)
   awesome_print
   chronic_duration (~> 0.10.6)
   commander (~> 4.6.0)
