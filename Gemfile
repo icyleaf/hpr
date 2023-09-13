@@ -16,7 +16,7 @@ gem 'sidekiq-failures', '~> 1.0.4'
 
 # Database
 gem 'activerecord', '~> 7.0.6'
-gem 'sqlite3', '~> 1.6.2'
+gem 'sqlite3', '~> 1.6.6'
 
 # Tools
 gem 'chronic_duration', '~> 0.10.6'
