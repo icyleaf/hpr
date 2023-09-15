@@ -15,7 +15,7 @@ gem 'sidekiq', '~> 7.1.4'
 gem 'sidekiq-failures', '~> 1.0.4'
 
 # Database
-gem 'activerecord', '~> 7.0.6'
+gem 'activerecord', '~> 7.0.8'
 gem 'sqlite3', '~> 1.6.6'
 
 # Tools
