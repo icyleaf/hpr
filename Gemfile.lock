@@ -11,7 +11,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.1)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     awesome_print (1.9.2)
@@ -26,7 +26,7 @@ GEM
     diff-lcs (1.5.0)
     ffi (1.15.5)
     formatador (1.1.0)
-    git (1.18.0)
+    git (1.19.0)
       addressable (~> 2.8)
       rchardet (~> 1.8)
     gitlab (4.19.0)
@@ -82,7 +82,7 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    public_suffix (5.0.1)
+    public_suffix (5.0.4)
     puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -175,7 +175,7 @@ DEPENDENCIES
   awesome_print
   chronic_duration (~> 0.10.6)
   commander (~> 4.6.0)
-  git (~> 1.18.0)
+  git (~> 1.19.0)
   gitlab (~> 4.19.0)
   guard
   guard-puma
