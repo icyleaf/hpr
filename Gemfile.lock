@@ -1,29 +1,38 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.8)
-      activesupport (= 7.0.8)
-    activerecord (7.0.8)
-      activemodel (= 7.0.8)
-      activesupport (= 7.0.8)
-    activesupport (7.0.8)
+    activemodel (7.1.3)
+      activesupport (= 7.1.3)
+    activerecord (7.1.3)
+      activemodel (= 7.1.3)
+      activesupport (= 7.1.3)
+      timeout (>= 0.4.0)
+    activesupport (7.1.3)
+      base64
+      bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
+      mutex_m
       tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     awesome_print (1.9.2)
     base64 (0.1.1)
+    bigdecimal (3.1.5)
     chronic_duration (0.10.6)
       numerizer (~> 0.1.1)
     coderay (1.1.3)
     commander (4.6.0)
       highline (~> 2.0.0)
-    concurrent-ruby (1.2.2)
+    concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     diff-lcs (1.5.0)
+    drb (2.2.0)
+      ruby2_keywords
     ffi (1.15.5)
     formatador (1.1.0)
     git (1.18.0)
@@ -64,11 +73,12 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.5)
-    minitest (5.20.0)
+    minitest (5.21.1)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    mutex_m (0.2.0)
     nenv (0.3.0)
     nio4r (2.5.9)
     notiffany (0.1.3)
@@ -162,6 +172,7 @@ GEM
       unicode-display_width (>= 1.1.1, < 3)
     thor (1.2.2)
     tilt (2.2.0)
+    timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
@@ -171,7 +182,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 7.0.8)
+  activerecord (~> 7.1.3)
   awesome_print
   chronic_duration (~> 0.10.6)
   commander (~> 4.6.0)
