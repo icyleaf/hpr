@@ -18,14 +18,15 @@ module Hpr
       @mirror_url = mirror_url
       @gitlab_project_id = gitlab_project_id
       @repository = Repository.find_or_create_by name: name, url: url, mirror_url: mirror_url,
-        gitlab_project_id: gitlab_project_id, status: :cloning
+                                                 gitlab_project_id: gitlab_project_id,
+                                                 status: :cloning
 
       clone
       configure
       pushing
       schedule_update_job name, @repository
     rescue => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception e
       clean_clone_artifacts
       raise e
     end
@@ -34,8 +35,8 @@ module Hpr
 
     def clone
       logger.debug "cloning #{@url} ... #{@name}"
-      @git = ::Git.clone @url, @name, path: repository_path, mirror: true, log: nil,
-        config: 'core.sshCommand=ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+      git_clone_config = 'core.sshCommand=ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+      @git = ::Git.clone @url, @name, path: repository_path, mirror: true, log: nil, config: git_clone_config
     end
 
     def configure

@@ -25,3 +25,12 @@ Lint/AssignmentInCondition:
 
 Lint/SuppressedException:
   Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false

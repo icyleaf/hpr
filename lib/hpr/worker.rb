@@ -20,7 +20,7 @@ module Hpr
     def scheduled?(name)
       scheduled = Sidekiq::ScheduledSet.new
       rs = scheduled.select { |s| JSON.parse(s.value)['args'].first == name }
-      return rs unless rs.empty?
+      rs unless rs.empty?
     end
 
     def ensure_git_repository_not_exist(name)
@@ -43,7 +43,7 @@ module Hpr
 
     def git_repository_exist?(name)
       path = git_repository_path(name)
-      return path if File.directory? path
+      path if File.directory? path
     end
 
     def git_repository_path(name)

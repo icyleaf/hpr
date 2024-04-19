@@ -1,4 +1,4 @@
-# frozen_string_literal: tru
+# frozen_string_literal: true
 
 require 'gitlab'
 require 'fileutils'
@@ -93,7 +93,7 @@ module Hpr
     def search_gitlab_repository(name)
       projects = gitlab.project_search(name).select { |project| project.namespace.id == current_group.id }
 
-      return projects[0] unless projects.empty?
+      projects[0] unless projects.empty?
     end
 
     def determine_repository_path!
@@ -104,7 +104,7 @@ module Hpr
     def determine_gitlab_configure!
       raise NotRoleError, 'Please enable create group role.' unless current_user.can_create_group
       raise NotRoleError, 'Please enable create project role.' unless current_user.can_create_project
-      raise MissingSSHKeyError, "Please add ssh key for `#{current_user.name}` user." if gitlab.ssh_keys.size.zero?
+      raise MissingSSHKeyError, "Please add ssh key for `#{current_user.name}` user." if gitlab.ssh_keys.empty?
     end
 
     def current_user
@@ -132,6 +132,5 @@ module Hpr
         private_token: Hpr::Configuration.gitlab.private_token
       )
     end
-
   end
 end

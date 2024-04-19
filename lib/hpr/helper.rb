@@ -54,7 +54,7 @@ module Hpr
       def http_paths
         uri = URI.parse(@url)
         path = uri.path
-        (path.start_with?('/') ? path[1..-1] : path).split('/')
+        (path.start_with?('/') ? path[1..] : path).split('/')
       end
 
       def ssh_protocol?

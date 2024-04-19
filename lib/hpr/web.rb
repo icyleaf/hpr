@@ -1,4 +1,4 @@
-# frozen_string_literal: tru
+# frozen_string_literal: true
 
 require 'sinatra'
 require 'sinatra/json'
@@ -13,7 +13,7 @@ module Hpr
     helpers Sinatra::Streaming
 
     configure do
-      use Rack::CommonLogger, Logger.new(STDOUT)
+      use Rack::CommonLogger, Logger.new($stdout)
       use Sentry::Rack::CaptureExceptions
 
       if Configuration.basic_auth?
@@ -185,7 +185,7 @@ module Hpr
       entry = []
       workers.each do |process, thread, msg|
         job = Sidekiq::JobRecord.new(msg['payload'])
-        worker_type = job.display_class[5..-1].downcase
+        worker_type = job.display_class[5..].downcase
         repository = job.display_args[0]
 
         stats = {
@@ -221,7 +221,7 @@ module Hpr
         data = set.item
         obj << {
           name: data['args'].first,
-          worker: data['class'][5..-1].downcase,
+          worker: data['class'][5..].downcase,
           error_class: data['error_class'],
           error_message: data['error_message'],
           failed_at: data['failed_at'],
