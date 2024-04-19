@@ -92,8 +92,9 @@ module Hpr
 
     def search_gitlab_repository(name)
       projects = gitlab.project_search(name).select { |project| project.namespace.id == current_group.id }
+      return if projects.empty?
 
-      projects[0] unless projects.empty?
+      projects[0]
     end
 
     def determine_repository_path!
