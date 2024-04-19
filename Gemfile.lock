@@ -107,7 +107,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rchardet (1.8.0)
-    redis-client (0.19.0)
+    redis-client (0.22.1)
       connection_pool
     regexp_parser (2.8.1)
     rexml (3.2.6)
@@ -140,10 +140,11 @@ GEM
       parser (>= 3.2.1.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    sentry-ruby (5.15.2)
+    sentry-ruby (5.17.3)
+      bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.15.2)
-      sentry-ruby (~> 5.15.2)
+    sentry-sidekiq (5.17.3)
+      sentry-ruby (~> 5.17.3)
       sidekiq (>= 3.0)
     settingslogic (2.0.9)
     shellany (0.0.1)
