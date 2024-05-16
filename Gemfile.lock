@@ -110,7 +110,8 @@ GEM
     redis-client (0.19.0)
       connection_pool
     regexp_parser (2.8.1)
-    rexml (3.2.6)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -168,6 +169,7 @@ GEM
     sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
     sqlite3 (1.6.9-arm64-darwin)
+    strscan (3.1.0)
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
     thor (1.2.2)
