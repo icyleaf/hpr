@@ -1,13 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.1.5.1)
-      activesupport (= 7.1.5.1)
-    activerecord (7.1.5.1)
-      activemodel (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    activemodel (7.1.5.2)
+      activesupport (= 7.1.5.2)
+    activerecord (7.1.5.2)
+      activemodel (= 7.1.5.2)
+      activesupport (= 7.1.5.2)
       timeout (>= 0.4.0)
-    activesupport (7.1.5.1)
+    activesupport (7.1.5.2)
       base64
       benchmark (>= 0.3)
       bigdecimal
@@ -24,9 +24,9 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.2)
     awesome_print (1.9.2)
-    base64 (0.2.0)
-    benchmark (0.4.0)
-    bigdecimal (3.1.9)
+    base64 (0.3.0)
+    benchmark (0.4.1)
+    bigdecimal (3.2.2)
     chronic_duration (0.10.6)
       numerizer (~> 0.1.1)
     coderay (1.1.3)
@@ -35,7 +35,7 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     diff-lcs (1.5.1)
-    drb (2.2.1)
+    drb (2.2.3)
     ffi (1.15.5)
     formatador (1.1.0)
     git (3.0.2)
