@@ -208,7 +208,7 @@ DEPENDENCIES
   guard-sidekiq
   puma (~> 6.6.1)
   rack-test
-  rake
+  rake (>= 3.1.17)
   rspec
   rubocop
   sentry-ruby

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-# source 'https://gems.ruby-china.com'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
@@ -23,7 +22,7 @@ gem 'chronic_duration', '~> 0.10.6'
 gem 'commander', '~> 5.0.0'
 gem 'git', '~> 3.0.2'
 gem 'gitlab', '~> 4.19.0'
-gem 'rake'
+gem 'rake', '>= 3.1.17'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'settingslogic', '~> 2.0.9'
